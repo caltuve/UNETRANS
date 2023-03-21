@@ -1,0 +1,234 @@
+<mat-stepper #stepper>
+  <mat-step [stepControl]="firstFormGroup" errorMessage="Datos incompletos">
+    <form [formGroup]="firstFormGroup">
+      <ng-template matStepLabel>Identificación</ng-template>
+      <mat-card class="mat-card">
+        <mat-card-title-group class="mat-card-title-group">
+          <mat-card-title class="mat-card-title">Creación de nuevo estudiante</mat-card-title>
+          <mat-card-subtitle class="mat-card-subtitle">Datos básicos personales</mat-card-subtitle>
+          <!-- <mat-card-subtitle class="mat-card-subtitle">Otro subtitulo de prueba</mat-card-subtitle> -->
+        </mat-card-title-group>
+        <mat-divider class="mat-divider mat-divider-horizontal" role="separator"
+          aria-orientation="horizontal"></mat-divider>
+        <mat-card-content>
+          <div class="row">
+            <div class="col l6 m12 s12"><label class="label-custom">Documento de identidad:</label>
+              <div class="row">
+                <div class="col l6 m6 s4">
+                  <mat-form-field>
+                    <mat-label>Tipo de documento</mat-label>
+                    <mat-select required>
+                      <mat-option value="V">Venezolana</mat-option>
+                      <mat-option value="E">Extranjera</mat-option>
+                      <mat-option value="P">Pasaporte</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="col l6 m6 s8">
+                  <mat-form-field appearance="fill">
+                    <mat-label>Nro de documento</mat-label>
+                    <input matInput>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+            <div class="col l6 m12 s12"><label class="label-custom">Fecha de nacimiento:</label>
+              <div class="row mar-b-0">
+                <div  class="col l4 m4 s4">
+                  <mat-form-field appearance="fill">
+                    <mat-label>Día</mat-label>
+                    <input matInput>
+                  </mat-form-field>
+                </div>
+                <div class="col l4 m4 s4">
+                  <mat-form-field appearance="fill">
+                    <mat-label>Mes</mat-label>
+                    <input matInput>
+                  </mat-form-field>
+                </div>
+                <div class="col l4 m4 s4">
+                  <mat-form-field appearance="fill">
+                    <mat-label>Año</mat-label>
+                    <input matInput>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+            <!-- <div  class="col l6 m6 s8">
+                <mat-form-field 
+                  class="mat-form-field ng-tns-c28-282 mat-primary mat-form-field-type-mat-input mat-form-field-appearance-legacy mat-form-field-can-float mat-form-field-has-label mat-form-field-hide-placeholder ng-untouched ng-pristine mat-form-field-should-float mat-form-field-disabled">
+                  <div class="mat-form-field-wrapper">
+                    <div class="mat-form-field-flex">
+                      <div class="mat-form-field-infix"><input 
+                          class="mat-input-element mat-form-field-autofill-control cdk-text-field-autofill-monitored ng-untouched ng-pristine"
+                          color="primary"  matinput=""
+                          placeholder="Número de cédula" id="mat-input-82" aria-invalid="false" aria-required="false"
+                          disabled=""><span class="mat-form-field-label-wrapper"><label
+                            class="mat-form-field-label ng-tns-c28-282 ng-star-inserted" id="mat-form-field-label-339"
+                            for="mat-input-82" aria-owns="mat-input-82">Número de
+                            cédula</label></span></div>
+                    </div>
+                    <div class="mat-form-field-underline ng-tns-c28-282 ng-star-inserted"><span
+                        class="mat-form-field-ripple"></span></div>
+                    <div class="mat-form-field-subscript-wrapper">
+                      <div
+                        class="mat-form-field-hint-wrapper ng-tns-c28-282 ng-trigger ng-trigger-transitionMessages ng-star-inserted"
+                        style="opacity: 1; transform: translateY(0%);">
+                        <div class="mat-form-field-hint-spacer"></div>
+                      </div>
+                    </div>
+                  </div>
+                </mat-form-field></div> -->
+
+          </div>
+          <div class="row">
+            <div class="col l6 m12 s12"><label>Nombres:</label>
+              <div class="row mar-b-0">
+                <div class="col l6 m6 s6">
+                  <mat-form-field appearance="fill">
+                    <mat-label>Primer:</mat-label>
+                    <input matInput>
+                  </mat-form-field>
+                </div>
+                <div class="col l6 m6 s6">
+                  <mat-form-field appearance="fill">
+                    <mat-label>Segundo:</mat-label>
+                    <input matInput>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+            <div class="col l6 m12 s12"><label>Apellidos:</label>
+              <div class="row mar-b-0">
+                <div class="col l6 m6 s6"><mat-form-field appearance="fill">
+                    <mat-label>Primer</mat-label>
+                    <input matInput>
+                  </mat-form-field></div>
+                <div class="col l6 m6 s6"><mat-form-field appearance="fill">
+                    <mat-label>Segundo</mat-label>
+                    <input matInput>
+                  </mat-form-field></div>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+      <!-- <div class="contenedor">
+     <mat-form-field appearance="fill">
+       <mat-label>Nacionalidad</mat-label>
+        <mat-select required>
+          <mat-option value="V">Venezolana</mat-option>
+          <mat-option value="E">Extranjera</mat-option>
+          <mat-option value="P">Pasaporte</mat-option>
+        </mat-select>
+        <mat-hint align="end">Selecciona una opción ^</mat-hint>
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Nro Identificación</mat-label>
+        <input matInput placeholder="Cédula/Pasaporte" formControlName="id"
+               required>
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Fecha de nacimiento</mat-label>
+        <input matInput [matDatepicker]="picker">
+        <mat-hint>DD/MM/YYYY</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+    </div>
+    <div class="contenedor">
+      <mat-form-field appearance="fill">
+        <mat-label>Primer nombre</mat-label>
+        <input style='text-transform:uppercase' matInput placeholder="Primer nombre" formControlName="nombre1"
+               required>
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Segundo nombre</mat-label>
+        <input style='text-transform:uppercase' matInput placeholder="Segundo nombre" formControlName="nombre2"
+               required>
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Primer apellido</mat-label>
+        <input style='text-transform:uppercase' matInput placeholder="Primer apellido" formControlName="apellido1"
+               required>
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Segundo apellido</mat-label>
+        <input style='text-transform:uppercase' matInput placeholder="Segundo apellido" formControlName="apellido2"
+               required>
+      </mat-form-field>
+    </div>
+    <div class="contenedor">
+      <mat-form-field appearance="fill">
+        <mat-label>Teléfono Celular</mat-label>
+        <input style='text-transform:uppercase' matInput mask="(999) 000-0000" placeholder="412-1234578" formControlName="tel"
+               required>
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Teléfono Celular</mat-label>
+        <input style='text-transform:uppercase' matInput mask="(999) 000-0000" placeholder="412-1234578" formControlName="tel"
+               required>
+      </mat-form-field>
+    </div> -->
+      <div>
+        <button mat-button matStepperNext>Siguiente</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step [stepControl]="secondFormGroup" errorMessage="Datos incompletos">
+    <form [formGroup]="secondFormGroup">
+      <ng-template matStepLabel>Residencia</ng-template>
+      <mat-form-field appearance="fill">
+        <mat-label>Address</mat-label>
+        <input matInput placeholder="Ex. 1 Main St, New York, NY" formControlName="secondCtrl" required>
+      </mat-form-field>
+      <div>
+        <p>Go to a different step to see the error state</p>
+        <button mat-button matStepperPrevious>Regresar</button>
+        <button mat-button matStepperNext>Siguiente</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step [stepControl]="secondFormGroup" errorMessage="Datos incompletos">
+    <form [formGroup]="secondFormGroup">
+      <ng-template matStepLabel>Socio-Económicos</ng-template>
+      <mat-form-field appearance="fill">
+        <mat-label>Address</mat-label>
+        <input matInput placeholder="Ex. 1 Main St, New York, NY" formControlName="secondCtrl" required>
+      </mat-form-field>
+      <div>
+        <p>Go to a different step to see the error state</p>
+        <button mat-button matStepperPrevious>Regresar</button>
+        <button mat-button matStepperNext>Siguiente</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step [stepControl]="secondFormGroup" errorMessage="Datos incompletos">
+    <form [formGroup]="secondFormGroup">
+      <ng-template matStepLabel>Académicos</ng-template>
+      <mat-form-field appearance="fill">
+        <mat-label>Address</mat-label>
+        <input matInput placeholder="Ex. 1 Main St, New York, NY" formControlName="secondCtrl" required>
+      </mat-form-field>
+      <div>
+        <p>Go to a different step to see the error state</p>
+        <button mat-button matStepperPrevious>Regresar</button>
+        <button mat-button matStepperNext>Siguiente</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step [stepControl]="secondFormGroup" errorMessage="Datos incompletos">
+    <form [formGroup]="secondFormGroup">
+      <ng-template matStepLabel>UNETRANS</ng-template>
+      <mat-form-field appearance="fill">
+        <mat-label>Address</mat-label>
+        <input matInput placeholder="Ex. 1 Main St, New York, NY" formControlName="secondCtrl" required>
+      </mat-form-field>
+      <div>
+        <p>Go to a different step to see the error state</p>
+        <button mat-button matStepperPrevious>Regresar</button>
+        <button mat-button matStepperNext>Siguiente</button>
+      </div>
+    </form>
+  </mat-step>
+</mat-stepper>
