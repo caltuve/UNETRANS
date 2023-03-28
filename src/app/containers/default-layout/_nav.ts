@@ -66,6 +66,37 @@ export const navItems: INavData[] = [
   linkProps: { fragment: 'someAnchor' },
   iconComponent: { name: 'cil-pencil' },
 },
+{
+  title: true,
+  name: 'Administrativo'
+},
+{
+  name: 'Seguridad',
+  url: '/seguridad',
+  iconComponent: { name: 'cil-shield-alt' },
+  children: [
+    {
+      name: 'Institución',
+      url: '/seguridad/institucion',
+      iconComponent: { name: 'cil-building' },
+    },
+    {
+      name: 'Menús',
+      url: '/seguridad/menu',
+      iconComponent: { name: 'cil-list' },
+    },
+    {
+      name: 'Grupo',
+      url: '/seguridad/grupo',
+      iconComponent: { name: 'cil-sitemap' },
+    },
+    {
+      name: 'Perfil',
+      url: '/seguridad/perfil',
+      iconComponent: { name: 'cil-people' },
+    },
+  ]
+},
 
 /*FIN DEL MENÚ UNETRANS*/
 

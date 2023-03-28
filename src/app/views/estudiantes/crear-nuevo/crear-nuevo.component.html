@@ -1,4 +1,4 @@
-<mat-stepper #stepper>
+<mat-stepper labelPosition="bottom" #stepper>
   <mat-step [stepControl]="firstFormGroup" errorMessage="Datos incompletos">
     <form [formGroup]="firstFormGroup">
       <ng-template matStepLabel>Identificación</ng-template>
@@ -85,13 +85,13 @@
             <div class="col l6 m12 s12"><label>Nombres:</label>
               <div class="row mar-b-0">
                 <div class="col l6 m6 s6">
-                  <mat-form-field appearance="fill">
+                  <mat-form-field >
                     <mat-label>Primer:</mat-label>
                     <input matInput>
                   </mat-form-field>
                 </div>
                 <div class="col l6 m6 s6">
-                  <mat-form-field appearance="fill">
+                  <mat-form-field >
                     <mat-label>Segundo:</mat-label>
                     <input matInput>
                   </mat-form-field>
@@ -100,11 +100,11 @@
             </div>
             <div class="col l6 m12 s12"><label>Apellidos:</label>
               <div class="row mar-b-0">
-                <div class="col l6 m6 s6"><mat-form-field appearance="fill">
+                <div class="col l6 m6 s6"><mat-form-field >
                     <mat-label>Primer</mat-label>
                     <input matInput>
                   </mat-form-field></div>
-                <div class="col l6 m6 s6"><mat-form-field appearance="fill">
+                <div class="col l6 m6 s6"><mat-form-field >
                     <mat-label>Segundo</mat-label>
                     <input matInput>
                   </mat-form-field></div>

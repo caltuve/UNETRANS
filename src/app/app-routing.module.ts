@@ -30,6 +30,10 @@ const routes: Routes = [
         path: 'estudiantes', 
         loadChildren: () => import('./views/estudiantes/estudiantes.module').then(m => m.EstudiantesModule) 
       },
+      { 
+        path: 'seguridad', 
+        loadChildren: () => import('./views/seguridad/seguridad.module').then(m => m.SeguridadModule) 
+      },
       /* Fin derutas UNETRANS */
       {
         path: 'theme',
