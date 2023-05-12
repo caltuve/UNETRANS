@@ -18,6 +18,12 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon'
 import { MatDividerModule } from '@angular/material/divider';
+import {MatButtonModule} from '@angular/material/button';
+import { GridModule } from '@coreui/angular';
+import { FormModule } from '@coreui/angular';
+import {MatExpansionModule} from '@angular/material/expansion';
+import { ControlEstudiosService } from './control-estudios.service';
+import { HttpClientModule } from '@angular/common/http';
 
 
 @NgModule({
@@ -41,7 +47,12 @@ import { MatDividerModule } from '@angular/material/divider';
     MatCardModule,
     MatIconModule,
     MatDividerModule,
+    MatButtonModule,
+    GridModule,
+    FormModule,
+    MatExpansionModule,
+    HttpClientModule
   ],
-  providers: [{provide: MAT_DATE_LOCALE, useValue: 'es-VE'}]
+  providers: [{provide: MAT_DATE_LOCALE, useValue: 'es-VE'}, {provide: ControlEstudiosService}],
 })
 export class EstudiantesModule { }

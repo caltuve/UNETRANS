@@ -13,7 +13,7 @@ export const navItems: INavData[] = [
 /*INICIO DEL MENÚ UNETRANS*/
 {
   title: true,
-  name: 'Estudiantil'
+  name: 'CONTROL DE ESTUDIOS'
 },
 {
   name: 'Estudiantes',

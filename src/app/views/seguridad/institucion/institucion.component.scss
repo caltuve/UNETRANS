@@ -1,0 +1,329 @@
+.mat-card-title {
+    display:block;
+    margin-bottom:8px
+   }
+   .mat-card-title-group {
+    display:flex;
+    justify-content:space-between
+   }
+  
+   .label-custom {
+    display: inline-block;
+    margin-top: 1vh;
+    margin-bottom: 1vh;
+  }
+  
+  label {
+    color: #0067b1;
+    font-weight: 700;
+  }
+  
+  .mat-card:not([class*=mat-elevation-z]) {
+   box-shadow:0 2px 1px -1px rgba(0,0,0,.2),0 1px 1px 0 rgba(0,0,0,.14),0 1px 3px 0 rgba(0,0,0,.12)
+  }
+  .mat-card.mat-card-flat:not([class*=mat-elevation-z]) {
+   box-shadow:0 0 0 0 rgba(0,0,0,.2),0 0 0 0 rgba(0,0,0,.14),0 0 0 0 rgba(0,0,0,.12)
+  }
+  
+  .row .col {
+    float:left;
+    box-sizing:border-box;
+    padding:0 .75rem;
+    min-height:1px
+   }
+   .row .col.m12 {
+    width:100%;
+    margin-left:auto;
+    left:auto;
+    right:auto
+   }
+   .row .col.m6 {
+    width:50%;
+    margin-left:auto;
+    left:auto;
+    right:auto
+   }
+   .row .col.m4 {
+    width:33.3333333333%;
+    margin-left:auto;
+    left:auto;
+    right:auto
+   }
+   
+  .mat-card-subtitle:not(:first-child), .mat-card-title:not(:first-child) {
+    margin-top: -4px;
+  }
+  
+  .mat-card-content>:last-child:not(.mat-card-footer),
+  .mat-card>:last-child:not(.mat-card-footer) {
+   margin-bottom:0
+  }
+  
+  .row {
+    margin-left:auto;
+    margin-right:auto
+   }
+  
+  .row .col.m12 {
+    width:100%;
+    margin-left:auto;
+    left:auto;
+    right:auto
+   }
+  
+  .row .col {
+    float: left;
+    box-sizing: border-box;
+    padding: 0 .75rem;
+    min-height: 1px;
+  }
+  
+  .mat-card-content, .mat-card-subtitle {
+    font-size: 14px;
+  }
+  
+  .mat-card-actions, .mat-card-content, .mat-card-subtitle {
+    display: block;
+    margin-bottom: 16px;
+  }
+  
+  .mat-card-content > :first-child, .mat-card > :first-child {
+    margin-top: 0;
+  }
+  
+  .mat-card-content > :last-child:not(.mat-card-footer), .mat-card > :last-child:not(.mat-card-footer) {
+    margin-bottom: 0;
+  }
+  .mat-card-actions, .mat-card-content, .mat-card-subtitle {
+    display: block;
+    margin-bottom: 16px;
+  }
+  
+  //añadido todoo
+  .mat-card {
+    transition:box-shadow 280ms cubic-bezier(.4,0,.2,1);
+    display:block;
+    position:relative;
+    padding:16px;
+    border-radius:4px
+   }
+   .mat-card .mat-divider-horizontal {
+    position:absolute;
+    left:0;
+    width:100%
+   }
+   [dir=rtl] .mat-card .mat-divider-horizontal {
+    left:auto;
+    right:0
+   }
+   .mat-card .mat-divider-horizontal.mat-divider-inset {
+    position:static;
+    margin:0
+   }
+   [dir=rtl] .mat-card .mat-divider-horizontal.mat-divider-inset {
+    margin-right:0
+   }
+   @media (-ms-high-contrast:active) {
+    .mat-card {
+     outline:solid 1px
+    }
+   }
+   .mat-card-actions,
+   .mat-card-content,
+   .mat-card-subtitle {
+    display:block;
+    margin-bottom:16px
+   }
+   .mat-card-title {
+    display:block;
+    margin-bottom:8px
+   }
+   .mat-card-actions {
+    margin-left:-8px;
+    margin-right:-8px;
+    padding:8px 0
+   }
+   .mat-card-actions-align-end {
+    display:flex;
+    justify-content:flex-end
+   }
+   .mat-card-image {
+    width:calc(100% + 32px);
+    margin:0 -16px 16px -16px
+   }
+   .mat-card-footer {
+    display:block;
+    margin:0 -16px -16px -16px
+   }
+   .mat-card-actions .mat-button,
+   .mat-card-actions .mat-raised-button {
+    margin:0 8px
+   }
+   .mat-card-header {
+    display:flex;
+    flex-direction:row
+   }
+   .mat-card-header .mat-card-title {
+    margin-bottom:12px
+   }
+   .mat-card-header-text {
+    margin:0 16px
+   }
+   .mat-card-avatar {
+    height:40px;
+    width:40px;
+    border-radius:50%;
+    flex-shrink:0;
+    object-fit:cover
+   }
+   .mat-card-title-group {
+    display:flex;
+    justify-content:space-between
+   }
+   .mat-card-sm-image {
+    width:80px;
+    height:80px
+   }
+   .mat-card-md-image {
+    width:112px;
+    height:112px
+   }
+   .mat-card-lg-image {
+    width:152px;
+    height:152px
+   }
+   .mat-card-xl-image {
+    width:240px;
+    height:240px;
+    margin:-8px
+   }
+   .mat-card-title-group>.mat-card-xl-image {
+    margin:-8px 0 8px 0
+   }
+   @media (max-width:599px) {
+    .mat-card-title-group {
+     margin:0
+    }
+    .mat-card-xl-image {
+     margin-left:0;
+     margin-right:0
+    }
+   }
+   .mat-card-content>:first-child,
+   .mat-card>:first-child {
+    margin-top:0
+   }
+   .mat-card-content>:last-child:not(.mat-card-footer),
+   .mat-card>:last-child:not(.mat-card-footer) {
+    margin-bottom:0
+   }
+   .mat-card-image:first-child {
+    margin-top:-16px;
+    border-top-left-radius:inherit;
+    border-top-right-radius:inherit
+   }
+   .mat-card>.mat-card-actions:last-child {
+    margin-bottom:-8px;
+    padding-bottom:0
+   }
+   .mat-card-actions .mat-button:first-child,
+   .mat-card-actions .mat-raised-button:first-child {
+    margin-left:0;
+    margin-right:0
+   }
+   .mat-card-subtitle:not(:first-child),
+   .mat-card-title:not(:first-child) {
+    margin-top:-4px
+   }
+   .mat-card-header .mat-card-subtitle:not(:first-child) {
+    margin-top:-8px
+   }
+   .mat-card>.mat-card-xl-image:first-child {
+    margin-top:-8px
+   }
+   .mat-card>.mat-card-xl-image:last-child {
+    margin-bottom:-8px
+   }
+  
+   //lo otroo
+   .step-container {
+    margin-top:5vh
+   }
+   .title {
+    margin-left:10px
+   }
+   .full-size {
+    width:100%
+   }
+   .label-custom {
+    display:inline-block;
+    margin-top:1vh;
+    margin-bottom:1vh
+   }
+   .mar-b-0 {
+    padding-bottom:0!important
+   }
+   label {
+    color:#0067b1;
+    font-weight:700
+   }
+   .span-option {
+    margin:0 10px
+   }
+   .textInformativo {
+    display:flex;
+    align-items:center
+   }
+   .textoParrafo {
+    padding-left:.4em
+   }
+   .iconInformativo {
+    color:#db110d
+   }
+   mat-card-content {
+    margin-top:3vh
+   }
+   .mat-step-header {
+    pointer-events:none!important
+   }
+  
+   .col .row {
+    margin-left:-.75rem;
+    margin-right:-.75rem
+   }
+  
+   .row .col.m4 {
+    width:33.3333333333%;
+    margin-left:auto;
+    left:auto;
+    right:auto
+   }
+  
+   .mat-form-field-appearance-legacy .mat-form-field-infix {
+    padding:.4375em 0
+   }
+  
+   .mat-form-field {
+    display:inline-block;
+    position:relative;
+    text-align:left
+   }
+  
+   .mat-form-field-appearance-legacy .mat-form-field-wrapper {
+    padding-bottom:1.25em
+   }
+  
+   .mat-form-field-flex {
+    display:inline-flex;
+    align-items:baseline;
+    box-sizing:border-box;
+    width:100%
+   }
+  
+   table {
+    width: 100%;
+  }
+  
+  
+   //otraaas añadido el 14/03/23
+   

@@ -300,6 +300,6 @@ export enum IconSubset {
   cilUserFemale = 'cilUserFemale',
   cilUserFollow = 'cilUserFollow',
   cilUserUnfollow = 'cilUserUnfollow',
-  cilFolderOpen = 'cilUserUnfollow',
+  cilFolderOpen = 'cilFolderOpen',
   cilZoom = 'cilZoom'
 }

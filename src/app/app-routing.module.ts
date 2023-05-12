@@ -34,7 +34,7 @@ const routes: Routes = [
         path: 'seguridad', 
         loadChildren: () => import('./views/seguridad/seguridad.module').then(m => m.SeguridadModule) 
       },
-      /* Fin derutas UNETRANS */
+      /* Fin de rutas UNETRANS */
       {
         path: 'theme',
         loadChildren: () =>
