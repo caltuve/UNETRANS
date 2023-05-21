@@ -14,15 +14,15 @@
 [npm-coreui-badge]: https://img.shields.io/npm/v/@coreui/coreui.png?style=flat-square
 [npm-coreui-download]: https://img.shields.io/npm/dm/@coreui/coreui.svg?style=flat-square
 
-# CoreUI Free Admin Dashboard Template for Angular 15
+# Sistema Integral de Control de Estudios de la UNETRANS V 1.0
 
-CoreUI is meant to be the UX game changer. Pure & transparent code is devoid of redundant components, so the app is light enough to offer ultimate user experience. This means mobile devices also, where the navigation is just as easy and intuitive as on a desktop or laptop. The CoreUI Layout API lets you customize your project for almost any device – be it Mobile, Web or WebApp – CoreUI covers them all!
+El Sistema Integral de Control de Estudios (SICE) es el primer sistema web de la Universidad Nacional Experimental del Transporte (Venezuela) que permitirá poder realizar operaciones en línea referente a solicitudes académicas de los estudiantes de esta Casa de Estudios.
 
-- [CoreUI Angular Admin Dashboard Template & UI Components Library](https://coreui.io/angular)  
+<!-- - [CoreUI Angular Admin Dashboard Template & UI Components Library](https://coreui.io/angular)  
 - [CoreUI Angular Demo](https://coreui.io/angular/demo/4.3/free/)
-- [CoreUI Angular Docs](https://coreui.io/angular/docs/)  
+- [CoreUI Angular Docs](https://coreui.io/angular/docs/)   -->
 
-## Table of Contents
+<!-- ## Table of Contents
 
 * [Versions](#versions)
 * [CoreUI Pro](#coreui-pro)
@@ -218,4 +218,4 @@ copyright 2022 creativeLabs Łukasz Holeczek.
 
  
 Code released under [the MIT license](https://github.com/coreui/coreui-free-react-admin-template/blob/master/LICENSE).
-There is only one limitation you can't re-distribute the CoreUI as stock. You can’t do this if you modify the CoreUI. In past we faced some problems with persons who tried to sell CoreUI based templates.
+There is only one limitation you can't re-distribute the CoreUI as stock. You can’t do this if you modify the CoreUI. In past we faced some problems with persons who tried to sell CoreUI based templates. -->
