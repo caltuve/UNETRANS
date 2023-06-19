@@ -24,6 +24,11 @@ import { FormModule } from '@coreui/angular';
 import {MatExpansionModule} from '@angular/material/expansion';
 import { ControlEstudiosService } from './control-estudios.service';
 import { HttpClientModule } from '@angular/common/http';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {MatTabsModule} from '@angular/material/tabs';
+
+import {TableModule } from '@coreui/angular';
+import { MatTableModule } from '@angular/material/table' 
 
 
 @NgModule({
@@ -51,7 +56,12 @@ import { HttpClientModule } from '@angular/common/http';
     GridModule,
     FormModule,
     MatExpansionModule,
-    HttpClientModule
+    HttpClientModule,
+    MatAutocompleteModule,
+    MatTabsModule,
+    TableModule,
+    MatTableModule
+    
   ],
   providers: [{provide: MAT_DATE_LOCALE, useValue: 'es-VE'}, {provide: ControlEstudiosService}],
 })

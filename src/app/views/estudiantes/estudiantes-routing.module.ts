@@ -20,7 +20,7 @@ const routes: Routes = [
         path: 'crear-nuevo',
         component: CrearNuevoComponent,
         data: {
-          title: 'Crear nuevo estudiante'
+          title: 'Crear nuevo estudiante555'
         }
       },
       {

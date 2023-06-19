@@ -1,1 +1,3 @@
-<p>consultar-datos works!</p>
+<div *ngFor="let data of petro"> Valor del petro al día es de {{data}} Bs/PTR
+<div *ngFor="let docu of docs">{{docu.desc_doc}} - {{docu.costo_ptr}} PTR - {{docu.costo_ptr * data | number: '.1-2'}} Bs</div>
+</div>

@@ -219,6 +219,9 @@ label {
  .mat-card-title:not(:first-child) {
   margin-top:-4px
  }
+
+ .abrir{z-index:3000;}
+
  .mat-card-header .mat-card-subtitle:not(:first-child) {
   margin-top:-8px
  }
@@ -229,9 +232,14 @@ label {
   margin-bottom:-8px
  }
 
+ .yellow-theme {
+  $yellow-theme: mat-light-theme(#0067b1);
+}
+
  //lo otroo
  .step-container {
-  margin-top:5vh
+  margin-top:5vh;
+  background-color:#0067b1
  }
  .title {
   margin-left:10px
@@ -933,3 +941,40 @@ label {
  .mat-accordion>:last-child:not(.mat-expansion-panel) .mat-expansion-panel-spacing {
   margin-bottom:0
  }
+
+ .mat-tab-group.mat-primary .mat-ink-bar,
+.mat-tab-nav-bar.mat-primary .mat-ink-bar {
+ background-color:#b3133f
+}
+
+.add-number-container-title[_ngcontent-sfv-c50]   button[_ngcontent-sfv-c50] {
+ margin-bottom:2vh
+}
+
+H3 {
+  color:#0067b1!important;
+  margin-top:15px!important
+ }
+
+ mat-form-field[_ngcontent-mnw-c27] {
+  width:100%
+ }
+ .m-top-15[_ngcontent-mnw-c27] {
+  margin-top:15px
+ }
+ .example-tooltip-red[_ngcontent-mnw-c27] {
+  background:#b71c1c
+ }
+ table[_ngcontent-mnw-c27] {
+  width:100%
+ }
+ .mat-icon-button[_ngcontent-mnw-c27] {
+  background-color:transparent!important
+ }
+ .add-number-container-title[_ngcontent-mnw-c27] > *[_ngcontent-mnw-c27] {
+  display:inline-block!important
+ }
+ .add-number-container-title[_ngcontent-mnw-c27]   button[_ngcontent-mnw-c27] {
+  margin-bottom:2vh
+ }
+ 

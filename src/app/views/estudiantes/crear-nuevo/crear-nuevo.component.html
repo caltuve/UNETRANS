@@ -1,41 +1,34 @@
- <!-- PASO 1 DATOS DE IDENTIDAD DEL ESTUDIANTE  -->
-<mat-stepper labelPosition="bottom" #stepper >
-  <mat-step [stepControl]="firstFormGroup"  errorMessage="Datos incompletos" >
+<div><!-- PASO 1 DATOS DE IDENTIDAD DEL ESTUDIANTE  -->
+<mat-stepper linear #stepper>
+  <mat-step class="step-container" [stepControl]="firstFormGroup" errorMessage="Datos incompletos">
     <form [formGroup]="firstFormGroup">
       <ng-template matStepLabel>Identidad</ng-template>
       <mat-card class="mat-card">
         <mat-card-title-group class="mat-card-title-group">
           <mat-card-title class="mat-card-title">Datos de identidad del estudiante</mat-card-title>
-          <mat-card-subtitle class="mat-card-subtitle">Ingrese los datos tal y como se muestran en el documento de identidad</mat-card-subtitle> 
+          <mat-card-subtitle class="mat-card-subtitle">Ingrese los datos tal y como se muestran en el documento de identidad</mat-card-subtitle>
           <!-- <mat-card-subtitle class="mat-card-subtitle">Otro subtitulo de prueba</mat-card-subtitle> -->
-          <div  class="button-container-top">
-            <!-- <button  color="accent" mat-mini-fab="" matstepperprevious="" type="button" class="mat-mini-fab mat-accent">
-              <span class="mat-button-wrapper"><mat-icon aria-hidden="true">arrow_back</mat-icon></span>
-            </button> -->
-            <button  matStepperNext color="accent" mat-mini-fab="" matstepperprevious="" type="button" class="mat-mini-fab mat-accent">
-              <span class="mat-button-wrapper"><mat-icon aria-hidden="true">arrow_forward</mat-icon></span>
-            </button>
-          </div>
+          
         </mat-card-title-group>
         <mat-divider class="mat-divider mat-divider-horizontal" role="separator"
-          aria-orientation="horizontal"></mat-divider> 
+          aria-orientation="horizontal"></mat-divider>
         <mat-card-content>
           <div class="row">
             <div class="col l6 m12 s12">
               <label class="label-custom">Documento de identidad:</label>
               <div class="row">
                 <div class="col l6 s12">
-                  <mat-form-field>
+                  <mat-form-field >
                     <mat-label>Tipo de documento</mat-label>
                     <mat-select formControlName="nac" required>
-                      <mat-option [value]= "item.CODELEMENTO" *ngFor= "let item of nacs" >{{item.DESCRIPCION}}</mat-option>
+                      <mat-option [value]="item.codelemento" *ngFor="let item of nacs">{{item.descripcion}}</mat-option>
                     </mat-select>
                   </mat-form-field>
                 </div>
                 <div class="col l6 s12">
                   <mat-form-field appearance="fill">
                     <mat-label>Nro de documento</mat-label>
-                    <input type="number" matInput formControlName="identificacion" required >
+                    <input oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" type="number" min="1" max="100000000" matInput formControlName="identificacion" required>
                   </mat-form-field>
                 </div>
               </div>
@@ -44,11 +37,13 @@
               <label class="label-custom">Fecha de nacimiento:</label>
               <div class="row">
                 <div class="col l4 m4 s12">
-                  <mat-form-field appearance="fill">
+                  <mat-form-field >
                     <mat-label>Seleccione una fecha</mat-label>
-                    <input matInput [matDatepicker]="fec_nac" formControlName="fec_nac" readonly required>
-                    <mat-datepicker-toggle matIconSuffix [for]="fec_nac"></mat-datepicker-toggle>
-                    <mat-datepicker #fec_nac disabled="false" touchUi></mat-datepicker>
+                    <input matInput [matDatepicker]="fec_nac"matInput [min]="minDate" [max]="maxDate" formControlName="fec_nac" readonly required>
+                    <mat-datepicker-toggle matIconSuffix [for]="fec_nac">
+                      <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+                    </mat-datepicker-toggle>
+                    <mat-datepicker class="abrir"touchUi #fec_nac></mat-datepicker>
                   </mat-form-field>
                 </div>
               </div>
@@ -60,7 +55,7 @@
                 <div class="col l6 m6 s12">
                   <mat-form-field>
                     <mat-label>Primer:</mat-label>
-                    <input style='text-transform:uppercase' matInput formControlName="pnombre" required >
+                    <input style='text-transform:uppercase' matInput formControlName="pnombre" required>
                   </mat-form-field>
                 </div>
                 <div class="col l6 m6 s12">
@@ -84,115 +79,121 @@
               </div>
             </div>
           </div>
-            <div class="row">
-              <div class="col l6 m12 s12">
-                <label class="label-custom">Género:</label>
+          <div class="row">
+            <div class="col l6 m12 s12">
+              <label class="label-custom">Género:</label>
               <div class="row">
                 <div class="col l3 m3 s6">
                   <mat-form-field>
                     <mat-label>Sexo</mat-label>
-                    <mat-select formControlName="genero" required >
-                      <mat-option [value]= "item.CODELEMENTO" *ngFor= "let item of genero" >{{item.DESCRIPCION}}</mat-option>
+                    <mat-select formControlName="genero" required>
+                      <mat-option [value]="item.codelemento"
+                        *ngFor="let item of genero">{{item.descripcion}}</mat-option>
                     </mat-select>
                   </mat-form-field>
                 </div>
               </div>
-              </div>
-              <div class="col l6 m12 s12">
-                <label class="label-custom">Estado civil:</label>
+            </div>
+            <div class="col l6 m12 s12">
+              <label class="label-custom">Estado civil:</label>
               <div class="row">
                 <div class="col l3 m3 s6">
                   <mat-form-field>
                     <mat-label>Estado civil</mat-label>
                     <mat-select formControlName="edo_civil" required>
-                      <mat-option [value]= "item.CODELEMENTO" *ngFor= "let item of edocivil" >{{item.DESCRIPCION}}</mat-option>
+                      <mat-option [value]="item.codelemento"
+                        *ngFor="let item of edocivil">{{item.descripcion}}</mat-option>
                     </mat-select>
                   </mat-form-field>
                 </div>
               </div>
-              </div>
-              <div class="col l6 m12 s12">
-                <label class="label-custom">Grupo Sanguíneo:</label>
+            </div>
+            <div class="col l6 m12 s12">
+              <label class="label-custom">Grupo Sanguíneo:</label>
               <div class="row">
                 <div class="col l3 m3 s6">
                   <mat-form-field>
                     <mat-label>Tipo de sangre</mat-label>
-                    <mat-select formControlName="edo_civil" required>
-                      <mat-option [value]= "item.CODELEMENTO" *ngFor= "let item of gruposan" >{{item.DESCRIPCION}}</mat-option>
+                    <mat-select formControlName="gruposan" required>
+                      <mat-option [value]="item.codelemento"
+                        *ngFor="let item of gruposan">{{item.descripcion}}</mat-option>
                     </mat-select>
                   </mat-form-field>
                 </div>
               </div>
-              </div>
             </div>
+          </div>
 
-            <div class="row">
-              <div class="col l12 m12 s12"><label>Información complementaria:</label>
-                <div class="row">
-                  <div class="col l3 m6 s6">
-                    <mat-form-field>
-                      <mat-label>Etnia</mat-label>
-                      <mat-select formControlName="pais" required>
-                        <mat-option [value]= "item.CODELEMENTO" *ngFor= "let item of etnia" >{{item.DESCRIPCION}}</mat-option>
-                      </mat-select>
-                    </mat-form-field>
-                  </div>
-                  <div class="col l3 m6 s6">
-                    <mat-form-field>
-                      <mat-label>Privado de libertad</mat-label>
-                      <mat-select formControlName="estado" required>
-                        <mat-option [value]= "item.CODELEMENTO" *ngFor= "let item of indresp" >{{item.DESCRIPCION}}</mat-option>
-                      </mat-select>
-                    </mat-form-field>
-                  </div>
-                  <div class="col l3 m6 s6">
-                    <mat-form-field>
-                      <mat-label>Discapacidad</mat-label>
-                      <mat-select formControlName="municipio" required>
-                        <mat-option [value]= "item.CODELEMENTO" *ngFor= "let item of discapacidad" >{{item.DESCRIPCION}}</mat-option>
-                      </mat-select>
-                    </mat-form-field>
-                  </div>
-                  <div class="col l3 m6 s6">
-                    <mat-form-field>
-                      <mat-label>Nro. CONAPDIS</mat-label>
-                      <input *ngIf="municipio != '99'" type="number" matInput formControlName="conapdis" required >
-                    </mat-form-field>
-                  </div>
+          <div class="row">
+            <div class="col l12 m12 s12"><label>Información complementaria:</label>
+              <div class="row">
+                <div class="col l3 m6 s6">
+                  <mat-form-field>
+                    <mat-label>Etnia</mat-label>
+                    <mat-select formControlName="etnia" required>
+                      <mat-option [value]="item.codelemento"
+                        *ngFor="let item of etnia">{{item.descripcion}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="col l3 m6 s6">
+                  <mat-form-field>
+                    <mat-label>Privado de libertad</mat-label>
+                    <mat-select  formControlName="plibertad" required>
+                      <mat-option [value]="item.codelemento"
+                        *ngFor="let item of indresp">{{item.descripcion}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="col l3 m6 s6">
+                  <mat-form-field>
+                    <mat-label>Discapacidad</mat-label>
+                    <mat-select [(ngModel)]="discapacidad2" name="discapacidad" formControlName="discapacidad" required>
+                      <mat-option [value]="item.codelemento" *ngFor="let item of discapacidad">{{item.descripcion}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div *ngIf="(discapacidad2 !== '' && discapacidad2 !== '99' )" class="col l3 m6 s6">
+                  <mat-form-field>
+                    <mat-label>Nro. CONAPDIS</mat-label>
+                    <input type="number" min="1" matInput>
+                  </mat-form-field>
                 </div>
               </div>
             </div>
-
+          </div>
+          <div align="right"><button  matStepperNext color="accent" mat-mini-fab="" matstepperprevious="" type="button"
+            class="mat-mini-fab mat-accent" [disabled]="!firstFormGroup.valid">
+            <span class="mat-button-wrapper"><mat-icon aria-hidden="true">arrow_forward</mat-icon></span>
+          </button></div>
+          
         </mat-card-content>
       </mat-card>
     </form>
   </mat-step>
 
- <!-- PASO 2 DATOS DE RESIDENCIA DEL ESTUDIANTE  -->  
-  <mat-step [stepControl]="secondFormGroup"  errorMessage="Datos incompletos">
+  <!-- PASO 2 DATOS DE RESIDENCIA/CONTACTO DEL ESTUDIANTE  -->
+  <mat-step [stepControl]="secondFormGroup" errorMessage="Datos incompletos">
     <form [formGroup]="secondFormGroup">
       <ng-template matStepLabel>Residencia</ng-template>
       <mat-card class="mat-card">
         <mat-card-title-group class="mat-card-title-group">
           <mat-card-title class="mat-card-title">Datos de residencia/contacto del estudiante</mat-card-title>
-          <mat-card-subtitle class="mat-card-subtitle">Ingrese la información donde reside el estudiante y los datos de contacto (correo, teléfono movil, telefono residencial)</mat-card-subtitle> 
+          <mat-card-subtitle class="mat-card-subtitle">Ingrese la información donde reside el estudiante y los datos de
+            contacto (correo, teléfono movil, telefono residencial)
+          </mat-card-subtitle>
           <!-- <mat-card-subtitle class="mat-card-subtitle">Otro subtitulo de prueba</mat-card-subtitle> -->
-          <div  class="button-container-top">
-            <button  matStepperPrevious color="accent" mat-mini-fab="" matstepperprevious="" type="button" class="mat-mini-fab mat-accent">
-              <span class="mat-button-wrapper"><mat-icon aria-hidden="true">arrow_back</mat-icon></span>
-            </button>
-            <button  matStepperNext color="accent" mat-mini-fab="" matstepperprevious="" type="button" class="mat-mini-fab mat-accent">
-              <span class="mat-button-wrapper"><mat-icon aria-hidden="true">arrow_forward</mat-icon></span>
-            </button>
-          </div>
         </mat-card-title-group>
-        <mat-divider class="mat-divider mat-divider-horizontal" role="separator"  aria-orientation="horizontal"></mat-divider>
+        <mat-divider class="mat-divider mat-divider-horizontal" role="separator"
+          aria-orientation="horizontal"></mat-divider>
         <mat-card-content>
-          <mat-accordion class="example-headers-align" multi>
+          <mat-accordion>
             <mat-expansion-panel>
-              <mat-expansion-panel-header class="expancion-header mat-expansion-panel-header ng-tns-c48-104 ng-trigger ng-trigger-expansionHeight ng-star-inserted">
+              <mat-expansion-panel-header
+                class="expancion-header mat-expansion-panel-header ng-tns-c48-104 ng-trigger ng-trigger-expansionHeight ng-star-inserted">
                 <mat-panel-title>
                   Datos de residencia
+                  
                 </mat-panel-title>
               </mat-expansion-panel-header>
               <div class="row">
@@ -200,37 +201,19 @@
                   <div class="row">
                     <div class="col l3 m6 s6">
                       <mat-form-field>
-                        <mat-label>País</mat-label>
-                        <mat-select formControlName="pais" required>
-                          <mat-option value="S">SOLTERO</mat-option>
-                          <mat-option value="C">CASADO</mat-option>
-                          <mat-option value="V">VIUDO</mat-option>
-                          <mat-option value="D">DIVORCIADO</mat-option>
-                          <mat-option value="CO">CONCUBINO</mat-option>
-                        </mat-select>
-                      </mat-form-field>
-                    </div>
-                    <div class="col l3 m6 s6">
-                      <mat-form-field>
                         <mat-label>Estado</mat-label>
-                        <mat-select formControlName="estado" required>
-                          <mat-option value="S">SOLTERO</mat-option>
-                          <mat-option value="C">CASADO</mat-option>
-                          <mat-option value="V">VIUDO</mat-option>
-                          <mat-option value="D">DIVORCIADO</mat-option>
-                          <mat-option value="CO">CONCUBINO</mat-option>
+                        <mat-select  [(ngModel)]="estadoSelected" (ngModelChange)="onEstadoselected($event)" (ngModelChange)="onMunicipioselected($event)" formControlName="estado" required>
+                          <mat-option *ngFor="let estado of listEstados" [value]="estado.codestado">
+                            {{estado.nombestado}}</mat-option>
                         </mat-select>
                       </mat-form-field>
                     </div>
                     <div class="col l3 m6 s6">
                       <mat-form-field>
                         <mat-label>Municipio</mat-label>
-                        <mat-select formControlName="municipio" required>
-                          <mat-option value="S">SOLTERO</mat-option>
-                          <mat-option value="C">CASADO</mat-option>
-                          <mat-option value="V">VIUDO</mat-option>
-                          <mat-option value="D">DIVORCIADO</mat-option>
-                          <mat-option value="CO">CONCUBINO</mat-option>
+                        <mat-select [(ngModel)]="municipioSelected" (ngModelChange)="onMunicipioselected($event)" formControlName="municipio" required>
+                          <mat-option *ngFor="let municipio of listMunicipios" [value]="municipio.codmuni">
+                            {{municipio.nombmuni}}</mat-option>
                         </mat-select>
                       </mat-form-field>
                     </div>
@@ -238,11 +221,8 @@
                       <mat-form-field>
                         <mat-label>Parroquia</mat-label>
                         <mat-select formControlName="parroquia" required>
-                          <mat-option value="S">SOLTERO</mat-option>
-                          <mat-option value="C">CASADO</mat-option>
-                          <mat-option value="V">VIUDO</mat-option>
-                          <mat-option value="D">DIVORCIADO</mat-option>
-                          <mat-option value="CO">CONCUBINO</mat-option>
+                          <mat-option *ngFor="let parroquia of listParroquias" [value]="parroquia.codparroq">
+                            {{parroquia.nombparroq}}</mat-option>
                         </mat-select>
                       </mat-form-field>
                     </div>
@@ -256,9 +236,9 @@
                     <div class="col-xs-5">
                       <mat-form-field>
                         <mat-label>Tipo de vía:</mat-label>
-                        <mat-select required>
-                          <mat-option value="F">AVENIDA</mat-option>
-                          <mat-option value="M">CALLE</mat-option>
+                        <mat-select formControlName="tipovia" required>
+                          <mat-option [value]="item.codelemento"
+                            *ngFor="let item of tipovia">{{item.descripcion}}</mat-option>
                         </mat-select>
                       </mat-form-field>
                     </div>
@@ -270,7 +250,7 @@
                     <div class="col l4 m6 s6">
                       <mat-form-field>
                         <mat-label>Nombre vía:</mat-label>
-                        <input  matInput  required >
+                        <input style='text-transform:uppercase' formControlName="nombrevia" matInput required>
                       </mat-form-field>
                     </div>
                   </div>
@@ -283,9 +263,9 @@
                     <div class="col-xs-5">
                       <mat-form-field>
                         <mat-label>Tipo de núcleo:</mat-label>
-                        <mat-select required>
-                          <mat-option value="F">URBANZACIÓN</mat-option>
-                          <mat-option value="M">BARRIO</mat-option>
+                        <mat-select formControlName="tiponucleo" required>
+                          <mat-option [value]="item.codelemento"
+                            *ngFor="let item of tiponucleo">{{item.descripcion}}</mat-option>
                         </mat-select>
                       </mat-form-field>
                     </div>
@@ -297,7 +277,7 @@
                     <div class="col l4 m6 s6">
                       <mat-form-field>
                         <mat-label>Nombre del núcleo:</mat-label>
-                        <input  matInput  required >
+                        <input style='text-transform:uppercase' formControlName="nombrenucleo" matInput required>
                       </mat-form-field>
                     </div>
                   </div>
@@ -310,21 +290,21 @@
                     <div class="col-xs-5">
                       <mat-form-field>
                         <mat-label>Tipo de contrucción:</mat-label>
-                        <mat-select required>
-                          <mat-option value="F">EDIFICIO</mat-option>
-                          <mat-option value="M">CASA</mat-option>
+                        <mat-select formControlName="tipoconstruccion" required>
+                          <mat-option [value]="item.codelemento"
+                            *ngFor="let item of tipoconstruccion">{{item.descripcion}}</mat-option>
                         </mat-select>
                       </mat-form-field>
                     </div>
                   </div>
                 </div>
                 <div class="col l12 m12 s12">
-                  <label class="label-custom">Nombre de la contrucción:</label>
+                  <label class="label-custom">Nombre de la construcción:</label>
                   <div class="row">
                     <div class="col l4 m6 s6">
                       <mat-form-field>
-                        <mat-label>Nombre de la contrucción:</mat-label>
-                        <input  matInput  required >
+                        <mat-label>Nombre de la construcción:</mat-label>
+                        <input style='text-transform:uppercase' formControlName="nombreconstruccion" matInput required>
                       </mat-form-field>
                     </div>
                   </div>
@@ -337,31 +317,227 @@
                     <div class="col-xs-5">
                       <mat-form-field>
                         <mat-label>Piso, Apto, Nivel, etc:</mat-label>
-                         <input  matInput  required >
+                        <input style='text-transform:uppercase' matInput>
                       </mat-form-field>
                     </div>
                   </div>
                 </div>
-                <div class="col l12 m12 s12">
-                  <label class="label-custom">Zona Postal:</label>
-                  <div class="row">
-                    <div class="col l4 m6 s6">
+                
+              </div>
+
+            </mat-expansion-panel>
+
+
+            <mat-expansion-panel>
+              <mat-expansion-panel-header
+                class="expancion-header mat-expansion-panel-header ng-tns-c48-104 ng-trigger ng-trigger-expansionHeight ng-star-inserted">
+                <mat-panel-title>
+                  Datos de contacto
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <div class="row">
+                <div class="row">
+                  <div class="col l12 m12 s12"><label>Teléfono móvil:</label>
+                    <div class="row mar-b-0">
+                      <div class="col l6 m6 s12">
+                        <mat-form-field>
+                          <mat-label>Operadora:</mat-label>
+                        <mat-select  formControlName="opermovil" required>
+                          <mat-option [value]="operm.codelemento"
+                            *ngFor="let operm of opermovil">{{operm.codelemento}}</mat-option>
+                        </mat-select>
+                        </mat-form-field>
+                      </div>
+                      <div class="col l6 m6 s12">
+                        <mat-form-field>
+                          <mat-label>Número:</mat-label>
+                          <input type="number" maxlength="7" 
+                          oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength); this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" 
+                          formControlName="nummovil" matInput id="snombre" required>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col l12 m12 s12"><label>Teléfono residencial:</label>
+                    <div class="row mar-b-0">
+                      <div class="col l6 m6 s12"><mat-form-field>
+                          <mat-label>Operadora</mat-label>
+                          <mat-select>
+                            <mat-option [value]="operr.codelemento"
+                              *ngFor="let operr of operres">{{operr.codelemento}}</mat-option>
+                          </mat-select>
+                        </mat-form-field></div>
+                      <div class="col l6 m6 s12"><mat-form-field>
+                          <mat-label>Número</mat-label>
+                          <input type="number" maxlength="7" 
+                          oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength); this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" 
+                          matInput id="sapellido">
+                        </mat-form-field></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col l12 m12 s12"><label>Correo electrónico:</label>
+                    <div class="row mar-b-0">
+                      <div class="col l6 m6 s12">
+                        <mat-form-field>
+                          <mat-label>Principal:</mat-label>
+                          <input style='text-transform:lowercase' pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" formControlName="emailppal" matInput  required>
+                        </mat-form-field>
+                      </div>
+                      <div class="col l6 m6 s12">
+                        <mat-form-field>
+                          <mat-label>Alternativo:</mat-label>
+                          <input style='text-transform:lowercase' pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"  matInput id="snombre">
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- <div *ngFor="let data of petro" > El documento Constancia de estudios tiene un valor de{{data * 0.08615936 | number: '.1-2'}} Bs.</div> -->
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+<br>
+          <div align="right">
+          <button matStepperPrevious color="accent" mat-mini-fab="" matstepperprevious="" type="button"
+          class="mat-mini-fab mat-accent">
+          <span class="mat-button-wrapper"><mat-icon aria-hidden="true">arrow_back</mat-icon></span>
+        </button>
+        <button matStepperNext color="accent" mat-mini-fab="" matstepperprevious="" type="button"
+          class="mat-mini-fab mat-accent"  [disabled]="!secondFormGroup.valid">
+          <span class="mat-button-wrapper"><mat-icon aria-hidden="true">arrow_forward</mat-icon></span>
+        </button>
+        </div>
+        </mat-card-content>
+      </mat-card>
+    </form>
+  </mat-step>
+
+  <!-- PASO 2 DATOS DE RESIDENCIA DEL ESTUDIANTE  -->
+  <mat-step [stepControl]="thirdFormGroup" errorMessage="Datos incompletos">
+    <form [formGroup]="secondFormGroup">
+      <ng-template matStepLabel>Académicos</ng-template>
+      <mat-card class="mat-card">
+        <mat-card-title-group class="mat-card-title-group">
+          <mat-card-title class="mat-card-title">Datos académicos</mat-card-title>
+          <mat-card-subtitle class="mat-card-subtitle">Ingrese la información académica</mat-card-subtitle>
+          <!-- <mat-card-subtitle class="mat-card-subtitle">Otro subtitulo de prueba</mat-card-subtitle> -->
+          <div class="button-container-top">
+            <button matStepperPrevious color="accent" mat-mini-fab="" matstepperprevious="" type="button"
+              class="mat-mini-fab mat-accent">
+              <span class="mat-button-wrapper"><mat-icon aria-hidden="true">arrow_back</mat-icon></span>
+            </button>
+            <button matStepperNext color="accent" mat-mini-fab="" matstepperprevious="" type="button"
+              class="mat-mini-fab mat-accent">
+              <span class="mat-button-wrapper"><mat-icon aria-hidden="true">arrow_forward</mat-icon></span>
+            </button>
+          </div>
+        </mat-card-title-group>
+        <mat-divider class="mat-divider mat-divider-horizontal" role="separator"
+          aria-orientation="horizontal"></mat-divider>
+        <div class="example-action-buttons">
+
+        </div>
+
+        <mat-card-content>
+          <mat-accordion class="example-headers-align" multi>
+            <mat-expansion-panel>
+              <mat-expansion-panel-header
+                class="expancion-header mat-expansion-panel-header ng-tns-c48-104 ng-trigger ng-trigger-expansionHeight ng-star-inserted">
+                <mat-panel-title>
+                  Datos académicos de Educación Secundaria
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <div class="row">
+                <div class="col l6 m12 s12"><label>Completa la siguiente información:</label>
+                  <div class="row mar-b-0">
+                    <div class="col l3 m6 s6">
                       <mat-form-field>
-                        <mat-label>Seleccione zona postal:</mat-label>
-                        <input  matInput  required >
+                        <mat-label>Título:</mat-label>
+                        <mat-select  required>
+                          <mat-option value="S">CIENCIAS</mat-option>
+                          <mat-option value="C">HUMANIDADES</mat-option>
+                          <mat-option value="V">TÉCNICO MEDIO</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                    <div class="col l3 m6 s6">
+                      <mat-form-field>
+                        <mat-label>Año de graduación:</mat-label>
+                        <input type="number" matInput required>
+                      </mat-form-field>
+                    </div>
+                    <div class="col l3 m6 s6">
+                      <mat-form-field>
+                        <mat-label>N° SNI/RUSNIES</mat-label>
+                        <input type="number" matInput required>
+                      </mat-form-field>
+                    </div>
+                    <div class="col l3 m6 s6">
+                      <mat-form-field>
+                        <mat-label>Índice</mat-label>
+                        <input type="number" matInput max="20.00" min="10.00" required>
                       </mat-form-field>
                     </div>
                   </div>
                 </div>
               </div>
-          
+              <div class="row">
+                <div class="col l6 m12 s12"><label>Datos del plantel de estudios:</label>
+                  <div class="row mar-b-0">
+                    <div class="col l6 m6 s6">
+                      <mat-form-field>
+                        <mat-label>Estado</mat-label>
+                        <mat-select  required>
+                          <mat-option value="S">CIENCIAS</mat-option>
+                          <mat-option value="C">HUMANIDADES</mat-option>
+                          <mat-option value="V">TÉCNICO MEDIO</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                    <div class="col l6 m6 s6">
+                      <mat-form-field>
+                        <mat-label>Municipio</mat-label>
+                        <mat-select  required>
+                          <mat-option value="S">CIENCIAS</mat-option>
+                          <mat-option value="C">HUMANIDADES</mat-option>
+                          <mat-option value="V">TÉCNICO MEDIO</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                    <div class="col l6 m6 s6">
+                      <mat-form-field>
+                        <mat-label>Parroquia</mat-label>
+                        <mat-select  required>
+                          <mat-option value="S">CIENCIAS</mat-option>
+                          <mat-option value="C">HUMANIDADES</mat-option>
+                          <mat-option value="V">TÉCNICO MEDIO</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                    <div class="col l6 m6 s6">
+                      <mat-form-field>
+                        <mat-label>Nombre del plantel</mat-label>
+                        <mat-select  required>
+                          <mat-option value="S">CIENCIAS</mat-option>
+                          <mat-option value="C">HUMANIDADES</mat-option>
+                          <mat-option value="V">TÉCNICO MEDIO</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
             </mat-expansion-panel>
-  
-          
+
+
             <mat-expansion-panel>
-              <mat-expansion-panel-header class="expancion-header mat-expansion-panel-header ng-tns-c48-104 ng-trigger ng-trigger-expansionHeight ng-star-inserted">
+              <mat-expansion-panel-header
+                class="expancion-header mat-expansion-panel-header ng-tns-c48-104 ng-trigger ng-trigger-expansionHeight ng-star-inserted">
                 <mat-panel-title>
-                  Datos de contacto
+                  Datos académicos de Educación Superior
                 </mat-panel-title>
               </mat-expansion-panel-header>
               <div class="row">
@@ -370,17 +546,13 @@
                     <div class="col l6 m6 s6">
                       <mat-form-field>
                         <mat-label>IES</mat-label>
-                        <mat-select formControlName="pais">
-                          <mat-option value="S">IUGT</mat-option>
-                          <mat-option value="C">UCV</mat-option>
-                          <mat-option value="V">UNEXPO</mat-option>
-                        </mat-select>
+                        <input type="string" matInput> 
                       </mat-form-field>
                     </div>
                     <div class="col l6 m6 s6">
                       <mat-form-field>
                         <mat-label>Título obtenido</mat-label>
-                        <mat-select formControlName="pais">
+                        <mat-select >
                           <mat-option value="S">TSU en Informática</mat-option>
                           <mat-option value="C">ING en Electricidad</mat-option>
                           <mat-option value="V">TSU en Administración</mat-option>
@@ -390,7 +562,7 @@
                     <div class="col l6 m6 s6">
                       <mat-form-field>
                         <mat-label>Año de graduación:</mat-label>
-                        <input  type="number" matInput >
+                        <input type="number" matInput>
                       </mat-form-field>
                     </div>
                   </div>
@@ -398,193 +570,34 @@
               </div>
             </mat-expansion-panel>
           </mat-accordion>
-
-
         </mat-card-content>
       </mat-card>
     </form>
   </mat-step>
 
-  <!-- PASO 2 DATOS DE RESIDENCIA DEL ESTUDIANTE  -->  
-  <mat-step [stepControl]="secondFormGroup" errorMessage="Datos incompletos">
-    <form [formGroup]="secondFormGroup">
-      <ng-template matStepLabel>Académicos</ng-template>
-      <mat-card class="mat-card">
-        <mat-card-title-group class="mat-card-title-group">
-          <mat-card-title class="mat-card-title">Datos académicos</mat-card-title>
-          <mat-card-subtitle class="mat-card-subtitle">Ingrese la información académica</mat-card-subtitle> 
-          <!-- <mat-card-subtitle class="mat-card-subtitle">Otro subtitulo de prueba</mat-card-subtitle> -->
-          <div  class="button-container-top">
-            <button  matStepperPrevious color="accent" mat-mini-fab="" matstepperprevious="" type="button" class="mat-mini-fab mat-accent">
-              <span class="mat-button-wrapper"><mat-icon aria-hidden="true">arrow_back</mat-icon></span>
-            </button>
-            <button  matStepperNext color="accent" mat-mini-fab="" matstepperprevious="" type="button" class="mat-mini-fab mat-accent">
-              <span class="mat-button-wrapper"><mat-icon aria-hidden="true">arrow_forward</mat-icon></span>
-            </button>
-          </div>
-        </mat-card-title-group>
-        <mat-divider class="mat-divider mat-divider-horizontal" role="separator"  aria-orientation="horizontal"></mat-divider>
-        <div class="example-action-buttons">
 
-        </div>
-
-        <mat-card-content>
-        <mat-accordion class="example-headers-align" multi>
-          <mat-expansion-panel>
-            <mat-expansion-panel-header class="expancion-header mat-expansion-panel-header ng-tns-c48-104 ng-trigger ng-trigger-expansionHeight ng-star-inserted">
-              <mat-panel-title>
-                Datos académicos de Educación Secundaria
-              </mat-panel-title>
-            </mat-expansion-panel-header>
-            <div class="row">
-              <div class="col l6 m12 s12"><label>Completa la siguiente información:</label>
-                <div class="row mar-b-0">
-                  <div class="col l3 m6 s6">
-                    <mat-form-field>
-                      <mat-label>Bachiller en:</mat-label>
-                      <mat-select formControlName="pais" required>
-                        <mat-option value="S">CIENCIAS</mat-option>
-                        <mat-option value="C">HUMANIDADES</mat-option>
-                        <mat-option value="V">TÉCNICO MEDIO</mat-option>
-                      </mat-select>
-                    </mat-form-field>
-                  </div>
-                  <div class="col l3 m6 s6">
-                    <mat-form-field>
-                      <mat-label>Año de graduación:</mat-label>
-                      <input  type="number" matInput  required >
-                    </mat-form-field>
-                  </div>
-                  <div class="col l3 m6 s6">
-                    <mat-form-field>
-                      <mat-label>N° SNI/RUSNIES</mat-label>
-                      <input  type="number" matInput  required >
-                    </mat-form-field>
-                  </div>
-                  <div class="col l3 m6 s6">
-                    <mat-form-field>
-                      <mat-label>Índice</mat-label>
-                      <input  type="number" matInput max="20.00"  min="10.00" required >
-                    </mat-form-field>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col l6 m12 s12"><label>Datos del plantel de estudios:</label>
-                <div class="row mar-b-0">
-                  <div class="col l6 m6 s6">
-                    <mat-form-field>
-                      <mat-label>Estado</mat-label>
-                      <mat-select formControlName="pais" required>
-                        <mat-option value="S">CIENCIAS</mat-option>
-                        <mat-option value="C">HUMANIDADES</mat-option>
-                        <mat-option value="V">TÉCNICO MEDIO</mat-option>
-                      </mat-select>
-                    </mat-form-field>
-                  </div>
-                  <div class="col l6 m6 s6">
-                    <mat-form-field>
-                      <mat-label>Municipio</mat-label>
-                      <mat-select formControlName="pais" required>
-                        <mat-option value="S">CIENCIAS</mat-option>
-                        <mat-option value="C">HUMANIDADES</mat-option>
-                        <mat-option value="V">TÉCNICO MEDIO</mat-option>
-                      </mat-select>
-                    </mat-form-field>
-                  </div>
-                  <div class="col l6 m6 s6">
-                    <mat-form-field>
-                      <mat-label>Parroquia</mat-label>
-                      <mat-select formControlName="pais" required>
-                        <mat-option value="S">CIENCIAS</mat-option>
-                        <mat-option value="C">HUMANIDADES</mat-option>
-                        <mat-option value="V">TÉCNICO MEDIO</mat-option>
-                      </mat-select>
-                    </mat-form-field>
-                  </div>
-                  <div class="col l6 m6 s6">
-                    <mat-form-field>
-                      <mat-label>Nombre del plantel</mat-label>
-                      <mat-select formControlName="pais" required>
-                        <mat-option value="S">CIENCIAS</mat-option>
-                        <mat-option value="C">HUMANIDADES</mat-option>
-                        <mat-option value="V">TÉCNICO MEDIO</mat-option>
-                      </mat-select>
-                    </mat-form-field>
-                  </div>
-                </div>
-              </div>
-            </div>
-        
-          </mat-expansion-panel>
-
-        
-          <mat-expansion-panel>
-            <mat-expansion-panel-header class="expancion-header mat-expansion-panel-header ng-tns-c48-104 ng-trigger ng-trigger-expansionHeight ng-star-inserted">
-              <mat-panel-title>
-                Datos académicos de Educación Superior
-              </mat-panel-title>
-            </mat-expansion-panel-header>
-            <div class="row">
-              <div class="col l6 m12 s12"><label>Completa la siguiente información: (en caso de que aplique)</label>
-                <div class="row mar-b-0">
-                  <div class="col l6 m6 s6">
-                    <mat-form-field>
-                      <mat-label>IES</mat-label>
-                      <mat-select formControlName="pais">
-                        <mat-option value="S">IUGT</mat-option>
-                        <mat-option value="C">UCV</mat-option>
-                        <mat-option value="V">UNEXPO</mat-option>
-                      </mat-select>
-                    </mat-form-field>
-                  </div>
-                  <div class="col l6 m6 s6">
-                    <mat-form-field>
-                      <mat-label>Título obtenido</mat-label>
-                      <mat-select formControlName="pais">
-                        <mat-option value="S">TSU en Informática</mat-option>
-                        <mat-option value="C">ING en Electricidad</mat-option>
-                        <mat-option value="V">TSU en Administración</mat-option>
-                      </mat-select>
-                    </mat-form-field>
-                  </div>
-                  <div class="col l6 m6 s6">
-                    <mat-form-field>
-                      <mat-label>Año de graduación:</mat-label>
-                      <input  type="number" matInput >
-                    </mat-form-field>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </mat-expansion-panel>
-        </mat-accordion>
-      </mat-card-content>
-      </mat-card>
-    </form>
-  </mat-step>
-
-
-  <mat-step [stepControl]="secondFormGroup" errorMessage="Datos incompletos">
+  <mat-step [stepControl]="fourthFormGroup" errorMessage="Datos incompletos">
     <form [formGroup]="secondFormGroup">
       <ng-template matStepLabel>UNETRANS</ng-template>
       <mat-card class="mat-card">
         <mat-card-title-group class="mat-card-title-group">
           <mat-card-title class="mat-card-title">Datos académicos de la UNETRANS</mat-card-title>
-          <mat-card-subtitle class="mat-card-subtitle">Ingrese los datos que corresponden a la carrera a cursar en UNETRANS</mat-card-subtitle> 
+          <mat-card-subtitle class="mat-card-subtitle">Ingrese los datos que corresponden a la carrera a cursar en
+            UNETRANS</mat-card-subtitle>
           <!-- <mat-card-subtitle class="mat-card-subtitle">Otro subtitulo de prueba</mat-card-subtitle> -->
-          <div  class="button-container-top">
-            <button  matStepperPrevious color="accent" mat-mini-fab="" matstepperprevious="" type="button" class="mat-mini-fab mat-accent">
+          <div class="button-container-top">
+            <button matStepperPrevious color="accent" mat-mini-fab="" matstepperprevious="" type="button"
+              class="mat-mini-fab mat-accent">
               <span class="mat-button-wrapper"><mat-icon aria-hidden="true">arrow_back</mat-icon></span>
             </button>
-            <button  matStepperNext color="accent" mat-mini-fab="" matstepperprevious="" type="button" class="mat-mini-fab mat-accent">
+            <button matStepperNext color="accent" mat-mini-fab="" matstepperprevious="" type="button"
+              class="mat-mini-fab mat-accent">
               <span class="mat-button-wrapper"><mat-icon aria-hidden="true">arrow_forward</mat-icon></span>
             </button>
           </div>
         </mat-card-title-group>
         <mat-divider class="mat-divider mat-divider-horizontal" role="separator"
-          aria-orientation="horizontal"></mat-divider> 
+          aria-orientation="horizontal"></mat-divider>
         <mat-card-content>
 
           <div class="row">
@@ -593,7 +606,7 @@
                 <div class="col l6 m6 s12">
                   <mat-form-field>
                     <mat-label>Sede:</mat-label>
-                    <mat-select formControlName="pais" required>
+                    <mat-select  required>
                       <mat-option value="S">IUGT</mat-option>
                       <mat-option value="C">UCV</mat-option>
                       <mat-option value="V">UNEXPO</mat-option>
@@ -607,10 +620,9 @@
                 <div class="col l6 m6 s12">
                   <mat-form-field>
                     <mat-label>Carrera:</mat-label>
-                    <mat-select formControlName="pais" required>
-                      <mat-option value="S">IUGT</mat-option>
-                      <mat-option value="C">UCV</mat-option>
-                      <mat-option value="V">UNEXPO</mat-option>
+                    <mat-select  required>
+                      <mat-option [value]="item.codelemento"
+                      *ngFor="let item of carreras">{{item.descripcion}}</mat-option>
                     </mat-select>
                   </mat-form-field>
                 </div>
@@ -623,7 +635,7 @@
                 <div class="col l6 m6 s12">
                   <mat-form-field>
                     <mat-label>Turno:</mat-label>
-                    <mat-select formControlName="pais" required>
+                    <mat-select  required>
                       <mat-option value="S">IUGT</mat-option>
                       <mat-option value="C">UCV</mat-option>
                       <mat-option value="V">UNEXPO</mat-option>
@@ -637,7 +649,7 @@
                 <div class="col l6 m6 s12">
                   <mat-form-field>
                     <mat-label>Modalidad de ingreso:</mat-label>
-                    <mat-select formControlName="pais" required>
+                    <mat-select  required>
                       <mat-option value="S">IUGT</mat-option>
                       <mat-option value="C">UCV</mat-option>
                       <mat-option value="V">UNEXPO</mat-option>
@@ -651,12 +663,12 @@
       </mat-card>
     </form>
   </mat-step>
-  <mat-step [stepControl]="secondFormGroup" errorMessage="Datos incompletos">
-    <form [formGroup]="secondFormGroup">
+  <mat-step>
+    <form >
       <ng-template matStepLabel>Verificación</ng-template>
       <mat-form-field appearance="fill">
         <mat-label>Address</mat-label>
-        <input matInput placeholder="Ex. 1 Main St, New York, NY"  required>
+        <input matInput placeholder="Ex. 1 Main St, New York, NY" required>
       </mat-form-field>
       <div>
         <p>Go to a different step to see the error state</p>
@@ -666,3 +678,4 @@
     </form>
   </mat-step>
 </mat-stepper>
+</div>
