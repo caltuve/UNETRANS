@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
-import { EstadoI, MunicipioI } from '../estudiantes/crear-nuevo/model.interface';
+import { EstadoI, MunicipioI } from './crear-nuevo/model.interface';
 import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { Observable } from "rxjs";
@@ -83,6 +83,22 @@ getMunicipioOfSelectedEstado(selectedEstadoId: string): Observable<any>{
 
 getParroquiaOfSelectedMunicipio(selectedMunicipioId: string): Observable<any>{
   return this.http.get(`${this.url}parroquias.php?codmuni=${selectedMunicipioId}`)
+}
+
+getBachiller() {
+  return this.http.get(`${this.url}tipo_bachiller.php`);
+}
+
+getModIngreso() {
+  return this.http.get(`${this.url}modalidad_ingreso.php`);
+}
+
+getTurnos() {
+  return this.http.get(`${this.url}turnos.php`);
+}
+
+getAspirantes() {
+  return this.http.get(`${this.url}aspirante_opsu.php`);
 }
 
 }

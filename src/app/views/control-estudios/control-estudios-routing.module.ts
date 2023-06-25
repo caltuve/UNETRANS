@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import {CrearNuevoComponent } from './crear-nuevo/crear-nuevo.component';
+import { AspiranteOpsuComponent } from './aspirante-opsu/aspirante-opsu.component';
+import { CrearNuevoComponent } from './crear-nuevo/crear-nuevo.component';
 import { ConsultarDatosComponent } from './consultar-datos/consultar-datos.component';
 import { ExpedienteDigitalComponent } from './expediente-digital/expediente-digital.component';
 
@@ -8,7 +9,7 @@ const routes: Routes = [
   {
     path: '',
     data: {
-      title: 'Estudiantes'
+      title: 'Control de Estudios'
     },
     children: [
       {
@@ -17,10 +18,17 @@ const routes: Routes = [
         redirectTo: 'consultar-datos'
       },
       {
+        path: 'aspirante-opsu',
+        component: AspiranteOpsuComponent,
+        data: {
+          title: 'Aspirante OPSU'
+        }
+      },
+      {
         path: 'crear-nuevo',
         component: CrearNuevoComponent,
         data: {
-          title: 'Crear nuevo estudiante555'
+          title: 'Crear nuevo estudiante'
         }
       },
       {
@@ -45,4 +53,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class EstudiantesRoutingModule { }
+export class ControlEstudiosRoutingModule { }

@@ -58,6 +58,7 @@ import {
   cilLayers,
   cilList,
   cilListNumbered,
+  cilListRich,
   cilLocationPin,
   cilLockLocked,
   cilMagnifyingGlass,
@@ -97,7 +98,11 @@ import {
   cilUserFollow,
   cilUserUnfollow,
   cilFolderOpen,
-  cilZoom
+  cilZoom,
+  cilUserPlus,
+  cilCloudUpload,
+  cilCheckCircle,
+  cilClock
 } from '@coreui/icons';
 
 export const iconSubset = {
@@ -160,6 +165,7 @@ export const iconSubset = {
   cilLayers,
   cilList,
   cilListNumbered,
+  cilListRich,
   cilLocationPin,
   cilLockLocked,
   cilMagnifyingGlass,
@@ -199,7 +205,11 @@ export const iconSubset = {
   cilUserFollow,
   cilUserUnfollow,
   cilFolderOpen,
-  cilZoom
+  cilZoom,
+  cilUserPlus,
+  cilCloudUpload,
+  cilCheckCircle,
+  cilClock
 };
 
 export enum IconSubset {
@@ -262,6 +272,7 @@ export enum IconSubset {
   cilLayers = 'cilLayers',
   cilList = 'cilList',
   cilListNumbered = 'cilListNumbered',
+  cilListRich='cilListRich',
   cilLocationPin = 'cilLocationPin',
   cilLockLocked = 'cilLockLocked',
   cilMagnifyingGlass = 'cilMagnifyingGlass',
@@ -301,5 +312,9 @@ export enum IconSubset {
   cilUserFollow = 'cilUserFollow',
   cilUserUnfollow = 'cilUserUnfollow',
   cilFolderOpen = 'cilFolderOpen',
-  cilZoom = 'cilZoom'
+  cilZoom = 'cilZoom',
+  cilUserPlus = 'cilUserPlus',
+  cilCloudUpload ='cilCloudUpload',
+  cilCheckCircle= 'cilCheckCircle',
+  cilClock ='cilClock'
 }

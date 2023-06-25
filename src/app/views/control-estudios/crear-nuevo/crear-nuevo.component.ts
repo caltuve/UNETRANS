@@ -29,6 +29,7 @@ export class CrearNuevoComponent  implements OnInit {
   condicion: any='';
   nacs: any []= [];
   petro: any []= [];
+  persona: any []= [];
   genero: any []= [];
   edocivil: any []= [];
   gruposan: any []= [];
@@ -42,7 +43,10 @@ export class CrearNuevoComponent  implements OnInit {
   carreras: any []= [];
   opermovil: any []= [];
   operres: any []= [];
-  pet!: number;
+  bachiller: any []= [];
+  moding: any []= [];
+  turnos: any []= [];
+  sede: string ='001';
 
   selectedEstadoId: string= '';
   selectedMunicipioId: string= '';
@@ -86,11 +90,14 @@ ngOnInit() {
     this.findCarreras();
     this.findOperMovil();
     this.findOperRes();
-    this.loadEstados();
-    this.loadPetro();
+    this.findEstados();
+    this.findPetro();
+    this.findBachiller();
+    this.findModIngreso();
+    this.findTurnos();
 }
 
-loadPetro(){
+findPetro(){
   this.controlestudiosService.obtenerPetro().subscribe(
     (result: any) => {
         this.petro = Object.values(result.data.PTR);
@@ -98,6 +105,7 @@ loadPetro(){
   }
   );
 }
+
 
 findNac(){
   this.controlestudiosService.getNac().subscribe(
@@ -204,7 +212,7 @@ findOperRes(){
   );
 }
 
-private loadEstados(){
+private findEstados(){
   this.controlestudiosService.getEstados().subscribe(data=>{
     this.listEstados = data
   })
@@ -224,6 +232,30 @@ onMunicipioselected(selectedMunicipioId: any){
       this.listParroquias = data
     }
   )
+}
+
+findBachiller(){
+  this.controlestudiosService.getBachiller().subscribe(
+    (result: any) => {
+        this.bachiller = result;
+  }
+  );
+}
+
+findModIngreso(){
+  this.controlestudiosService.getModIngreso().subscribe(
+    (result: any) => {
+        this.moding = result;
+  }
+  );
+}
+
+findTurnos(){
+  this.controlestudiosService.getTurnos().subscribe(
+    (result: any) => {
+        this.turnos = result;
+  }
+  );
 }
 
 firstFormGroup = this._formBuilder.group({
@@ -258,11 +290,18 @@ secondFormGroup = this._formBuilder.group({
 });
 
 thirdFormGroup = this._formBuilder.group({
- 
+  tbachiller: ['', Validators.required],
+  estadoplantel: ['', Validators.required],
+  municipioplantel: ['', Validators.required],
+  parroquiaplantel: ['', Validators.required],
  
 });
 
 fourthFormGroup = this._formBuilder.group({
+ turno: ['', Validators.required],
+ mingreso: ['', Validators.required],
+ pnf: ['', Validators.required],
+ trayecto: ['', Validators.required],
  
  
 });

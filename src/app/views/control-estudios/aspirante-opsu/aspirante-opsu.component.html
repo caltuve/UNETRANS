@@ -1,0 +1,172 @@
+<c-col xs="12">
+    <c-card class="mb-4">
+      <c-card-header>
+        <strong>Aspirantes OPSU</strong> &nbsp; <small>Módulo para gestión de aspirantes</small>  &nbsp; 
+        <button [cModalToggle]="addAspiranteOpsuIndividual.id" cButton color="info" size="sm"> <svg cIcon class="me-2" name="cil-user-plus"></svg>Añadir aspirante</button> &nbsp; 
+        <button [cModalToggle]="addAspirantesOpsuMasivo.id" cButton color="warning" size="sm"> <svg cIcon class="me-2" name="cil-cloud-upload"></svg>Subir archivo masivo</button>
+      </c-card-header>
+      <c-card-body>
+          Listado de aspirantes generado por OPSU al cierre del proceso del SNI.
+          <table mat-table [dataSource]="dataSource" [hover]="true" cTable>
+            <tr>
+              <ng-container matColumnDef="id_estudiante">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Cédula</th>
+                <td mat-cell *matCellDef="let row">{{row.id_estudiante}} </td>
+              </ng-container>
+              <ng-container matColumnDef="nombre_completo">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Apellidos y nombres</th>
+                <td mat-cell *matCellDef="let row">{{row.nombre_completo}} </td>
+              </ng-container>
+              <ng-container matColumnDef="pnf">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> PNF</th>
+                <td mat-cell *matCellDef="let row">{{row.pnf}} </td>
+              </ng-container>
+              <ng-container matColumnDef="confirma">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> ¿Preinscrito?</th>
+                <td mat-cell *matCellDef="let row">
+                  <div class="container" align="center">
+                    <svg *ngIf="row.confirma == '1'" cIcon class="me-2" name="cil-check-circle" size="xl" style="color: #2EB85C;"></svg>
+                    <svg *ngIf="row.confirma == '0'" cIcon class="me-2" name="cil-clock" size="xl" style="color: #f9b115;"></svg>
+                  </div>
+                </td>
+              </ng-container>
+
+              <!-- <th scope="col">Cédula</th>
+              <th scope="col">Nombres y apellidos</th>
+              <th scope="col">PNF asignado</th>
+              <th scope="col">Código OPSU/SNI</th>
+              <th scope="col">¿Preinscrito?</th> -->
+            </tr>
+            <!-- <tr>
+              <th scope="row">1</th>
+              <td>V-21134278</td>
+              <td>CHRISTIAN ALEXANDER ALTUVE MERCHAN</td>
+              <td>PNF EN INFORMATICA</td>
+              <td>20230607-02-21134278</td>
+              <td>
+                <div class="container" align="center">
+                    <svg *ngIf="row.ESTATUS == 'ACTIVO'" cIcon class="me-2" name="cil-check-circle" size="xl" style="color: #2EB85C;"></svg>
+                  </div>
+              </td>
+            </tr>
+            <tr>
+                <th scope="row">2</th>
+                <td>V-20747551</td>
+                <td>GÉNESIS YUDEIXY PÉREZ MENDOZA</td>
+                <td>PNF EN INGENIERÍA DE MATERIALES INDUSTRIALES MENCIÓN METALURGIA</td>
+                <td>20230607-05-20747551</td>
+                <td>
+                  <div class="container" align="center">
+                      <svg cIcon class="me-2" name="cil-clock" size="xl" style="color: #f9b115;"></svg>
+                    </div>
+                </td>
+              </tr> -->
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+          <mat-paginator [pageSizeOptions]="[5,10, 25, 50, 100]"></mat-paginator>
+      </c-card-body>
+    </c-card>
+  </c-col>
+
+  <c-modal #addAspiranteOpsuIndividual backdrop="static" id="addAspiranteOpsuIndividual" size="lg">
+    <c-modal-header>
+      <h1 cModalTitle>Añadir aspirante OPSU de forma individual</h1>
+    </c-modal-header>
+    <c-modal-body>
+      <form [formGroup]="FormGroupAddAspiranteOpsu">
+      <div class="row">
+        <div class="col l9 m9 s9">
+          <label class="label-custom">Documento de identidad:</label>
+          <div class="row">
+            <div class="col l5 s12">
+              <mat-form-field >
+                <mat-label>Tipo de documento</mat-label>
+                <mat-select formControlName="nac" required>
+                  <mat-option [value]="item.codelemento" *ngFor="let item of nacs">{{item.descripcion}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col l4 s12">
+              <mat-form-field appearance="fill">
+                <mat-label>Nro de documento</mat-label>
+                <input oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" type="number" min="1" max="100000000" matInput formControlName="identificacion" required>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col l12 m12 s12"><label>Nombres:</label>
+          <div class="row mar-b-0">
+            <div class="col l6 m6 s12">
+              <mat-form-field>
+                <mat-label>Primer:</mat-label>
+                <input style='text-transform:uppercase' matInput formControlName="pnombre" required>
+              </mat-form-field>
+            </div>
+            <div class="col l6 m6 s12">
+              <mat-form-field>
+                <mat-label>Segundo:</mat-label>
+                <input style='text-transform:uppercase' matInput id="snombre">
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="col l12 m12 s12"><label>Apellidos:</label>
+          <div class="row mar-b-0">
+            <div class="col l6 m6 s12"><mat-form-field>
+                <mat-label>Primer</mat-label>
+                <input style='text-transform:uppercase' matInput formControlName="papellido" required>
+              </mat-form-field></div>
+            <div class="col l6 m6 s12"><mat-form-field>
+                <mat-label>Segundo</mat-label>
+                <input style='text-transform:uppercase' matInput id="sapellido">
+              </mat-form-field></div>
+          </div>
+        </div>
+      </div>
+                <div class="row">
+            <div class="col l12 m12 s12"><label>Carrera:</label>
+              <div class="row mar-b-0">
+                <div class="col l6 m6 s12">
+                  <mat-form-field>
+                    <mat-label>Carrera:</mat-label>
+                    <mat-select  formControlName="carrera" required>
+                      <mat-option [value]="item.codelemento"
+                      *ngFor="let item of carreras">{{item.descripcion}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+          </div>
+    </form>
+    </c-modal-body>
+    <c-modal-footer>
+      <button [cModalToggle]="addAspiranteOpsuIndividual.id" cButton color="secondary">
+        Cerrar
+      </button>
+      <button cButton [disabled]="!FormGroupAddAspiranteOpsu.valid" color="info">Añadir aspirante</button>
+    </c-modal-footer>
+  </c-modal>
+  
+  <c-modal #addAspirantesOpsuMasivo backdrop="static" id="addAspirantesOpsuMasivo" size="lg">
+    <c-modal-header>
+      <h1 cModalTitle>Añadir aspirantes OPSU de forma MASIVA</h1>
+    </c-modal-header>
+    <c-modal-body>
+      <form [formGroup]="FormGroupAddAspiranteOpsuMasivo">
+        <div class="mb-3">
+          <label cLabel for="formFile">Seleccione el archivo con la data para subirla (formato .xlsx)</label>
+          <input cFormControl  formControlName="masivoopsu" id="formFile" type="file" />
+        </div>
+      </form>
+    </c-modal-body>
+    <c-modal-footer>
+      <button [cModalToggle]="addAspirantesOpsuMasivo.id" cButton color="secondary">
+        Cerrar
+      </button>
+      <button cButton [disabled]="!FormGroupAddAspiranteOpsuMasivo.valid"  color="info">Añadir masivo</button>
+    </c-modal-footer>
+  </c-modal>

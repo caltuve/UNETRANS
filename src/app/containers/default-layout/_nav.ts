@@ -17,22 +17,27 @@ export const navItems: INavData[] = [
 },
 {
   name: 'Estudiantes',
-  url: '/estudiantes',
+  url: '',
   iconComponent: { name: 'cil-address-book' },
   children: [
     {
+      name: 'Aspirante OPSU',
+      url: '/control-estudios/aspirante-opsu',
+      iconComponent: { name: 'cil-list-rich' },
+    },
+    {
       name: 'Crear nuevo',
-      url: '/estudiantes/crear-nuevo',
+      url: '/control-estudios/crear-nuevo',
       iconComponent: { name: 'cil-plus' },
     },
     {
       name: 'Consultar datos',
-      url: '/estudiantes/consultar-datos',
+      url: '/control-estudios/consultar-datos',
       iconComponent: { name: 'cil-zoom' }, 
     },
     {
       name: 'Expediente digital',
-      url: '/estudiantes/expediente-digital',
+      url: '/control-estudios/expediente-digital',
       iconComponent: { name: 'cil-folder-open' }, 
     },
   ]

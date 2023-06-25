@@ -27,8 +27,8 @@ const routes: Routes = [
       },
       /* Inicio de rutas UNETRANS*/
       { 
-        path: 'estudiantes', 
-        loadChildren: () => import('./views/estudiantes/estudiantes.module').then(m => m.EstudiantesModule) 
+        path: 'control-estudios', 
+        loadChildren: () => import('./views/control-estudios/control-estudios.module').then(m => m.ControlEstudiosModule) 
       },
       { 
         path: 'seguridad', 
@@ -110,8 +110,9 @@ const routes: Routes = [
       title: 'Register Page'
     }
   },
+
   
-  {path: '**', redirectTo: 'dashboard'}
+  {path: '**', redirectTo: '404'}
 ];
 
 @NgModule({
