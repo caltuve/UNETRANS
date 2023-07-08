@@ -6,6 +6,8 @@ import { Page404Component } from './views/pages/page404/page404.component';
 import { Page500Component } from './views/pages/page500/page500.component';
 import { LoginComponent } from './views/pages/login/login.component';
 import { RegisterComponent } from './views/pages/register/register.component';
+import { LoginAspiranteComponent } from './views/aspirante/login-aspirante/login-aspirante.component';
+import { AutomatriculacionComponent } from './views/aspirante/automatriculacion/automatriculacion.component';
 
 const routes: Routes = [
   {
@@ -28,11 +30,18 @@ const routes: Routes = [
       /* Inicio de rutas UNETRANS*/
       { 
         path: 'control-estudios', 
-        loadChildren: () => import('./views/control-estudios/control-estudios.module').then(m => m.ControlEstudiosModule) 
+        loadChildren: () => 
+          import('./views/control-estudios/control-estudios.module').then(m => m.ControlEstudiosModule) 
       },
       { 
         path: 'seguridad', 
-        loadChildren: () => import('./views/seguridad/seguridad.module').then(m => m.SeguridadModule) 
+        loadChildren: () => 
+          import('./views/seguridad/seguridad.module').then(m => m.SeguridadModule) 
+      },
+      { 
+        path: 'aspirante', 
+        loadChildren: () => 
+          import('./views/aspirante/aspirante.module').then(m => m.AspiranteModule) 
       },
       /* Fin de rutas UNETRANS */
       {
@@ -110,6 +119,21 @@ const routes: Routes = [
       title: 'Register Page'
     }
   },
+  {
+    path: 'login-aspirante',
+    component: LoginAspiranteComponent,
+    data: {
+      title: 'Login Aspirantes'
+    }
+  },
+  {
+    path: 'automatriculacion',
+    component: AutomatriculacionComponent,
+    data: {
+      title: 'Registro Aspirantes'
+    }
+  },
+  
 
   
   {path: '**', redirectTo: '404'}

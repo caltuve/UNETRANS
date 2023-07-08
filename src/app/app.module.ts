@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { HashLocationStrategy, LocationStrategy, PathLocationStrategy } from '@angular/common';
 import { BrowserModule, Title } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule,ReactiveFormsModule } from '@angular/forms';
 
 import {
   PERFECT_SCROLLBAR_CONFIG,
@@ -44,7 +44,38 @@ import {
   UtilitiesModule,
 } from '@coreui/angular';
 
+
 import { IconModule, IconSetService } from '@coreui/icons-angular';
+
+import { HttpClientModule } from '@angular/common/http';
+
+import { AspiranteService } from './views/aspirante/aspirante.service';
+
+
+import { MatStepperModule } from '@angular/material/stepper'; 
+
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from "@angular/material/form-field";
+import {MatSelectModule} from '@angular/material/select';
+
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule,MAT_DATE_LOCALE } from '@angular/material/core';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon'
+import { MatDividerModule } from '@angular/material/divider';
+import {MatButtonModule} from '@angular/material/button';
+import {MatExpansionModule} from '@angular/material/expansion';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {MatTabsModule} from '@angular/material/tabs';
+
+import {TableModule } from '@coreui/angular';
+import { MatTableModule } from '@angular/material/table';
+
+
+import { DocsComponentsModule } from '@docs-components/docs-components.module';
+
+import {MatPaginatorModule} from '@angular/material/paginator';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true,
@@ -77,7 +108,6 @@ const APP_CONTAINERS = [
     UtilitiesModule,
     ButtonGroupModule,
     ReactiveFormsModule,
-    SidebarModule,
     SharedModule,
     TabsModule,
     ListGroupModule,
@@ -85,6 +115,26 @@ const APP_CONTAINERS = [
     BadgeModule,
     ListGroupModule,
     CardModule,
+    HttpClientModule,
+    MatStepperModule,
+    MatInputModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatProgressSpinnerModule,
+    MatCardModule,
+    MatIconModule,
+    MatDividerModule,
+    MatButtonModule,
+    MatExpansionModule,
+    MatAutocompleteModule,
+    MatTabsModule,
+    TableModule,
+    MatTableModule,
+    DocsComponentsModule,
+    MatPaginatorModule
+
   ],
   providers: [
     {
@@ -95,6 +145,8 @@ const APP_CONTAINERS = [
       provide: PERFECT_SCROLLBAR_CONFIG,
       useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG,
     },
+    {provide: AspiranteService},
+    {provide: MAT_DATE_LOCALE, useValue: 'es-VE'},
     IconSetService,
     Title
   ],

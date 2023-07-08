@@ -1,24 +1,14 @@
 <!--<c-header class="mb-4 d-print-none" position="sticky">-->
 <ng-container>
   <c-container [fluid]="true">
-    <button
-      toggle="visible"
-      cHeaderToggler
-      [cSidebarToggle]="sidebarId"
-      class="ps-1"
-    >
-      <svg cIcon
-        name="cilMenu"
-        size="lg"
-      ></svg>
-    </button>
-    <c-header-nav class="d-none d-lg-flex me-auto">
+
+    <c-header-nav class=" d-lg-flex me-auto">
       <c-nav-item>
           Sistema Integral de Control de Estudios - SICE
       </c-nav-item>
     </c-header-nav>
 
-    <c-header-nav class="d-none d-lg-flex">
+    <c-header-nav class=" d-lg-flex">
      CHRISTIAN ALTUVE
     </c-header-nav>
     <c-header-nav class="ms-3">
@@ -26,10 +16,10 @@
     </c-header-nav>
 
   </c-container>
-  <c-header-divider></c-header-divider>
+   <c-header-divider></c-header-divider> 
   <c-container [fluid]="true">
     <c-breadcrumb-router class="ms-2"></c-breadcrumb-router>
-  </c-container>
+  </c-container> 
 </ng-container>
 <!--</c-header>-->
 
@@ -46,7 +36,7 @@
         cTextColor="primary"
         shape="rounded-1"
         size="md"
-        src="./assets/img/avatars/teacher.png"
+        src="./assets/img/avatars/avatar-users.png"
         status="success"
       >
       </c-avatar>

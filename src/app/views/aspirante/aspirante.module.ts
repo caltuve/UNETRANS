@@ -1,11 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { ControlEstudiosRoutingModule } from './control-estudios-routing.module';
-import { CrearNuevoComponent } from './crear-nuevo/crear-nuevo.component';
-import { ConsultarDatosComponent } from './consultar-datos/consultar-datos.component';
-import { ExpedienteDigitalComponent } from './expediente-digital/expediente-digital.component';
-import { AspiranteOpsuComponent } from './aspirante-opsu/aspirante-opsu.component' ;
+import { AspiranteRoutingModule } from './aspirante-routing.module';
+import { LoginAspiranteComponent } from './login-aspirante/login-aspirante.component';
+import { AutomatriculacionComponent } from './automatriculacion/automatriculacion.component';
 
 import { MatStepperModule } from '@angular/material/stepper'; 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -24,7 +22,7 @@ import {MatButtonModule} from '@angular/material/button';
 import { GridModule } from '@coreui/angular';
 import { FormModule } from '@coreui/angular';
 import {MatExpansionModule} from '@angular/material/expansion';
-import { ControlEstudiosService } from './control-estudios.service';
+import { AspiranteService } from './aspirante.service';
 import { HttpClientModule } from '@angular/common/http';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatTabsModule} from '@angular/material/tabs';
@@ -48,12 +46,14 @@ import {
   CarouselModule,
   CollapseModule,
   DropdownModule,
+  HeaderModule ,
   ListGroupModule,
   ModalModule,
   PaginationModule,
   PlaceholderModule,
   PopoverModule,
   ProgressModule,
+  SidebarModule,
   SharedModule,
   SpinnerModule,
   TooltipModule,
@@ -64,14 +64,12 @@ import { IconModule } from '@coreui/icons-angular';
 
 @NgModule({
   declarations: [
-    CrearNuevoComponent,
-    ConsultarDatosComponent,
-    ExpedienteDigitalComponent,
-    AspiranteOpsuComponent
+    LoginAspiranteComponent,
+    AutomatriculacionComponent,
   ],
   imports: [
     CommonModule,
-    ControlEstudiosRoutingModule,
+    AspiranteRoutingModule,
     MatStepperModule,
     FormsModule,
     ReactiveFormsModule,
@@ -103,18 +101,20 @@ import { IconModule } from '@coreui/icons-angular';
   CarouselModule,
   CollapseModule,
   DropdownModule,
+  HeaderModule,
   ListGroupModule,
   ModalModule,
   PaginationModule,
   PlaceholderModule,
   PopoverModule,
   ProgressModule,
+  SidebarModule,
   SharedModule,
   SpinnerModule,
   TooltipModule,
   IconModule,
   MatPaginatorModule,  
   ],
-  providers: [{provide: MAT_DATE_LOCALE, useValue: 'es-VE'}, {provide: ControlEstudiosService}],
+  providers: [{provide: MAT_DATE_LOCALE, useValue: 'es-VE'}, {provide: AspiranteService}],
 })
-export class ControlEstudiosModule { }
+export class AspiranteModule { }

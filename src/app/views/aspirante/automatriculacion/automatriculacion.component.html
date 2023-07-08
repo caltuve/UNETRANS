@@ -1,0 +1,214 @@
+
+<c-header>
+  <c-container fluid>
+    <c-sidebar-brand
+    [brandFull]="{
+      src: 'assets/img/brand/logounetrans_sinfondo.png',
+      width: 200,
+      height: 55,
+      alt: 'UNETRANS Logo'
+    }"
+    [brandNarrow]="{
+      src: 'assets/img/brand/logo_circular_unetrans.png',
+      width: 50,
+      height: 50,
+      alt: 'UNETRANS Logo'
+    }"
+    routerLink="./"
+  >
+  </c-sidebar-brand>
+    <c-header-nav class=" d-lg-flex me-auto">
+      <c-nav-item>
+          Sistema Integral de Control de Estudios - SICE
+      </c-nav-item>
+    </c-header-nav>
+
+    <c-header-nav class=" d-lg-flex">
+     Aspirante: {{aspirante.primer_nombre}} {{aspirante.primer_apellido}} ({{aspirante.nac}}-{{aspirante.cedula}})
+    </c-header-nav>
+  </c-container>
+</c-header>
+
+<div>
+
+  <div><!-- PASO 1 DATOS DE IDENTIDAD DEL ESTUDIANTE  -->
+    <mat-stepper linear #stepper>
+      <mat-step class="step-container" [stepControl]="firstFormGroup" errorMessage="Datos incompletos">
+        <form [formGroup]="firstFormGroup">
+          <ng-template matStepLabel>Identidad</ng-template>
+          <mat-card class="mat-card">
+            <mat-card-title-group class="mat-card-title-group">
+              <mat-card-title class="mat-card-title">Datos de identidad del estudiante</mat-card-title>
+              <mat-card-subtitle class="mat-card-subtitle">Ingrese los datos tal y como se muestran en el documento de identidad</mat-card-subtitle>
+              <!-- <mat-card-subtitle class="mat-card-subtitle">Otro subtitulo de prueba</mat-card-subtitle> -->
+              
+            </mat-card-title-group>
+            <mat-divider class="mat-divider mat-divider-horizontal" role="separator"
+              aria-orientation="horizontal"></mat-divider>
+            <mat-card-content>
+              <div class="row">
+                <div class="col l6 m12 s12">
+                  <label class="label-custom">Documento de identidad:</label>
+                  <div class="row">
+                    <div class="col l6 s12">
+                      <mat-form-field >
+                        <mat-label>Tipo de documento</mat-label>
+                        <mat-select formControlName="nac" required>
+                          <mat-option [value]="item.codelemento" *ngFor="let item of nacs">{{item.descripcion}}</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                    <div class="col l6 s12">
+                      <mat-form-field appearance="fill">
+                        <mat-label>Nro de documento</mat-label>
+                        <input [(ngModel)]="aspirante.cedula" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" type="number" min="1" max="100000000" matInput formControlName="cedula" required>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+                <div class="col l6 m12 s12">
+                  <label class="label-custom">Fecha de nacimiento:</label>
+                  <div class="row">
+                    <div class="col l4 m4 s12">
+                      <mat-form-field >
+                        <mat-label>Seleccione una fecha</mat-label>
+                        <input matInput [matDatepicker]="fec_nac"matInput [min]="minDate" [max]="maxDate" formControlName="fec_nac" readonly required>
+                        <mat-datepicker-toggle matIconSuffix [for]="fec_nac">
+                          <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+                        </mat-datepicker-toggle>
+                        <mat-datepicker class="abrir"touchUi #fec_nac></mat-datepicker>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col l12 m12 s12"><label>Nombres:</label>
+                  <div class="row mar-b-0">
+                    <div class="col l6 m6 s12">
+                      <mat-form-field>
+                        <mat-label>Primer:</mat-label>
+                        <input style='text-transform:uppercase' [(ngModel)]="aspirante.primer_nombre" matInput formControlName="primer_nombre" required>
+                      </mat-form-field>
+                    </div>
+                    <div class="col l6 m6 s12">
+                      <mat-form-field>
+                        <mat-label>Segundo:</mat-label>
+                        <input style='text-transform:uppercase' [value]="aspirante.segundo_nombre" matInput id="snombre">
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+                <div class="col l12 m12 s12"><label>Apellidos:</label>
+                  <div class="row mar-b-0">
+                    <div class="col l6 m6 s12"><mat-form-field>
+                        <mat-label>Primer</mat-label>
+                        <input style='text-transform:uppercase' [(ngModel)]="aspirante.primer_apellido" matInput formControlName="primer_apellido" required>
+                      </mat-form-field></div>
+                    <div class="col l6 m6 s12"><mat-form-field>
+                        <mat-label>Segundo</mat-label>
+                        <input style='text-transform:uppercase' [value]="aspirante.segundo_apellido" matInput id="sapellido">
+                      </mat-form-field></div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col l6 m12 s12">
+                  <label class="label-custom">Género:</label>
+                  <div class="row">
+                    <div class="col l3 m3 s6">
+                      <mat-form-field>
+                        <mat-label>Sexo</mat-label>
+                        <mat-select formControlName="genero" required>
+                          <mat-option [value]="item.codelemento"
+                            *ngFor="let item of genero">{{item.descripcion}}</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+                <div class="col l6 m12 s12">
+                  <label class="label-custom">Estado civil:</label>
+                  <div class="row">
+                    <div class="col l3 m3 s6">
+                      <mat-form-field>
+                        <mat-label>Estado civil</mat-label>
+                        <mat-select formControlName="edo_civil" required>
+                          <mat-option [value]="item.codelemento"
+                            *ngFor="let item of edocivil">{{item.descripcion}}</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+                <div class="col l6 m12 s12">
+                  <label class="label-custom">Grupo Sanguíneo:</label>
+                  <div class="row">
+                    <div class="col l3 m3 s6">
+                      <mat-form-field>
+                        <mat-label>Tipo de sangre</mat-label>
+                        <mat-select formControlName="gruposan" required>
+                          <mat-option [value]="item.codelemento"
+                            *ngFor="let item of gruposan">{{item.descripcion}}</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+              </div>
+    
+              <div class="row">
+                <div class="col l12 m12 s12"><label>Información complementaria:</label>
+                  <div class="row">
+                    <div class="col l3 m6 s6">
+                      <mat-form-field>
+                        <mat-label>Etnia</mat-label>
+                        <mat-select formControlName="etnia" required>
+                          <mat-option [value]="item.codelemento"
+                            *ngFor="let item of etnia">{{item.descripcion}}</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                    <div class="col l3 m6 s6">
+                      <mat-form-field>
+                        <mat-label>Privado de libertad</mat-label>
+                        <mat-select  formControlName="plibertad" required>
+                          <mat-option [value]="item.codelemento"
+                            *ngFor="let item of indresp">{{item.descripcion}}</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                    <div class="col l3 m6 s6">
+                      <mat-form-field>
+                        <mat-label>Discapacidad</mat-label>
+                        <mat-select [(ngModel)]="discapacidad2" name="discapacidad" formControlName="discapacidad" required>
+                          <mat-option [value]="item.codelemento" *ngFor="let item of discapacidad">{{item.descripcion}}</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                    <div *ngIf="(discapacidad2 !== '' && discapacidad2 !== '99' )" class="col l3 m6 s6">
+                      <mat-form-field>
+                        <mat-label>Nro. CONAPDIS</mat-label>
+                        <input type="number" min="1" matInput>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div align="right"><button  matStepperNext color="accent" mat-mini-fab="" matstepperprevious="" type="button"
+                class="mat-mini-fab mat-accent" [disabled]="!firstFormGroup.valid">
+                <span class="mat-button-wrapper"><mat-icon aria-hidden="true">arrow_forward</mat-icon></span>
+              </button></div>
+              
+            </mat-card-content>
+          </mat-card>
+        </form>
+      </mat-step>
+    
+  
+    </mat-stepper>
+    </div>
+</div>
+
+
+  

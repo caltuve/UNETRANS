@@ -1,19 +1,17 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
-import { EstadoI, MunicipioI } from './crear-nuevo/model.interface';
-import { catchError } from 'rxjs/operators';
-import { throwError } from 'rxjs';
+import { EstadoI, MunicipioI } from '../control-estudios/crear-nuevo/model.interface';
 import { Observable } from "rxjs";
-import { tap, map} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ControlEstudiosService {
+export class AspiranteService {
+
   url = 'http://localhost/unetrans/';
   url2 = 'https://petroapp-price.petro.gob.ve/price/';
   constructor(private http: HttpClient) { } 
-
+  datosAspirante: any;
   estados: EstadoI []= [];
   municipios: MunicipioI []= []; 
 
@@ -89,6 +87,10 @@ getPlantelOfSelectedParroquia(selectedParroquiaId: string): Observable<any>{
   return this.http.get(`${this.url}centro_educativo.php?codparr=${selectedParroquiaId}`)
 }
 
+getAspirante(identificacion: any): Observable<any>{
+    return this.http.post(`${this.url}verify_aspirante.php`, JSON.stringify(identificacion))
+}
+
 getBachiller() {
   return this.http.get(`${this.url}tipo_bachiller.php`);
 }
@@ -104,5 +106,4 @@ getTurnos() {
 getAspirantes() {
   return this.http.get(`${this.url}aspirante_opsu.php`);
 }
-
 }

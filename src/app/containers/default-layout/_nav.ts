@@ -17,7 +17,7 @@ export const navItems: INavData[] = [
 },
 {
   name: 'Estudiantes',
-  url: '',
+  url: '/control-estudios',
   iconComponent: { name: 'cil-address-book' },
   children: [
     {

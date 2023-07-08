@@ -1,11 +1,11 @@
 import { EstadoI, MunicipioI, ParroquiaI } from './model.interface';
-import {Component, ViewChild,OnInit, OnChanges} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormBuilder, Validators,FormControl} from '@angular/forms';
 import {STEPPER_GLOBAL_OPTIONS} from '@angular/cdk/stepper';
-import {MatAccordion} from '@angular/material/expansion';
 import { ControlEstudiosService } from '../control-estudios.service';
-import {Observable} from 'rxjs';
-import {map, startWith} from 'rxjs/operators';
+import {MatTableDataSource} from '@angular/material/table';
+
+
 
 
 @Component({
@@ -23,8 +23,26 @@ import {map, startWith} from 'rxjs/operators';
 
 export class CrearNuevoComponent  implements OnInit {
 
+  dataSource = new MatTableDataSource();
+  displayedColumns: string[] = ['nombre'];
+
   minDate!: Date;
   maxDate!: Date;
+
+  minDateAnnio!: Date;
+  maxDateAnnio!: Date;
+
+  myDate!: any;
+
+  public myNumber!: string;
+  public numberMask = {
+    mask: '##.##',
+    scale: 2,
+    thousandsSeparator: '',
+    decimalSymbol: '.',
+    align: 'right',
+    placeholderChar: '_'
+  };
   
   condicion: any='';
   nacs: any []= [];
@@ -47,9 +65,12 @@ export class CrearNuevoComponent  implements OnInit {
   moding: any []= [];
   turnos: any []= [];
   sede: string ='001';
+  plantel = '';
 
   selectedEstadoId: string= '';
   selectedMunicipioId: string= '';
+  selectedParroquiaId: string= '';
+
   
   municipios: MunicipioI[] = [];
 
@@ -63,6 +84,14 @@ export class CrearNuevoComponent  implements OnInit {
   listMunicipios!:MunicipioI[]
   municipioSelected!: string
   listParroquias!:ParroquiaI[]
+  parroquiaSelected!: string
+  listPlantel: any = [];
+
+  docs: any []= [];
+
+  selectedValue!: string;
+
+  public visible = false;
 
   constructor(private _formBuilder: FormBuilder,
               public controlestudiosService: ControlEstudiosService) {
@@ -71,8 +100,11 @@ export class CrearNuevoComponent  implements OnInit {
                 const currentDay = new Date().getDate();
     this.minDate = new Date(currentYear - 90, currentMonth, currentDay);
     console.log(this.minDate);
-    this.maxDate = new Date(currentYear, currentMonth, currentDay);
+    this.maxDate = new Date(currentYear - 14, currentMonth, currentDay);
     console.log(this.maxDate);
+    this.minDateAnnio = new Date(1900, 0, 1); // Fecha mínima
+    this.maxDateAnnio = new Date(); // Fecha máxima (hoy)
+
               }
 
  
@@ -95,6 +127,7 @@ ngOnInit() {
     this.findBachiller();
     this.findModIngreso();
     this.findTurnos();
+    this.findDocAcad();
 }
 
 findPetro(){
@@ -106,6 +139,11 @@ findPetro(){
   );
 }
 
+chosenYearHandler(normalizedYear: Date) {
+  const ctrlValue = this.myDate.value;
+  ctrlValue.setFullYear(normalizedYear.getFullYear());
+  this.myDate.setValue(ctrlValue);
+}
 
 findNac(){
   this.controlestudiosService.getNac().subscribe(
@@ -122,6 +160,7 @@ findGen(){
   }
   );
 }
+
 
 findEdoCivil(){
   this.controlestudiosService.getEdoCivil().subscribe(
@@ -234,6 +273,17 @@ onMunicipioselected(selectedMunicipioId: any){
   )
 }
 
+onParroquiaselected(selectedParroquiaId: any){
+  this.controlestudiosService.getPlantelOfSelectedParroquia(selectedParroquiaId).subscribe(
+    data=>{
+      this.dataSource.data = data;
+      this.listPlantel = data
+      //console.log(data)
+    }
+  )
+}
+
+
 findBachiller(){
   this.controlestudiosService.getBachiller().subscribe(
     (result: any) => {
@@ -254,6 +304,14 @@ findTurnos(){
   this.controlestudiosService.getTurnos().subscribe(
     (result: any) => {
         this.turnos = result;
+  }
+  );
+}
+
+findDocAcad(){
+  this.controlestudiosService.getDocsAcad().subscribe(
+    (result: any) => {
+        this.docs = result;
   }
   );
 }
@@ -294,6 +352,7 @@ thirdFormGroup = this._formBuilder.group({
   estadoplantel: ['', Validators.required],
   municipioplantel: ['', Validators.required],
   parroquiaplantel: ['', Validators.required],
+  nombreplantel: ['', Validators.required],
  
 });
 
@@ -305,6 +364,15 @@ fourthFormGroup = this._formBuilder.group({
  
  
 });
+
+selectedPlantel = this._formBuilder.group({
+  turno: ['', Validators.required],
+  mingreso: ['', Validators.required],
+  pnf: ['', Validators.required],
+  trayecto: ['', Validators.required],
+  
+  
+ });
  
 }
 
