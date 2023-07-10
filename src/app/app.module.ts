@@ -77,6 +77,8 @@ import { DocsComponentsModule } from '@docs-components/docs-components.module';
 
 import {MatPaginatorModule} from '@angular/material/paginator';
 
+import {MatCheckboxModule} from '@angular/material/checkbox';
+
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true,
 };
@@ -133,7 +135,8 @@ const APP_CONTAINERS = [
     TableModule,
     MatTableModule,
     DocsComponentsModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatCheckboxModule
 
   ],
   providers: [

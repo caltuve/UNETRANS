@@ -36,6 +36,8 @@ import { DocsComponentsModule } from '@docs-components/docs-components.module';
 
 import {MatPaginatorModule} from '@angular/material/paginator';
 
+import {MatCheckboxModule} from '@angular/material/checkbox';
+
 
 import {
   AccordionModule,
@@ -114,6 +116,7 @@ import { IconModule } from '@coreui/icons-angular';
   TooltipModule,
   IconModule,
   MatPaginatorModule,  
+  MatCheckboxModule
   ],
   providers: [{provide: MAT_DATE_LOCALE, useValue: 'es-VE'}, {provide: AspiranteService}],
 })

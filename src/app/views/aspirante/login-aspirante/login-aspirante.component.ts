@@ -27,12 +27,13 @@ export class LoginAspiranteComponent {
         data=>{
           this.aspirante = data
           this.aspiranteService.datosAspirante = data
+          this.aspiranteService.materiasAspirante = data.materias
+          console.log(data.materias)
           sessionStorage.setItem('currentUser', JSON.stringify(this.aspirante)); 
           this.router.navigateByUrl('/automatriculacion');
         }
       )
     }
-
 
   firstFormGroup = this._formBuilder.group({
     identificacion: ['', Validators.required],

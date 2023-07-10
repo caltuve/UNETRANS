@@ -12,6 +12,7 @@ export class AspiranteService {
   url2 = 'https://petroapp-price.petro.gob.ve/price/';
   constructor(private http: HttpClient) { } 
   datosAspirante: any;
+  materiasAspirante: any;
   estados: EstadoI []= [];
   municipios: MunicipioI []= []; 
 
@@ -101,6 +102,10 @@ getModIngreso() {
 
 getTurnos() {
   return this.http.get(`${this.url}turnos.php`);
+}
+
+getTrayectos() {
+  return this.http.get(`${this.url}trayectos.php`);
 }
 
 getAspirantes() {
