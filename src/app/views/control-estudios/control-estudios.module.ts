@@ -60,6 +60,7 @@ import {
 } from '@coreui/angular';
 
 import { IconModule } from '@coreui/icons-angular';
+import { MantenimientoMallasComponent } from './mantenimiento-mallas/mantenimiento-mallas.component';
 
 
 @NgModule({
@@ -67,7 +68,8 @@ import { IconModule } from '@coreui/icons-angular';
     CrearNuevoComponent,
     ConsultarDatosComponent,
     ExpedienteDigitalComponent,
-    AspiranteOpsuComponent
+    AspiranteOpsuComponent,
+    MantenimientoMallasComponent
   ],
   imports: [
     CommonModule,

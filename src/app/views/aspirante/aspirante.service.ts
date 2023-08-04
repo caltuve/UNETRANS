@@ -108,7 +108,17 @@ getTrayectos() {
   return this.http.get(`${this.url}trayectos.php`);
 }
 
+getZonaPTransporte() {
+  return this.http.get(`${this.url}zonaptransporte.php`);
+}
+
 getAspirantes() {
   return this.http.get(`${this.url}aspirante_opsu.php`);
 }
+
+createPerson(datospersona : any): Observable<any>{
+  return this.http.post(`${this.url}crearpersona.php`, JSON.stringify(datospersona))
+}
+
+
 }

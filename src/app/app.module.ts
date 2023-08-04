@@ -79,6 +79,9 @@ import {MatPaginatorModule} from '@angular/material/paginator';
 
 import {MatCheckboxModule} from '@angular/material/checkbox';
 
+import { ToastrModule } from 'ngx-toastr';
+import { NgxSpinnerModule } from "ngx-spinner"; 
+
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true,
 };
@@ -136,8 +139,9 @@ const APP_CONTAINERS = [
     MatTableModule,
     DocsComponentsModule,
     MatPaginatorModule,
-    MatCheckboxModule
-
+    MatCheckboxModule,
+    NgxSpinnerModule,
+    ToastrModule.forRoot(),
   ],
   providers: [
     {

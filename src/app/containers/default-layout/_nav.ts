@@ -72,6 +72,21 @@ export const navItems: INavData[] = [
   iconComponent: { name: 'cil-pencil' },
 },
 {
+  name: 'Mantenimiento',
+  url: '/base',
+  iconComponent: { name: 'cil-puzzle' },
+  children: [
+    {
+      name: 'Mallas curriculares',
+      url: '/base/accordion'
+    },
+    {
+      name: 'Constantes globales',
+      url: '/base/accordion'
+    },
+  ]
+},
+{
   title: true,
   name: 'Administrativo'
 },

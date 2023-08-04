@@ -4,6 +4,7 @@ import { AspiranteOpsuComponent } from './aspirante-opsu/aspirante-opsu.componen
 import { CrearNuevoComponent } from './crear-nuevo/crear-nuevo.component';
 import { ConsultarDatosComponent } from './consultar-datos/consultar-datos.component';
 import { ExpedienteDigitalComponent } from './expediente-digital/expediente-digital.component';
+import { MantenimientoMallasComponent } from './mantenimiento-mallas/mantenimiento-mallas.component'
 
 const routes: Routes = [
   {
@@ -43,6 +44,13 @@ const routes: Routes = [
         component: ExpedienteDigitalComponent,
         data: {
           title: 'Expediente Digital'
+        }
+      },
+      {
+        path: 'mantenimiento-mallas',
+        component: MantenimientoMallasComponent,
+        data: {
+          title: 'Mantenimiento de Mallas Curriculares'
         }
       },
     ]

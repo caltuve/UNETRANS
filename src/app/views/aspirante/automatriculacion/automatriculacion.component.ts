@@ -1,8 +1,9 @@
 import { Component, AfterViewInit, OnInit } from '@angular/core';
-import {FormBuilder, Validators,FormControl} from '@angular/forms';
+import { NgForm, FormBuilder, FormGroup, Validators,FormControl} from '@angular/forms';
 import { AspiranteService } from '../aspirante.service';
 import {MatTableDataSource} from '@angular/material/table';
 import { EstadoI, MunicipioI, ParroquiaI } from '../../control-estudios/crear-nuevo/model.interface'
+
 @Component({
   selector: 'app-automatriculacion',
   templateUrl: './automatriculacion.component.html',
@@ -17,8 +18,12 @@ export class AutomatriculacionComponent  implements OnInit, AfterViewInit {
   displayedColumnsUniCurricular: string[] = ['seleccion','código', 'nombre', 'créditos'];
 
   aspirante: any ;
-  minDate!: Date;
-  maxDate!: Date;
+  minDate1!: Date;
+  maxDate1!: Date;
+  minDate2!: Date;
+  maxDate2!: Date;
+  minDate3!: Date;
+  maxDate3!: Date;
   nacs: any []= [];
   genero: any []= [];
   edocivil: any []= [];
@@ -27,18 +32,35 @@ export class AutomatriculacionComponent  implements OnInit, AfterViewInit {
   indresp: any []= [];
   discapacidad: any []= [];
   discapacidad2: string= '';
+  tipoconstruccionvalue: string= '';
   tipovia: any []= [];
   tiponucleo: any []= [];
   tipoconstruccion: any []= [];
   carreras: any []= [];
   opermovil: any []= [];
   operres: any []= [];
-  listEstados!:EstadoI[]
-  estadoSelected!: string
-  listMunicipios!:MunicipioI[]
-  municipioSelected!: string
-  listParroquias!:ParroquiaI[]
-  parroquiaSelected!: string
+  
+  listEstadosNacimiento!: EstadoI[]
+  estadoSelectedNacimiento!: string
+  listMunicipiosNacimiento!: MunicipioI[]
+  municipioSelectedNacimiento!: string
+  listParroquiasNacimiento!: ParroquiaI[]
+  parroquiaSelectedNacimiento!: string
+
+  listEstadosResidencia!: EstadoI[]
+  estadoSelectedResidencia!: string
+  listMunicipiosResidencia!: MunicipioI[]
+  municipioSelectedResidencia!: string
+  listParroquiasResidencia!: ParroquiaI[]
+  parroquiaSelectedResidencia!: string
+
+
+  listEstadosEducacionMedia!: EstadoI[]
+  estadoSelectedEducacionMedia!: string
+  listMunicipiosEducacionMedia!: MunicipioI[]
+  municipioSelectedEducacionMedia!: string
+  listParroquiasEducacionMedia!: ParroquiaI[]
+  parroquiaSelectedEducacionMedia!: string
 
   bachiller: any []= [];
   moding: any []= [];
@@ -55,8 +77,17 @@ export class AutomatriculacionComponent  implements OnInit, AfterViewInit {
 
   selectedValue!: string;
 
-  isDisabled: boolean = false;
-  
+  annoegreso!: Date;
+
+  /*LISTADO DE VARIABLES PARA ALMANCENAR LOS VALORES EN BD*/
+  //STEP 1
+  nac!: string;
+  cedula!: number;
+  fecnac!: Date;
+  primer_nombre!: string;
+  segundo_nombre!: string;
+  primer_apellido!: string;
+  segundo_apellido!: string;
 
   constructor(private _formBuilder: FormBuilder,
     public aspiranteService: AspiranteService,
@@ -69,8 +100,13 @@ export class AutomatriculacionComponent  implements OnInit, AfterViewInit {
       const currentYear = new Date().getFullYear();
       const currentMonth = new Date().getMonth();
       const currentDay = new Date().getDate();
-      this.minDate = new Date(currentYear - 90, currentMonth, currentDay);
-      this.maxDate = new Date(currentYear - 14, currentMonth, currentDay);
+      this.minDate1 = new Date(currentYear - 90, currentMonth, currentDay);
+      this.maxDate1 = new Date(currentYear - 14, currentMonth, currentDay);
+      this.minDate2 = new Date(currentYear - 90, currentMonth, currentDay);
+      this.maxDate2 = new Date(currentYear - 14, currentMonth, currentDay);
+      this.minDate3 = new Date(currentYear - 90, currentMonth, currentDay);
+      this.maxDate3 = new Date(currentYear - 14, currentMonth, currentDay);
+      
     }
 
     ngOnInit() {
@@ -92,11 +128,13 @@ export class AutomatriculacionComponent  implements OnInit, AfterViewInit {
       this.findModIngreso();
       this.findTurnos();
       this.findTrayectos();
-      
+      this.findZonaPTransporte();
       }
 
       ngAfterViewInit() {
-        this.findEstados();
+        this.findEstadosNacimiento();
+        this.findEstadosResidencia();
+        this.findEstadosEducacionMedia();
       }
 
 findNac(){
@@ -157,29 +195,74 @@ findDiscapacidad(){
   );
 }
 
-private findEstados(){
+private findEstadosNacimiento(){
   this.aspiranteService.getEstados().subscribe(data=>{
-    this.listEstados = data
+    this.listEstadosNacimiento = data
   })
 }
 
-onEstadoselected(selectedEstadoId: any){
+private findEstadosResidencia(){
+  this.aspiranteService.getEstados().subscribe(data=>{
+    this.listEstadosResidencia = data
+  })
+}
+
+private findEstadosEducacionMedia(){
+  this.aspiranteService.getEstados().subscribe(data=>{
+    this.listEstadosEducacionMedia = data
+  })
+}
+
+onEstadoselectedNacimiento(selectedEstadoId: any){
   this.aspiranteService.getMunicipioOfSelectedEstado(selectedEstadoId).subscribe(
     data=>{
-      this.listMunicipios = data
+      this.listMunicipiosNacimiento = data
     }
   )
 }
 
-onMunicipioselected(selectedMunicipioId: any){
+onMunicipioselectedNacimiento(selectedMunicipioId: any){
   this.aspiranteService.getParroquiaOfSelectedMunicipio(selectedMunicipioId).subscribe(
     data=>{
-      this.listParroquias = data
+      this.listParroquiasNacimiento = data
     }
   )
 }
 
-onParroquiaselected(selectedParroquiaId: any){
+onEstadoselectedResidencia(selectedEstadoId: any){
+  this.aspiranteService.getMunicipioOfSelectedEstado(selectedEstadoId).subscribe(
+    data=>{
+      this.listMunicipiosResidencia = data
+    }
+  )
+}
+
+onMunicipioselectedResidencia(selectedMunicipioId: any){
+  this.aspiranteService.getParroquiaOfSelectedMunicipio(selectedMunicipioId).subscribe(
+    data=>{
+      this.listParroquiasResidencia = data
+    }
+  )
+}
+
+
+onEstadoselectedEducacionMedia(selectedEstadoId: any){
+  this.aspiranteService.getMunicipioOfSelectedEstado(selectedEstadoId).subscribe(
+    data=>{
+      this.listMunicipiosEducacionMedia = data
+    }
+  )
+}
+
+onMunicipioselectedEducacionMedia(selectedMunicipioId: any){
+  this.aspiranteService.getParroquiaOfSelectedMunicipio(selectedMunicipioId).subscribe(
+    data=>{
+      this.listParroquiasEducacionMedia = data
+    }
+  )
+}
+
+onParroquiaselectedEducacionMedia(selectedParroquiaId: any){
   this.aspiranteService.getPlantelOfSelectedParroquia(selectedParroquiaId).subscribe(
     data=>{
       this.dataSource.data = data;
@@ -265,23 +348,83 @@ findTrayectos(){
   this.aspiranteService.getTrayectos().subscribe(
     (result: any) => {
         this.trayectos = result;
+  }
+  );
+}
+
+findZonaPTransporte(){
+  this.aspiranteService.getZonaPTransporte().subscribe(
+    (result: any) => {
         this.procedencia = result;
   }
   );
 }
+
+crearPersona(f: any) {
+  this.aspiranteService.createPerson(f.value).subscribe(datos => {
+    if (datos['resultado']=='NOK' || datos['resultado']!=='OK') {
+    }else {
+     
+    }
+  });
+}
+
+guardarDatos(event: any): void {
+  if (event.selectedIndex === 2) {
+    const datosStep1 = this.firstFormGroup.value;
+    const datosStep2 = this.secondFormGroup.value;
+
+    console.log(datosStep1);
+    console.log(datosStep2);
+
+    // Aquí puedes enviar los datos al servidor o realizar cualquier otra acción con ellos
+  }
+}
+
+guardar(): void {
+  // Esta función se ejecutará cuando se haga clic en "Guardar Datos" en el último step
+  // Puedes acceder a los datos de cada step utilizando this.step1Form.value, this.step2Form.value, etc.
+  const datosStep1 = this.firstFormGroup.value;
+    const datosStep2 = this.secondFormGroup.value;
+    const datosStep3 = this.thirdFormGroup.value;
+
+
+    const datosCompletos = {
+      step1: datosStep1,
+      step2: datosStep2,
+      step3: datosStep3,
+    };
+
+    //console.log(datosCompletos);
+
+    this.aspiranteService.createPerson(datosCompletos).subscribe(datos => {
+      if (datos['resultado']=='NOK' || datos['resultado']!=='OK') {
+      }else {
+       
+      }
+    });
+}
+
+
       
     firstFormGroup = this._formBuilder.group({
-      nac: [{value: '', disabled: true}, Validators.required, ] ,
-      cedula: [{value: '', disabled: true}, Validators.required],
+      nac:[{value: '', disabled: true}, Validators.required],
+      nacpost: ['', Validators.required, ] ,
+      cedula: [{value: '', readonly: true}, Validators.required],
       fec_nac: ['', Validators.required],
-      primer_nombre: [{value: '', disabled: true}, Validators.required],
-      primer_apellido: [{value: '', disabled: true}, Validators.required],
+      primer_nombre: [{value: '', readonly: true}, Validators.required],
+      segundo_nombre: [{value: '', readonly: true}, Validators.nullValidator],
+      primer_apellido: [{value: '', readonly: true}, Validators.required],
+      segundo_apellido: [{value: '', readonly: true}, Validators.nullValidator],
       genero: ['', Validators.required],
       edo_civil: ['', Validators.required],
       gruposan: ['', Validators.required],
+      estadoNacimiento: ['', Validators.required],
+      municipioNacimiento: ['', Validators.required],
+      parroquiaNacimiento: ['', Validators.required],
       etnia: ['', Validators.required],
-      discapacidad: ['', Validators.required], 
-    
+      discapacidad: ['', Validators.required],
+      conapdis: [null, Validators.nullValidator],
     });
 
     secondFormGroup = this._formBuilder.group({
@@ -294,19 +437,34 @@ findTrayectos(){
   nombrenucleo: ['', Validators.required],
   tipoconstruccion: ['', Validators.required],
   nombreconstruccion: ['', Validators.required],
+  complemento: [null, Validators.nullValidator],
+
 
   opermovil: ['', Validators.required],
   nummovil: ['', Validators.required],
-  emailppal: ['', Validators.required ],
+  operres: [null, Validators.nullValidator],
+  numres: [null, Validators.nullValidator],
+  operemer:['', Validators.required],
+  numemer:['', Validators.required],
+  parenemer:['', Validators.required],
+  nombreemer:['', Validators.required],
+  emailppal: ['', Validators.compose([Validators.required, Validators.email])  ],
+  emailalter: [null, Validators.compose([Validators.nullValidator, Validators.email])  ],
  
 });
 
 thirdFormGroup = this._formBuilder.group({
   tbachiller: ['', Validators.required],
+  fechagradobachiller: ['', Validators.required],
+  sni: ['', Validators.required],
+  indbachiller: ['', Validators.required],
   estadoplantel: ['', Validators.required],
   municipioplantel: ['', Validators.required],
   parroquiaplantel: ['', Validators.required],
-  nombreplantel: ['', Validators.required],
+  nombreplantel: ['',Validators.required],
+  nombreies: [null, Validators.nullValidator],
+  tituloies: [null, Validators.nullValidator],
+  fechagradoies: ['', Validators.nullValidator],
  
 });
 

@@ -63,6 +63,8 @@ import {
 
 import { IconModule } from '@coreui/icons-angular';
 
+import { NgxSpinnerModule } from "ngx-spinner"; 
+
 
 @NgModule({
   declarations: [
@@ -116,7 +118,8 @@ import { IconModule } from '@coreui/icons-angular';
   TooltipModule,
   IconModule,
   MatPaginatorModule,  
-  MatCheckboxModule
+  MatCheckboxModule,
+  NgxSpinnerModule
   ],
   providers: [{provide: MAT_DATE_LOCALE, useValue: 'es-VE'}, {provide: AspiranteService}],
 })
