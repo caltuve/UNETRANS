@@ -12,10 +12,10 @@ import { tap, map} from 'rxjs/operators';
 export class ControlEstudiosService {
   url = 'http://localhost/unetrans/';
   url2 = 'https://petroapp-price.petro.gob.ve/price/';
-  constructor(private http: HttpClient) { } 
+  constructor(private http: HttpClient) { }
 
   estados: EstadoI []= [];
-  municipios: MunicipioI []= []; 
+  municipios: MunicipioI []= [];
 
   getNac() {
     return this.http.get(`${this.url}nacionalidad.php`);
@@ -104,5 +104,7 @@ getTurnos() {
 getAspirantes() {
   return this.http.get(`${this.url}aspirante_opsu.php`);
 }
-
+  getEstudiante() {
+    return this.http.get(`${this.url}dat_estudiante.php`);
+  }
 }
