@@ -31,11 +31,11 @@ export class LoginAspiranteComponent {
       this.aspiranteService.getAspirante(user).subscribe(
         data=>{
           this.aspirante = data;
-          console.log(this.aspirante)
+          //console.log(this.aspirante)
           if (this.aspirante.length == 0 ){
             this.SpinnerService.hide(); 
-            this.notifyService.showError('Identificación no registrada como aspirante');
-            this.router.navigateByUrl('/login-aspirante');
+            this.notifyService.showInfo('Usted no es asignado OPSU, será redireccionado al proceso de autopostulación');
+            this.router.navigateByUrl('/autopostulacion');
           }
           else {
 
@@ -51,6 +51,7 @@ export class LoginAspiranteComponent {
           this.aspiranteService.datosAspirante = data
           this.aspiranteService.materiasAspirante = data.materias
           sessionStorage.setItem('currentUser', JSON.stringify(this.aspirante)); 
+          sessionStorage.setItem('materiasAspirante', JSON.stringify(this.aspiranteService.materiasAspirante)); 
           this.notifyService.showSuccess('Bienvenido al proceso de automatriculación');
           this.router.navigateByUrl('/automatriculacion');
           }

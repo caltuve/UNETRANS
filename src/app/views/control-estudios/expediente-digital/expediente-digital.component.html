@@ -1,4 +1,4 @@
 <div id="pdfTable" #pdfTable>
-<div *ngFor="let dato of estudiante">{{dato.id_estudiante}} {{dato.nombre_completo}}</div>
+<div *ngFor="let dato of estudiante">{{dato.nac}}-{{dato.ced_pas}} {{dato.nombre_completo}}, {{dato.fecnac}}</div>
   <button class="btn btn-primary" (click)="generatedPDFFile()">Export To PDF</button>
 </div>

@@ -5,17 +5,11 @@ import {MatTableDataSource} from '@angular/material/table';
 import { EstadoI, MunicipioI, ParroquiaI } from '../../control-estudios/crear-nuevo/model.interface'
 
 @Component({
-  selector: 'app-automatriculacion',
-  templateUrl: './automatriculacion.component.html',
-  styleUrls: ['./automatriculacion.component.scss']
+  selector: 'app-autopostulacion',
+  templateUrl: './autopostulacion.component.html',
+  styleUrls: ['./autopostulacion.component.scss']
 })
-export class AutomatriculacionComponent  implements OnInit, AfterViewInit {
-
-  dataSource = new MatTableDataSource();
-  displayedColumns: string[] = ['nombre'];
-
-  materias = new MatTableDataSource();
-  displayedColumnsUniCurricular: string[] = ['seleccion','trayecto','código', 'nombre', 'créditos','seccion'];
+export class AutopostulacionComponent implements OnInit, AfterViewInit {
 
   aspirante: any ;
   minDate1!: Date;
@@ -30,14 +24,9 @@ export class AutomatriculacionComponent  implements OnInit, AfterViewInit {
   gruposan: any []= [];
   etnia: any []= [];
   indresp: any []= [];
-  indresp2: string= ''; 
-  indresp3: string= ''; 
   discapacidad: any []= [];
   discapacidad2: string= '';
   tipoconstruccionvalue: string= '';
-  pass: string;
-  confpass:string;
-  usrsice:string;
   tipovia: any []= [];
   tiponucleo: any []= [];
   tipoconstruccion: any []= [];
@@ -72,9 +61,6 @@ export class AutomatriculacionComponent  implements OnInit, AfterViewInit {
   turnos: any []= [];
   trayectos: any []= [];
   procedencia: any []= [];
-  parentesco: any []= [];
-  sectortrab: any []= [];
-  questsec: any []= [];
   sede: string ='001';
   turno: string='X';
   mingresoopsu: string='001';
@@ -96,23 +82,24 @@ export class AutomatriculacionComponent  implements OnInit, AfterViewInit {
   segundo_nombre!: string;
   primer_apellido!: string;
   segundo_apellido!: string;
+  pnf!: string;
 
   constructor(private _formBuilder: FormBuilder,
     public aspiranteService: AspiranteService,
     ) 
     { 
-      this.aspirante = this.aspiranteService.datosAspirante;
-      this.materias = this.aspiranteService.materiasAspirante;
-      sessionStorage.setItem('currentUser', JSON.stringify(this.aspirante)); 
-      sessionStorage.setItem('materiasAspirante', JSON.stringify(this.aspiranteService.materiasAspirante)); 
-      console.log(this.aspiranteService.materiasAspirante);
+      //this.aspirante = this.aspiranteService.datosAspirante;
+      //this.materias = this.aspiranteService.materiasAspirante;
+      //sessionStorage.setItem('currentUser', JSON.stringify(this.aspirante)); 
+      //sessionStorage.setItem('materiasAspirante', JSON.stringify(this.aspiranteService.materiasAspirante)); 
+      //console.log(this.aspiranteService.materiasAspirante);
       const currentYear = new Date().getFullYear();
       const currentMonth = new Date().getMonth();
       const currentDay = new Date().getDate();
       this.minDate1 = new Date(currentYear - 90, currentMonth, currentDay);
       this.maxDate1 = new Date(currentYear - 14, currentMonth, currentDay);
-      this.minDate2 = new Date(currentYear - 69, currentMonth, currentDay);
-      this.maxDate2 = new Date(currentYear , currentMonth, currentDay);
+      this.minDate2 = new Date(currentYear - 90, currentMonth, currentDay);
+      this.maxDate2 = new Date(currentYear - 14, currentMonth, currentDay);
       this.minDate3 = new Date(currentYear - 90, currentMonth, currentDay);
       this.maxDate3 = new Date(currentYear - 14, currentMonth, currentDay);
       
@@ -138,9 +125,6 @@ export class AutomatriculacionComponent  implements OnInit, AfterViewInit {
       this.findTurnos();
       this.findTrayectos();
       this.findZonaPTransporte();
-      this.findParentescoEmer();
-      this.findSectorTrabajo();
-      this.findQuestSec();
       }
 
       ngAfterViewInit() {
@@ -277,7 +261,7 @@ onMunicipioselectedEducacionMedia(selectedMunicipioId: any){
 onParroquiaselectedEducacionMedia(selectedParroquiaId: any){
   this.aspiranteService.getPlantelOfSelectedParroquia(selectedParroquiaId).subscribe(
     data=>{
-      this.dataSource.data = data;
+      //this.dataSource.data = data;
       this.listPlantel = data
       //console.log(data)
     }
@@ -372,30 +356,6 @@ findZonaPTransporte(){
   );
 }
 
-findParentescoEmer(){
-  this.aspiranteService.getParentescoEmer().subscribe(
-    (result: any) => {
-        this.parentesco = result;
-  }
-  );
-}
-
-findSectorTrabajo(){
-  this.aspiranteService.getSectorTrabajo().subscribe(
-    (result: any) => {
-        this.sectortrab = result;
-  }
-  );
-}
-
-findQuestSec(){
-  this.aspiranteService.getQuestSec().subscribe(
-    (result: any) => {
-        this.questsec = result;
-  }
-  );
-}
-
 crearPersona(f: any) {
   this.aspiranteService.createPerson(f.value).subscribe(datos => {
     if (datos['resultado']=='NOK' || datos['resultado']!=='OK') {
@@ -422,7 +382,6 @@ guardar(): void {
     const datosStep2 = this.secondFormGroup.value;
     const datosStep3 = this.thirdFormGroup.value;
     const datosStep4 = this.fourthFormGroup.value;
-    const datosStep5 = this.fiveFormGroup.value;
     //this.aspiranteService.materiasAspirante = data.materias
     const materiasSeleccionadas = this.aspiranteService.materiasAspirante;
 
@@ -434,7 +393,6 @@ guardar(): void {
       step2: datosStep2,
       step3: datosStep3,
       step4: datosStep4,
-      step5: datosStep5,
       materias: materiasSeleccionadas
     };
 
@@ -448,11 +406,11 @@ guardar(): void {
     });
 }
 
+
       
     firstFormGroup = this._formBuilder.group({
-      nac:[{value: '', disabled: true}, Validators.required],
-      nacpost: ['', Validators.required, ] ,
-      cedula: [{value: '', readonly: true}, Validators.required],
+      nac:['', Validators.required],
+      cedula: ['', Validators.required],
       fec_nac: ['', Validators.required],
       primer_nombre: [{value: '', readonly: true}, Validators.required],
       segundo_nombre: [{value: '', readonly: true}, Validators.nullValidator],
@@ -460,40 +418,29 @@ guardar(): void {
       segundo_apellido: [{value: '', readonly: true}, Validators.nullValidator],
       genero: ['', Validators.required],
       edo_civil: ['', Validators.required],
-      gruposan: ['', Validators.required],
-      estadoNacimiento: ['', Validators.required],
-      municipioNacimiento: ['', Validators.required],
-      parroquiaNacimiento: ['', Validators.required],
-      etnia: ['', Validators.required],
-      discapacidad: ['', Validators.required],
-      conapdis: [null, Validators.nullValidator],
-      trabajo:  ['', Validators.required],
-      sectortrabajo:  ['', Validators.nullValidator],
-      hijos: ['', Validators.required],
-      canthijos: [null, Validators.nullValidator],
     });
-    
+
     secondFormGroup = this._formBuilder.group({
   estado: ['', Validators.required],
   municipio: ['', Validators.required],
   parroquia: ['', Validators.required],
   tipovia: ['', Validators.required],
-  nombrevia: ['', Validators.compose([Validators.required, Validators.pattern(/^[^\s]+(\s+[^\s]+)*$/)]) ],
+  nombrevia: ['', Validators.required],
   tiponucleo: ['', Validators.required],
-  nombrenucleo: ['', Validators.compose([Validators.required, Validators.pattern(/^[^\s]+(\s+[^\s]+)*$/)]) ],
+  nombrenucleo: ['', Validators.required],
   tipoconstruccion: ['', Validators.required],
-  nombreconstruccion: ['', Validators.compose([Validators.required, Validators.pattern(/^[^\s]+(\s+[^\s]+)*$/)]) ],
-  complemento: [null,Validators.compose([Validators.nullValidator, Validators.pattern(/^[^\s]+(\s+[^\s]+)*$/)]) ],
+  nombreconstruccion: ['', Validators.required],
+  complemento: [null, Validators.nullValidator],
 
 
   opermovil: ['', Validators.required],
-  nummovil: ['', [Validators.required, Validators.minLength(7), Validators.maxLength(7)]],
+  nummovil: ['', Validators.required],
   operres: [null, Validators.nullValidator],
-  numres: [null, Validators.compose([Validators.nullValidator, Validators.minLength(7), Validators.maxLength(7)]) ],
+  numres: [null, Validators.nullValidator],
   operemer:['', Validators.required],
-  numemer: ['', [Validators.required, Validators.minLength(7), Validators.maxLength(7)]],
+  numemer:['', Validators.required],
   parenemer:['', Validators.required],
-  nombreemer:['', Validators.compose([Validators.required, Validators.pattern(/^[^\s]+(\s+[^\s]+)*$/)]) ],
+  nombreemer:['', Validators.required],
   emailppal: ['', Validators.compose([Validators.required, Validators.email])  ],
   emailalter: [null, Validators.compose([Validators.nullValidator, Validators.email])  ],
  
@@ -502,7 +449,7 @@ guardar(): void {
 thirdFormGroup = this._formBuilder.group({
   tbachiller: ['', Validators.required],
   fechagradobachiller: ['', Validators.required],
-  sni: [null, Validators.nullValidator],
+  sni: ['', Validators.required],
   indbachiller: ['', Validators.required],
   estadoplantel: ['', Validators.required],
   municipioplantel: ['', Validators.required],
@@ -511,61 +458,30 @@ thirdFormGroup = this._formBuilder.group({
   nombreies: [null, Validators.nullValidator],
   tituloies: [null, Validators.nullValidator],
   fechagradoies: ['', Validators.nullValidator],
-  mencionies: [null, Validators.nullValidator],
  
 });
 
 fourthFormGroup = this._formBuilder.group({
- turno:     [{value: '', disabled: true}, Validators.required],
- mingreso:  [{value: '', disabled: true}, Validators.required],
- pnf:       [{value: '', disabled: true}, Validators.required],
- trayecto:  [{value: '', disabled: true}, Validators.required],
- turno2:     ['', Validators.required, ] ,
- mingreso2:  ['', Validators.required, ] ,
- pnf2:       ['', Validators.required, ] ,
- trayecto2:  ['', Validators.required, ] ,
- seleccionado:  [{value: '', disabled: true}, Validators.required],
- zonaprocedencia: ['', Validators.required],
- cod_ucurr: [{value: [], readonly: true}, Validators.nullValidator],
- 
- 
+ pnf:       ['', [Validators.required, Validators.minLength(1), Validators.maxLength(3)]],
+ zonaprocedencia: ['', Validators.required], 
 });
 
 fiveFormGroup = this._formBuilder.group({  
-  usrsice:[{value: '', readonly: true}, Validators.required],
+  usrsice:[{value: '', disabled: true}, Validators.required],
   pass:['', Validators.required],
   confpass:['', Validators.required],
-  quest1:['', Validators.required],
-  quest2:['', Validators.required],
-  quest3:['', Validators.required],
-  answ1:['', Validators.required],
-  answ2:['', Validators.required],
-  answ3:['', Validators.required],
+      nacpost: ['', Validators.required, ] ,
+      cedula: [{value: '', readonly: true}, Validators.required],
+      fec_nac: ['', Validators.required],
+      primer_nombre: [{value: '', readonly: true}, Validators.required],
+      segundo_nombre: [{value: '', readonly: true}, Validators.nullValidator],
+      primer_apellido: [{value: '', readonly: true}, Validators.required],
+      segundo_apellido: [{value: '', readonly: true}, Validators.nullValidator],
+  
  });
-
-
-
-  validacion1: boolean;
-  validacion2: boolean;
-  validacion3: boolean;
-  validacion4: boolean;
-  validacion5: boolean;
-  validacion6: boolean;
-
-  validarContrasena() {
-    this.validacion1 = this.pass.length >= 8;
-    this.validacion2 = /[+-.!_*$#]/.test(this.pass);
-    this.validacion4 = /\d/.test(this.pass); // Validar que haya al menos un número
-    this.validacion5 = /[A-Z]/.test(this.pass); // Validar que haya al menos una letra mayúscula
-    this.validacion6 = !this.pass.includes(this.aspirante.usrsice) && !this.pass.includes(this.aspirante.cedula);  // Validar que la contraseña no sea igual a la cédula de identidad
-    this.validarConfirmacion();
-  }
-
-  validarConfirmacion() {
-    this.validacion3 = this.pass !== null && this.confpass !== null && this.pass === this.confpass;
-  }
 
 selectedPlantel = this._formBuilder.group({
   
  });
+
 }

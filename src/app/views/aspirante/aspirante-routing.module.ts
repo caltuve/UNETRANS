@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LoginAspiranteComponent } from './login-aspirante/login-aspirante.component';
 import { AutomatriculacionComponent } from './automatriculacion/automatriculacion.component';
+import { AutopostulacionComponent } from './autopostulacion/autopostulacion.component'; 
 
 
 const routes: Routes = [
@@ -16,7 +17,14 @@ const routes: Routes = [
     path: 'automatriculacion',
     component: AutomatriculacionComponent,
     data: {
-      title: 'Registro Aspirante'
+      title: 'Automatriculación'
+    }
+  },
+  {
+    path: 'autopostulacion',
+    component: AutopostulacionComponent,
+    data: {
+      title: 'Autopostulación'
     }
   },
 ];

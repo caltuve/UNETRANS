@@ -8,6 +8,7 @@ import { LoginComponent } from './views/pages/login/login.component';
 import { RegisterComponent } from './views/pages/register/register.component';
 import { LoginAspiranteComponent } from './views/aspirante/login-aspirante/login-aspirante.component';
 import { AutomatriculacionComponent } from './views/aspirante/automatriculacion/automatriculacion.component';
+import { AutopostulacionComponent } from './views/aspirante/autopostulacion/autopostulacion.component';
 
 const routes: Routes = [
   {
@@ -131,6 +132,13 @@ const routes: Routes = [
     component: AutomatriculacionComponent,
     data: {
       title: 'Registro Aspirantes'
+    }
+  },
+  {
+    path: 'autopostulacion',
+    component: AutopostulacionComponent,
+    data: {
+      title: 'Autopostulación'
     }
   },
   

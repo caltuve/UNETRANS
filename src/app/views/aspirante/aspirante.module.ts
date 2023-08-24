@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { AspiranteRoutingModule } from './aspirante-routing.module';
 import { LoginAspiranteComponent } from './login-aspirante/login-aspirante.component';
 import { AutomatriculacionComponent } from './automatriculacion/automatriculacion.component';
+import { AutopostulacionComponent } from './autopostulacion/autopostulacion.component'; 
 
 import { MatStepperModule } from '@angular/material/stepper'; 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -63,13 +64,15 @@ import {
 
 import { IconModule } from '@coreui/icons-angular';
 
-import { NgxSpinnerModule } from "ngx-spinner"; 
+import { NgxSpinnerModule } from "ngx-spinner";
+
 
 
 @NgModule({
   declarations: [
     LoginAspiranteComponent,
     AutomatriculacionComponent,
+    AutopostulacionComponent,
   ],
   imports: [
     CommonModule,

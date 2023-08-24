@@ -112,6 +112,18 @@ getZonaPTransporte() {
   return this.http.get(`${this.url}zonaptransporte.php`);
 }
 
+getParentescoEmer() {
+  return this.http.get(`${this.url}parentescoemer.php`);
+}
+
+getSectorTrabajo() {
+  return this.http.get(`${this.url}sector_trabajo.php`);
+}
+
+getQuestSec() {
+  return this.http.get(`${this.url}questsec.php`);
+}
+
 getAspirantes() {
   return this.http.get(`${this.url}aspirante_opsu.php`);
 }

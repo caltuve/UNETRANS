@@ -16,17 +16,22 @@ export const navItems: INavData[] = [
   name: 'CONTROL DE ESTUDIOS'
 },
 {
-  name: 'Estudiantes',
+  name: 'Aspirante/Estudiante',
   url: '/control-estudios',
   iconComponent: { name: 'cil-address-book' },
   children: [
     {
-      name: 'Aspirante OPSU',
+      name: 'Asignados OPSU',
       url: '/control-estudios/aspirante-opsu',
       iconComponent: { name: 'cil-list-rich' },
     },
     {
-      name: 'Crear nuevo',
+      name: 'Autopostulación',
+      url: '/control-estudios/crear-nuevo',
+      iconComponent: { name: 'cil-color-border' },
+    },
+    {
+      name: 'Crear nuevo estudiante',
       url: '/control-estudios/crear-nuevo',
       iconComponent: { name: 'cil-plus' },
     },
