@@ -5,6 +5,7 @@ import { CrearNuevoComponent } from './crear-nuevo/crear-nuevo.component';
 import { ConsultarDatosComponent } from './consultar-datos/consultar-datos.component';
 import { ExpedienteDigitalComponent } from './expediente-digital/expediente-digital.component';
 import { MantenimientoMallasComponent } from './mantenimiento-mallas/mantenimiento-mallas.component'
+import { AutopostuladosComponent } from './autopostulados/autopostulados.component';
 
 const routes: Routes = [
   {
@@ -19,10 +20,24 @@ const routes: Routes = [
         redirectTo: 'consultar-datos'
       },
       {
+        path: 'consultar-datos',
+        component: ConsultarDatosComponent,
+        data: {
+          title: 'Consultar datos'
+        }
+      },
+      {
         path: 'aspirante-opsu',
         component: AspiranteOpsuComponent,
         data: {
           title: 'Aspirante OPSU'
+        }
+      },
+      {
+        path: 'autopostulados',
+        component: AutopostuladosComponent,
+        data: {
+          title: 'Autopostulados'
         }
       },
       {
@@ -32,13 +47,7 @@ const routes: Routes = [
           title: 'Crear nuevo estudiante'
         }
       },
-      {
-        path: 'consultar-datos',
-        component: ConsultarDatosComponent,
-        data: {
-          title: 'Consultar datos'
-        }
-      },
+      
       {
         path: 'expediente-digital',
         component: ExpedienteDigitalComponent,

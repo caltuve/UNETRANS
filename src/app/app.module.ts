@@ -82,6 +82,8 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import { ToastrModule } from 'ngx-toastr';
 import { NgxSpinnerModule } from "ngx-spinner"; 
 
+import { ModalModule } from 'ngx-bootstrap/modal';
+
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true,
 };
@@ -142,6 +144,7 @@ const APP_CONTAINERS = [
     MatCheckboxModule,
     NgxSpinnerModule,
     ToastrModule.forRoot(),
+    ModalModule.forRoot(),
   ],
   providers: [
     {

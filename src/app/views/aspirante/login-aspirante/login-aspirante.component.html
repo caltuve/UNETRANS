@@ -12,10 +12,10 @@
 	</head>
 	<body>
 	<section class="ftco-section">
-		<div class="container">
+		<div class="container-login">
 			<div class="row justify-content-center">
 				<div class="col-md-12 col-lg-10">
-					<div class="wrap d-md-flex">
+					<div class="wrap-login d-md-flex">
 						<div class="img" style="background-image: url(assets/img/brand/inscripcion.jpg);">
 			      </div>
 						<div class="login-wrap p-4 p-md-5">
@@ -48,6 +48,27 @@
 	<ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" size="default" type="ball-atom">
 		<p style="color: white" align="center">Por favor espere... <br>¡Validando información!</p>
 	  </ngx-spinner>
+	  <div bsModal #myModalCompletado="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+		  <div class="modal-content">
+			<div class="modal-header">
+			  <h2 class="modal-title">Proceso completado</h2>
+			  <button type="button" class="close" (click)="myModalCompletado.hide()" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			  </button>
+			</div>
+			<div class="modal-body" >
+				Usted ya cumplió con el proceso de automatriculación, ¿desea descargar nuevamente la planilla de registro?
+				<br>
+			  <input name="nuevoingreso" id="nuevoingreso" class="btn btn-block login-btn mb-4" type="button"  routerLink="/login-aspirante" value="Nuevo ingreso o autopostulación">
+			  
+			</div>
+			<div class="modal-footer">
+			  <button type="button" class="btn btn-secondary" (click)="myModalCompletado.hide()">Cerrar</button>
+			</div>
+		  </div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	  </div><!-- /.modal -->
 
 	<script src="js/jquery.min.js"></script>
   <script src="js/popper.js"></script>

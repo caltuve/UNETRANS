@@ -21,24 +21,24 @@ export const navItems: INavData[] = [
   iconComponent: { name: 'cil-address-book' },
   children: [
     {
+      name: 'Consultar datos',
+      url: '/control-estudios/consultar-datos',
+      iconComponent: { name: 'cil-zoom' }, 
+    },
+    {
       name: 'Asignados OPSU',
       url: '/control-estudios/aspirante-opsu',
       iconComponent: { name: 'cil-list-rich' },
     },
     {
       name: 'Autopostulación',
-      url: '/control-estudios/crear-nuevo',
+      url: '/control-estudios/autopostulados',
       iconComponent: { name: 'cil-color-border' },
     },
     {
       name: 'Crear nuevo estudiante',
       url: '/control-estudios/crear-nuevo',
       iconComponent: { name: 'cil-plus' },
-    },
-    {
-      name: 'Consultar datos',
-      url: '/control-estudios/consultar-datos',
-      iconComponent: { name: 'cil-zoom' }, 
     },
     {
       name: 'Expediente digital',

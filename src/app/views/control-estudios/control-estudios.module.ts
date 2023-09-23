@@ -33,6 +33,7 @@ import { CalloutModule, NavModule, TabsModule, UtilitiesModule } from '@coreui/a
 import {TableModule } from '@coreui/angular';
 import { MatTableModule } from '@angular/material/table';
 
+import { NgxSpinnerModule } from "ngx-spinner";
 
 import { DocsComponentsModule } from '@docs-components/docs-components.module';
 
@@ -41,6 +42,7 @@ import {MatPaginatorModule} from '@angular/material/paginator';
 
 import {
   AccordionModule,
+  AlertModule,
   BadgeModule,
   BreadcrumbModule,
   ButtonModule,
@@ -50,7 +52,7 @@ import {
   DropdownModule,
   ListGroupModule,
   ModalModule,
-  PaginationModule,
+  //PaginationModule,
   PlaceholderModule,
   PopoverModule,
   ProgressModule,
@@ -61,6 +63,9 @@ import {
 
 import { IconModule } from '@coreui/icons-angular';
 import { MantenimientoMallasComponent } from './mantenimiento-mallas/mantenimiento-mallas.component';
+import { AutopostuladosComponent } from './autopostulados/autopostulados.component';
+
+import {MatSortModule} from '@angular/material/sort';
 
 
 @NgModule({
@@ -69,13 +74,15 @@ import { MantenimientoMallasComponent } from './mantenimiento-mallas/mantenimien
     ConsultarDatosComponent,
     ExpedienteDigitalComponent,
     AspiranteOpsuComponent,
-    MantenimientoMallasComponent
+    MantenimientoMallasComponent,
+    AutopostuladosComponent
   ],
   imports: [
     CommonModule,
     ControlEstudiosRoutingModule,
     MatStepperModule,
     FormsModule,
+    AlertModule,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
@@ -107,7 +114,7 @@ import { MantenimientoMallasComponent } from './mantenimiento-mallas/mantenimien
   DropdownModule,
   ListGroupModule,
   ModalModule,
-  PaginationModule,
+  //PaginationModule,
   PlaceholderModule,
   PopoverModule,
   ProgressModule,
@@ -115,7 +122,9 @@ import { MantenimientoMallasComponent } from './mantenimiento-mallas/mantenimien
   SpinnerModule,
   TooltipModule,
   IconModule,
-  MatPaginatorModule,  
+  MatPaginatorModule, 
+  NgxSpinnerModule,
+  MatSortModule,
   ],
   providers: [{provide: MAT_DATE_LOCALE, useValue: 'es-VE'}, {provide: ControlEstudiosService}],
 })

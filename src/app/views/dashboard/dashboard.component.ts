@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 
 import { DashboardChartsData, IChartProps } from './dashboard-charts-data';
+import { NgxSpinnerService } from "ngx-spinner";
 
 interface IUser {
   name: string;
@@ -22,7 +23,8 @@ interface IUser {
   styleUrls: ['dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
-  constructor(private chartsData: DashboardChartsData) {
+  constructor(private chartsData: DashboardChartsData,
+    private SpinnerService: NgxSpinnerService,) {
   }
 
   public users: IUser[] = [
@@ -116,7 +118,9 @@ export class DashboardComponent implements OnInit {
   }
 
   initCharts(): void {
+    this.SpinnerService.show();
     this.mainChart = this.chartsData.mainChart;
+    this.SpinnerService.hide();
   }
 
   setTrafficPeriod(value: string): void {

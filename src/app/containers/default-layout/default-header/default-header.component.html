@@ -1,7 +1,18 @@
 <!--<c-header class="mb-4 d-print-none" position="sticky">-->
 <ng-container>
   <c-container [fluid]="true">
-
+    <button
+    toggle="visible"
+    cHeaderToggler
+    [cSidebarToggle]="sidebarId"
+    class="ps-1"
+  >
+    <svg cIcon
+      name="cilMenu"
+      size="lg"
+      color= #ffffff
+    ></svg>
+  </button>
     <c-header-nav class=" d-lg-flex me-auto">
       <c-nav-item>
         <a cNavLink>
@@ -12,7 +23,7 @@
 
     <c-header-nav class=" d-lg-flex">
       <a cNavLink>
-        CHRISTIAN ALTUVE
+        {{usr.saludo}}, {{usr.nombre_corto}}
       </a>
     </c-header-nav>
     <c-header-nav class="ms-3">

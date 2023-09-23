@@ -8,7 +8,9 @@ import { Observable } from "rxjs";
 })
 export class AspiranteService {
 
-  url = 'http://localhost/unetrans/';
+  //url = 'http://localhost/unetrans/'; //Desarrollo
+  //url = 'http://172.20.1.50/'; //Produccion local desa
+  url = 'http://190.202.27.122/'; //Produccion Produccion
   url2 = 'https://petroapp-price.petro.gob.ve/price/';
   constructor(private http: HttpClient) { } 
   datosAspirante: any;
@@ -91,6 +93,9 @@ getPlantelOfSelectedParroquia(selectedParroquiaId: string): Observable<any>{
 getAspirante(identificacion: any): Observable<any>{
     return this.http.post(`${this.url}verify_aspirante.php`, JSON.stringify(identificacion))
 }
+getEstudianteAspirante(identificacion: any): Observable<any>{
+  return this.http.post(`${this.url}dat_estudiante.php`, JSON.stringify(identificacion))
+}
 
 getBachiller() {
   return this.http.get(`${this.url}tipo_bachiller.php`);
@@ -132,5 +137,8 @@ createPerson(datospersona : any): Observable<any>{
   return this.http.post(`${this.url}crearpersona.php`, JSON.stringify(datospersona))
 }
 
+createPersonAutopostulado(datospersona : any): Observable<any>{
+  return this.http.post(`${this.url}crearautopostulado.php`, JSON.stringify(datospersona))
+}
 
 }

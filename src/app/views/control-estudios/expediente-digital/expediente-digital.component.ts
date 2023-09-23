@@ -406,13 +406,13 @@ columnStyles: {
 })
 doc.setFontSize(9);
 doc.setFont('Arial','normal');
-doc.text('NOTA: al momento de formalizar la inscripción debe consignar la documentación en ORIGINAL para su verificación', doc.internal.pageSize.getWidth() / 2, doc.internal.pageSize.getHeight() - 150, { align: 'center' });
+doc.text('NOTA: Al momento de formalizar la inscripción debe consignar la documentación en ORIGINAL para su verificación', doc.internal.pageSize.getWidth() / 2, doc.internal.pageSize.getHeight() - 150, { align: 'center' });
 doc.text(`____________________________`, 80, doc.internal.pageSize.getHeight() - 60);
 doc.text(`____________________________`, 250, doc.internal.pageSize.getHeight() - 60);
 doc.text(`____________________________`, 420, doc.internal.pageSize.getHeight() - 60);
 doc.setFont('Arial','bold');
 doc.text(`Firma del participante`, 100, doc.internal.pageSize.getHeight() - 50);
-doc.text(`Funcionario Control de Estudios`, 250, doc.internal.pageSize.getHeight() - 50);
+doc.text(`Personal de Control de Estudios`, 250, doc.internal.pageSize.getHeight() - 50);
 doc.text(`Fecha consignación`, 446, doc.internal.pageSize.getHeight() - 50);
 
 } else {
@@ -546,13 +546,13 @@ columnStyles: {
 })
 doc.setFontSize(9);
 doc.setFont('Arial','normal');
-doc.text('NOTA: al momento de formalizar la inscripción debe consignar la documentación en ORIGINAL para su verificación', doc.internal.pageSize.getWidth() / 2, doc.internal.pageSize.getHeight() - 120, { align: 'center' });
+doc.text('NOTA: Al momento de formalizar la inscripción debe consignar la documentación en ORIGINAL para su verificación', doc.internal.pageSize.getWidth() / 2, doc.internal.pageSize.getHeight() - 120, { align: 'center' });
 doc.text(`____________________________`, 80, doc.internal.pageSize.getHeight() - 60);
 doc.text(`____________________________`, 250, doc.internal.pageSize.getHeight() - 60);
 doc.text(`____________________________`, 420, doc.internal.pageSize.getHeight() - 60);
 doc.setFont('Arial','bold');
 doc.text(`Firma del participante`, 100, doc.internal.pageSize.getHeight() - 50);
-doc.text(`Funcionario Control de Estudios`, 250, doc.internal.pageSize.getHeight() - 50);
+doc.text(`Personal de Control de Estudios`, 250, doc.internal.pageSize.getHeight() - 50);
 doc.text(`Fecha consignación`, 446, doc.internal.pageSize.getHeight() - 50);
 
 }

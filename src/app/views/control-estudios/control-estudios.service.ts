@@ -10,7 +10,9 @@ import { tap, map} from 'rxjs/operators';
   providedIn: 'root'
 })
 export class ControlEstudiosService {
-  url = 'http://localhost/unetrans/';
+  //url = 'http://localhost/unetrans/'; //Desarrollo
+  //url = 'http://172.20.1.50/'; //Produccion local desa
+  url = 'http://190.202.27.122/'; //Produccion Produccion
   url2 = 'https://petroapp-price.petro.gob.ve/price/';
   constructor(private http: HttpClient) { }
 
@@ -102,7 +104,11 @@ getTurnos() {
 }
 
 getAspirantes() {
-  return this.http.get(`${this.url}aspirante_opsu.php`);
+  return this.http.get(`${this.url}resumen_opsu_dace.php`);
+}
+
+getAutopostulado() {
+  return this.http.get(`${this.url}resumen_autopostulados_dace.php`);
 }
   getEstudiante() {
     return this.http.get(`${this.url}dat_estudiante.php`);

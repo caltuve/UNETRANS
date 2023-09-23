@@ -1,15 +1,16 @@
 import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { NgForm, FormBuilder, FormGroup, Validators,FormControl} from '@angular/forms';
 import { AspiranteService } from '../aspirante.service';
-import {MatTableDataSource} from '@angular/material/table';
-import { EstadoI, MunicipioI, ParroquiaI } from '../../control-estudios/crear-nuevo/model.interface'
+import { NgxSpinnerService } from "ngx-spinner";
+import { NotificacionService } from './../../../notificacion.service'
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-autopostulacion',
   templateUrl: './autopostulacion.component.html',
   styleUrls: ['./autopostulacion.component.scss']
 })
-export class AutopostulacionComponent implements OnInit, AfterViewInit {
+export class AutopostulacionComponent implements OnInit {
 
   aspirante: any ;
   minDate1!: Date;
@@ -34,28 +35,7 @@ export class AutopostulacionComponent implements OnInit, AfterViewInit {
   opermovil: any []= [];
   operres: any []= [];
   
-  listEstadosNacimiento!: EstadoI[]
-  estadoSelectedNacimiento!: string
-  listMunicipiosNacimiento!: MunicipioI[]
-  municipioSelectedNacimiento!: string
-  listParroquiasNacimiento!: ParroquiaI[]
-  parroquiaSelectedNacimiento!: string
-
-  listEstadosResidencia!: EstadoI[]
-  estadoSelectedResidencia!: string
-  listMunicipiosResidencia!: MunicipioI[]
-  municipioSelectedResidencia!: string
-  listParroquiasResidencia!: ParroquiaI[]
-  parroquiaSelectedResidencia!: string
-
-
-  listEstadosEducacionMedia!: EstadoI[]
-  estadoSelectedEducacionMedia!: string
-  listMunicipiosEducacionMedia!: MunicipioI[]
-  municipioSelectedEducacionMedia!: string
-  listParroquiasEducacionMedia!: ParroquiaI[]
-  parroquiaSelectedEducacionMedia!: string
-
+ 
   bachiller: any []= [];
   moding: any []= [];
   turnos: any []= [];
@@ -82,15 +62,21 @@ export class AutopostulacionComponent implements OnInit, AfterViewInit {
   segundo_nombre!: string;
   primer_apellido!: string;
   segundo_apellido!: string;
-  pnf!: string;
+  pnf1!: string;
+  pnf2!: string;
+  pnf3!: string;
+  tipoaspirante!: string;
 
   constructor(private _formBuilder: FormBuilder,
     public aspiranteService: AspiranteService,
+    private SpinnerService: NgxSpinnerService,
+    private notifyService : NotificacionService,
+    public router: Router,
     ) 
     { 
-      //this.aspirante = this.aspiranteService.datosAspirante;
+      this.aspirante = this.aspiranteService.datosAspirante;
       //this.materias = this.aspiranteService.materiasAspirante;
-      //sessionStorage.setItem('currentUser', JSON.stringify(this.aspirante)); 
+      sessionStorage.setItem('currentUser', JSON.stringify(this.aspirante)); 
       //sessionStorage.setItem('materiasAspirante', JSON.stringify(this.aspiranteService.materiasAspirante)); 
       //console.log(this.aspiranteService.materiasAspirante);
       const currentYear = new Date().getFullYear();
@@ -98,8 +84,8 @@ export class AutopostulacionComponent implements OnInit, AfterViewInit {
       const currentDay = new Date().getDate();
       this.minDate1 = new Date(currentYear - 90, currentMonth, currentDay);
       this.maxDate1 = new Date(currentYear - 14, currentMonth, currentDay);
-      this.minDate2 = new Date(currentYear - 90, currentMonth, currentDay);
-      this.maxDate2 = new Date(currentYear - 14, currentMonth, currentDay);
+      this.minDate2 = new Date(currentYear - 69, currentMonth, currentDay);
+      this.maxDate2 = new Date(currentYear , currentMonth, currentDay);
       this.minDate3 = new Date(currentYear - 90, currentMonth, currentDay);
       this.maxDate3 = new Date(currentYear - 14, currentMonth, currentDay);
       
@@ -109,29 +95,13 @@ export class AutopostulacionComponent implements OnInit, AfterViewInit {
       this.findNac();
       this.findGen();
       this.findEdoCivil();
-      this.findGrupoSan();
-      this.findEtnia();
-      this.findIndResp();
-      this.findDiscapacidad();
-      //this.findEstados();
-      this.findTipoVia();
-      this.findTipoNucleo();
-      this.findTipoConstruccion();
-      this.findCarreras();
-      this.findOperMovil();
-      this.findOperRes();
       this.findBachiller();
-      this.findModIngreso();
-      this.findTurnos();
-      this.findTrayectos();
+      this.findCarreras();
       this.findZonaPTransporte();
+      this.findOperMovil();
+      this.findIndResp();
       }
 
-      ngAfterViewInit() {
-        this.findEstadosNacimiento();
-        this.findEstadosResidencia();
-        this.findEstadosEducacionMedia();
-      }
 
 findNac(){
   this.aspiranteService.getNac().subscribe(
@@ -158,163 +128,6 @@ findEdoCivil(){
   );
 }
 
-findGrupoSan(){
-  this.aspiranteService.getGrupoSan().subscribe(
-    (result: any) => {
-        this.gruposan = result;
-  }
-  );
-}
-
-findEtnia(){
-  this.aspiranteService.getEtnia().subscribe(
-    (result: any) => {
-        this.etnia = result;
-  }
-  );
-}
-
-findIndResp(){
-  this.aspiranteService.getIndResp().subscribe(
-    (result: any) => {
-        this.indresp = result;
-  }
-  );
-}
-
-findDiscapacidad(){
-  this.aspiranteService.getDiscapacidad().subscribe(
-    (result: any) => {
-        this.discapacidad = result;
-        //console.log(this.discapacidad);
-  }
-  );
-}
-
-private findEstadosNacimiento(){
-  this.aspiranteService.getEstados().subscribe(data=>{
-    this.listEstadosNacimiento = data
-  })
-}
-
-private findEstadosResidencia(){
-  this.aspiranteService.getEstados().subscribe(data=>{
-    this.listEstadosResidencia = data
-  })
-}
-
-private findEstadosEducacionMedia(){
-  this.aspiranteService.getEstados().subscribe(data=>{
-    this.listEstadosEducacionMedia = data
-  })
-}
-
-onEstadoselectedNacimiento(selectedEstadoId: any){
-  this.aspiranteService.getMunicipioOfSelectedEstado(selectedEstadoId).subscribe(
-    data=>{
-      this.listMunicipiosNacimiento = data
-    }
-  )
-}
-
-onMunicipioselectedNacimiento(selectedMunicipioId: any){
-  this.aspiranteService.getParroquiaOfSelectedMunicipio(selectedMunicipioId).subscribe(
-    data=>{
-      this.listParroquiasNacimiento = data
-    }
-  )
-}
-
-onEstadoselectedResidencia(selectedEstadoId: any){
-  this.aspiranteService.getMunicipioOfSelectedEstado(selectedEstadoId).subscribe(
-    data=>{
-      this.listMunicipiosResidencia = data
-    }
-  )
-}
-
-onMunicipioselectedResidencia(selectedMunicipioId: any){
-  this.aspiranteService.getParroquiaOfSelectedMunicipio(selectedMunicipioId).subscribe(
-    data=>{
-      this.listParroquiasResidencia = data
-    }
-  )
-}
-
-
-onEstadoselectedEducacionMedia(selectedEstadoId: any){
-  this.aspiranteService.getMunicipioOfSelectedEstado(selectedEstadoId).subscribe(
-    data=>{
-      this.listMunicipiosEducacionMedia = data
-    }
-  )
-}
-
-onMunicipioselectedEducacionMedia(selectedMunicipioId: any){
-  this.aspiranteService.getParroquiaOfSelectedMunicipio(selectedMunicipioId).subscribe(
-    data=>{
-      this.listParroquiasEducacionMedia = data
-    }
-  )
-}
-
-onParroquiaselectedEducacionMedia(selectedParroquiaId: any){
-  this.aspiranteService.getPlantelOfSelectedParroquia(selectedParroquiaId).subscribe(
-    data=>{
-      //this.dataSource.data = data;
-      this.listPlantel = data
-      //console.log(data)
-    }
-  )
-}
-
-findTipoVia(){
-  this.aspiranteService.getTipovia().subscribe(
-    (result: any) => {
-        this.tipovia = result;
-  }
-  );
-}
-
-findTipoNucleo(){
-  this.aspiranteService.getTipoNucleo().subscribe(
-    (result: any) => {
-        this.tiponucleo = result;
-  }
-  );
-}
-
-findTipoConstruccion(){
-  this.aspiranteService.getTipoConstruccion().subscribe(
-    (result: any) => {
-        this.tipoconstruccion = result;
-  }
-  );
-}
-
-findCarreras(){
-  this.aspiranteService.getCarreras().subscribe(
-    (result: any) => {
-        this.carreras = result;
-  }
-  );
-}
-
-findOperMovil(){
-  this.aspiranteService.getOperMovil().subscribe(
-    (result: any) => {
-        this.opermovil = result;
-  }
-  );
-}
-
-findOperRes(){
-  this.aspiranteService.getOperRes().subscribe(
-    (result: any) => {
-        this.operres = result;
-  }
-  );
-}
 
 findBachiller(){
   this.aspiranteService.getBachiller().subscribe(
@@ -324,29 +137,6 @@ findBachiller(){
   );
 }
 
-findModIngreso(){
-  this.aspiranteService.getModIngreso().subscribe(
-    (result: any) => {
-        this.moding = result;
-  }
-  );
-}
-
-findTurnos(){
-  this.aspiranteService.getTurnos().subscribe(
-    (result: any) => {
-        this.turnos = result;
-  }
-  );
-}
-
-findTrayectos(){
-  this.aspiranteService.getTrayectos().subscribe(
-    (result: any) => {
-        this.trayectos = result;
-  }
-  );
-}
 
 findZonaPTransporte(){
   this.aspiranteService.getZonaPTransporte().subscribe(
@@ -365,6 +155,30 @@ crearPersona(f: any) {
   });
 }
 
+findCarreras(){
+  this.aspiranteService.getCarreras().subscribe(
+    (result: any) => {
+        this.carreras = result;
+  }
+  );
+}
+
+findOperMovil(){
+  this.aspiranteService.getOperMovil().subscribe(
+    (result: any) => {
+        this.opermovil = result;
+  }
+  );
+}
+
+findIndResp(){
+  this.aspiranteService.getIndResp().subscribe(
+    (result: any) => {
+        this.indresp = result;
+  }
+  );
+}
+
 guardarDatos(event: any): void {
   if (event.selectedIndex === 1) {
     //const datosStep1 = this.firstFormGroup.value;
@@ -376,32 +190,35 @@ guardarDatos(event: any): void {
 }
 
 guardar(): void {
+  this.SpinnerService.show(); 
   // Esta función se ejecutará cuando se haga clic en "Guardar Datos" en el último step
   // Puedes acceder a los datos de cada step utilizando this.step1Form.value, this.step2Form.value, etc.
   const datosStep1 = this.firstFormGroup.value;
-    const datosStep2 = this.secondFormGroup.value;
-    const datosStep3 = this.thirdFormGroup.value;
-    const datosStep4 = this.fourthFormGroup.value;
-    //this.aspiranteService.materiasAspirante = data.materias
-    const materiasSeleccionadas = this.aspiranteService.materiasAspirante;
-
-    console.log(materiasSeleccionadas);
-
+  const datosStep2 = this.secondFormGroup.value;
+  const datosStep3 = this.thirdFormGroup.value;
+  const datosStep4 = this.fourthFormGroup.value;
 
     const datosCompletos = {
-      step1: datosStep1,
+      step1: datosStep1 ,
       step2: datosStep2,
       step3: datosStep3,
       step4: datosStep4,
-      materias: materiasSeleccionadas
     };
 
-    //console.log(datosCompletos);
-
-    this.aspiranteService.createPerson(datosCompletos).subscribe(datos => {
-      if (datos['resultado']=='NOK' || datos['resultado']!=='OK') {
+    this.aspiranteService.createPersonAutopostulado(datosCompletos).subscribe(datos => {
+      if (datos['resultado']=='OK') {
+        this.SpinnerService.hide();
+        this.notifyService.showInfo('Se le notificará en los próximos días via correo electrónico el estatus de su proceso de autopostulación.');
+        this.notifyService.showSuccess('Proceso de autopostulación finalizado');
+        setTimeout(() => {
+          this.router.navigateByUrl('/login-aspirante');
+        }, 6000); // 6000 milisegundos = 6 segundos
       }else {
-       
+        this.SpinnerService.hide();
+        this.notifyService.showWarning('Ha ocurrido un error, notifíquelo al correo electrónico: soportesice@unetrans.edu.ve indicando su cédula de identidad.');
+        setTimeout(() => {
+          this.router.navigateByUrl('/login-aspirante');
+        }, 6000); // 6000 milisegundos = 6 segundos  
       }
     });
 }
@@ -412,76 +229,42 @@ guardar(): void {
       nac:['', Validators.required],
       cedula: ['', Validators.required],
       fec_nac: ['', Validators.required],
-      primer_nombre: [{value: '', readonly: true}, Validators.required],
-      segundo_nombre: [{value: '', readonly: true}, Validators.nullValidator],
-      primer_apellido: [{value: '', readonly: true}, Validators.required],
-      segundo_apellido: [{value: '', readonly: true}, Validators.nullValidator],
+      primer_nombre: ['', Validators.required],
+      segundo_nombre: [null, Validators.nullValidator],
+      primer_apellido: ['', Validators.required],
+      segundo_apellido:[null, Validators.nullValidator],
       genero: ['', Validators.required],
       edo_civil: ['', Validators.required],
     });
 
     secondFormGroup = this._formBuilder.group({
-  estado: ['', Validators.required],
-  municipio: ['', Validators.required],
-  parroquia: ['', Validators.required],
-  tipovia: ['', Validators.required],
-  nombrevia: ['', Validators.required],
-  tiponucleo: ['', Validators.required],
-  nombrenucleo: ['', Validators.required],
-  tipoconstruccion: ['', Validators.required],
-  nombreconstruccion: ['', Validators.required],
-  complemento: [null, Validators.nullValidator],
+   
+      opermovil: ['', Validators.required],
+      nummovil: ['', [Validators.required, Validators.minLength(7), Validators.maxLength(7)]],
+      emailppal: ['', Validators.compose([Validators.required, Validators.email])  ],
+      emailalter: [null, Validators.compose([Validators.nullValidator, Validators.email])  ],
+     
+    });
 
-
-  opermovil: ['', Validators.required],
-  nummovil: ['', Validators.required],
-  operres: [null, Validators.nullValidator],
-  numres: [null, Validators.nullValidator],
-  operemer:['', Validators.required],
-  numemer:['', Validators.required],
-  parenemer:['', Validators.required],
-  nombreemer:['', Validators.required],
-  emailppal: ['', Validators.compose([Validators.required, Validators.email])  ],
-  emailalter: [null, Validators.compose([Validators.nullValidator, Validators.email])  ],
- 
-});
-
-thirdFormGroup = this._formBuilder.group({
-  tbachiller: ['', Validators.required],
-  fechagradobachiller: ['', Validators.required],
-  sni: ['', Validators.required],
-  indbachiller: ['', Validators.required],
-  estadoplantel: ['', Validators.required],
-  municipioplantel: ['', Validators.required],
-  parroquiaplantel: ['', Validators.required],
-  nombreplantel: ['',Validators.required],
+ thirdFormGroup = this._formBuilder.group({
+  tipoaspirante: ['', Validators.required],
+  sniopsu: ['', Validators.required],
+  tbachiller: [null, Validators.nullValidator],
+  fechagradobachiller: [null, Validators.nullValidator],
   nombreies: [null, Validators.nullValidator],
   tituloies: [null, Validators.nullValidator],
-  fechagradoies: ['', Validators.nullValidator],
- 
+  fechagradoies: [null, Validators.nullValidator],
+  mencionies: [null, Validators.nullValidator],
 });
+
 
 fourthFormGroup = this._formBuilder.group({
- pnf:       ['', [Validators.required, Validators.minLength(1), Validators.maxLength(3)]],
- zonaprocedencia: ['', Validators.required], 
+ pnf1:       ['', Validators.required],
+ pnf2:       ['', Validators.nullValidator],
+ pnf3:       ['', Validators.nullValidator],
+ zonaprocedencia: ['', Validators.required],
+ expmotivos: ['', Validators.required], 
 });
-
-fiveFormGroup = this._formBuilder.group({  
-  usrsice:[{value: '', disabled: true}, Validators.required],
-  pass:['', Validators.required],
-  confpass:['', Validators.required],
-      nacpost: ['', Validators.required, ] ,
-      cedula: [{value: '', readonly: true}, Validators.required],
-      fec_nac: ['', Validators.required],
-      primer_nombre: [{value: '', readonly: true}, Validators.required],
-      segundo_nombre: [{value: '', readonly: true}, Validators.nullValidator],
-      primer_apellido: [{value: '', readonly: true}, Validators.required],
-      segundo_apellido: [{value: '', readonly: true}, Validators.nullValidator],
-  
- });
-
-selectedPlantel = this._formBuilder.group({
-  
- });
+ 
 
 }

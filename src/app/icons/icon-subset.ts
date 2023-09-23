@@ -68,6 +68,7 @@ import {
   cilMenu,
   cilMoon,
   cilNotes,
+  cilNoteAdd,
   cilOptions,
   cilPaperclip,
   cilPaperPlane,
@@ -104,7 +105,9 @@ import {
   cilUserPlus,
   cilCloudUpload,
   cilCheckCircle,
-  cilClock
+  cilClock,
+  cilWarning,
+  cilXCircle
 } from '@coreui/icons';
 
 export const iconSubset = {
@@ -177,6 +180,7 @@ export const iconSubset = {
   cilMenu,
   cilMoon,
   cilNotes,
+  cilNoteAdd,
   cilOptions,
   cilPaperclip,
   cilPaperPlane,
@@ -213,7 +217,9 @@ export const iconSubset = {
   cilUserPlus,
   cilCloudUpload,
   cilCheckCircle,
-  cilClock
+  cilClock,
+  cilWarning,
+  cilXCircle
 };
 
 export enum IconSubset {
@@ -286,6 +292,7 @@ export enum IconSubset {
   cilMenu = 'cilMenu',
   cilMoon = 'cilMoon',
   cilNotes = 'cilNotes',
+  cilNoteAdd = 'cilNoteAdd',
   cilOptions = 'cilOptions',
   cilPaperclip = 'cilPaperclip',
   cilPaperPlane = 'cilPaperPlane',
@@ -318,9 +325,11 @@ export enum IconSubset {
   cilUserFollow = 'cilUserFollow',
   cilUserUnfollow = 'cilUserUnfollow',
   cilFolderOpen = 'cilFolderOpen',
+  cilWarning = 'cilWarning',
   cilZoom = 'cilZoom',
   cilUserPlus = 'cilUserPlus',
   cilCloudUpload ='cilCloudUpload',
   cilCheckCircle= 'cilCheckCircle',
-  cilClock ='cilClock'
+  cilClock ='cilClock',
+  cilXCircle = 'cilXCircle'
 }

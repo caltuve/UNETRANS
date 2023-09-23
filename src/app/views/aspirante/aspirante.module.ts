@@ -51,7 +51,7 @@ import {
   DropdownModule,
   HeaderModule ,
   ListGroupModule,
-  ModalModule,
+  //ModalModule,
   PaginationModule,
   PlaceholderModule,
   PopoverModule,
@@ -62,10 +62,13 @@ import {
   TooltipModule,
 } from '@coreui/angular';
 
+
 import { IconModule } from '@coreui/icons-angular';
 
 import { NgxSpinnerModule } from "ngx-spinner";
 
+import {MatDialogModule} from '@angular/material/dialog';
+import { ModalModule } from 'ngx-bootstrap/modal';
 
 
 @NgModule({
@@ -122,7 +125,8 @@ import { NgxSpinnerModule } from "ngx-spinner";
   IconModule,
   MatPaginatorModule,  
   MatCheckboxModule,
-  NgxSpinnerModule
+  NgxSpinnerModule,
+  MatDialogModule
   ],
   providers: [{provide: MAT_DATE_LOCALE, useValue: 'es-VE'}, {provide: AspiranteService}],
 })

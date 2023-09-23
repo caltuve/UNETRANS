@@ -3,39 +3,36 @@ import {FormBuilder, Validators,FormControl} from '@angular/forms';
 import { ControlEstudiosService } from '../control-estudios.service';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
+import { NgxSpinnerService } from "ngx-spinner";
 
 @Component({
   selector: 'app-aspirante-opsu',
   templateUrl: './aspirante-opsu.component.html',
   styleUrls: ['./aspirante-opsu.component.scss']
 })
-export class AspiranteOpsuComponent implements AfterViewInit, OnInit {
+export class AspiranteOpsuComponent implements OnInit {
   
-  dataSource = new MatTableDataSource();
-  displayedColumns: string[] = ['id_estudiante','nombre_completo','pnf','confirma'];
+  arrayDatos : any []= [];
+  dataSource = new MatTableDataSource([]);
+  displayedColumns: string[] = ['id_estudiante','nombre_completo','confirma'];
 
+  dato: any []= [];
   nacs: any []= [];
   genero: any []= [];
   carreras: any []= [];
   aspirantes: any []= [];
 
+  
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   constructor(private _formBuilder: FormBuilder,
-    public controlestudiosService: ControlEstudiosService) {
+    public controlestudiosService: ControlEstudiosService,
+    private SpinnerService: NgxSpinnerService,) {
     }
 
-    ngAfterViewInit() {
-      this.dataSource.paginator = this.paginator;
-      this.paginator._intl.itemsPerPageLabel = 'Registros por página';
-      this.paginator._intl.nextPageLabel = 'Siguiente';
-      this.paginator._intl.previousPageLabel = 'Anterior';     
-    }
 
-  ngOnInit() {
-    this.findNac();
-    this.findGen();
-    this.findCarreras();
+
+  ngOnInit() { 
     this.findAspirantes();
 }
 
@@ -58,17 +55,27 @@ findGen(){
 findCarreras(){
   this.controlestudiosService.getCarreras().subscribe(
     (result: any) => {
-        this.carreras = result;
+        //this.carreras = result;
   }
   );
 }
 
 findAspirantes(){
+  this.SpinnerService.show();
   this.controlestudiosService.getAspirantes().subscribe(
     (result: any) => {
-      this.dataSource.data = result;
+
+      this.arrayDatos = result;
+      this.carreras = result[0].carreras;
+      this.SpinnerService.hide();
   }
   );
+ 
+}
+
+applyFilter(event: Event) {
+  const filterValue = (event.target as HTMLInputElement).value;
+  this.dataSource.filter = filterValue.trim().toLowerCase();
 }
 
 // this.cargasdbServicio.RecuperarUserDiscoverer().subscribe(

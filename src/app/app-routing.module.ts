@@ -10,10 +10,12 @@ import { LoginAspiranteComponent } from './views/aspirante/login-aspirante/login
 import { AutomatriculacionComponent } from './views/aspirante/automatriculacion/automatriculacion.component';
 import { AutopostulacionComponent } from './views/aspirante/autopostulacion/autopostulacion.component';
 
+import { AuthGuard } from './guards/auth.guard';
+
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'dashboard',
+    redirectTo: 'login',
     pathMatch: 'full'
   },
   {
@@ -24,18 +26,18 @@ const routes: Routes = [
     },
     children: [
       {
-        path: 'dashboard',
+        path: 'dashboard', canActivate: [AuthGuard],
         loadChildren: () =>
           import('./views/dashboard/dashboard.module').then((m) => m.DashboardModule)
       },
       /* Inicio de rutas UNETRANS*/
       { 
-        path: 'control-estudios', 
+        path: 'control-estudios', canActivate: [AuthGuard],
         loadChildren: () => 
           import('./views/control-estudios/control-estudios.module').then(m => m.ControlEstudiosModule) 
       },
       { 
-        path: 'seguridad', 
+        path: 'seguridad', canActivate: [AuthGuard],
         loadChildren: () => 
           import('./views/seguridad/seguridad.module').then(m => m.SeguridadModule) 
       },

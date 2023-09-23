@@ -36,7 +36,7 @@
 <div>
 
   <div>
-    <mat-stepper linear #stepper (selectionChange)="guardarDatos($event)">
+    <mat-stepper linear #stepper>
       <!-- PASO 1 DATOS DE IDENTIDAD DEL ESTUDIANTE  -->
       <mat-step class="step-container" [stepControl]="firstFormGroup" errorMessage="Datos incompletos">
         <form #f="ngForm" [formGroup]="firstFormGroup" >
@@ -52,10 +52,10 @@
               aria-orientation="horizontal"></mat-divider>
             <mat-card-content>
               <div class="row">
-                <div class="col l6 m12 s12"> 
+                <div class="col l6 m12 s12 col-sm-12"> 
                   <label class="label-custom">Documento de identidad:</label>
                   <div class="row">
-                    <div class="col l6 s12">
+                    <div class="col s12">
                       <mat-form-field >
                         <mat-label>Tipo de documento</mat-label>
                         <mat-select formControlName="nac" [(ngModel)]="aspirante.nac" name="nac" formControlName="nac" >
@@ -64,7 +64,7 @@
                         <input type="hidden" [(ngModel)]="aspirante.nac"  formControlName="nacpost" name="nac" >
                       </mat-form-field>
                     </div>
-                    <div class="col l6 s12">
+                    <div class="col s12">
                       <mat-form-field appearance="fill">
                         <mat-label>Nro de documento</mat-label>
                         <input [readonly] = "true" [(ngModel)]="aspirante.cedula" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" type="number" min="1" max="100000000" matInput formControlName="cedula" name="cedula" required>
@@ -72,18 +72,10 @@
                     </div>
                   </div>
                 </div>
-                <div class="col l6 m12 s12">
+                <div class="col s12">
                   <label class="label-custom">Fecha de nacimiento:</label>
                   <div class="row">
-                    <div class="col l4 m4 s12">
-                      <!-- <mat-form-field >
-                        <mat-label>Seleccione una fecha</mat-label>
-                        <input matInput [matDatepicker]="fec_nac" [min]="minDate1" [max]="maxDate1" formControlName="fec_nac" [(ngModel)]="fecnac" name="fecnac" readonly required>
-                        <mat-datepicker-toggle matIconSuffix [for]="fec_nac">
-                          <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
-                        </mat-datepicker-toggle>
-                        <mat-datepicker class="abrir"touchUi #fec_nac [startView]="'multi-year'"></mat-datepicker>
-                      </mat-form-field> -->
+                    <div class="col s12">
                       <mat-form-field>
                         <mat-label>Seleccione una fecha</mat-label>
                         <input matInput [min]="minDate1" [max]="maxDate1" [matDatepicker]="fec_nac" formControlName="fec_nac" readonly required>
@@ -97,13 +89,13 @@
               <div class="row">
                 <div class="col l12 m12 s12"><label>Nombres:</label>
                   <div class="row mar-b-0">
-                    <div class="col l6 m6 s12">
+                    <div class="col s12">
                       <mat-form-field>
                         <mat-label>Primer:</mat-label>
                         <input [readonly] = "true" style='text-transform:uppercase' [(ngModel)]="aspirante.primer_nombre" matInput formControlName="primer_nombre" name="primer_nombre" >
                       </mat-form-field>
                     </div>
-                    <div class="col l6 m6 s12">
+                    <div class="col s12">
                       <mat-form-field>
                         <mat-label>Segundo:</mat-label>
                         <input [readonly] = "true" style='text-transform:uppercase' [(ngModel)]="aspirante.segundo_nombre" matInput formControlName="segundo_nombre" name="segundo_nombre" >
@@ -113,11 +105,11 @@
                 </div>
                 <div class="col l12 m12 s12"><label>Apellidos:</label>
                   <div class="row mar-b-0">
-                    <div class="col l6 m6 s12"><mat-form-field>
+                    <div class="col s12"><mat-form-field>
                         <mat-label>Primer</mat-label>
                         <input [readonly] = "true" style='text-transform:uppercase'  [(ngModel)]="aspirante.primer_apellido" matInput formControlName="primer_apellido" name="primer_apellido" >
                       </mat-form-field></div>
-                    <div class="col l6 m6 s12"><mat-form-field>
+                    <div class="col s12"><mat-form-field>
                         <mat-label>Segundo</mat-label>
                         <input [readonly] = "true" style='text-transform:uppercase' [(ngModel)]="aspirante.segundo_apellido" matInput  formControlName="segundo_apellido" name="segundo_apellido" >
                       </mat-form-field></div>
@@ -125,10 +117,10 @@
                 </div>
               </div>
               <div class="row">
-                <div class="col l6 m12 s12">
+                <div class="col l12 m12 s12">
                   <label class="label-custom">Género:</label>
                   <div class="row">
-                    <div class="col l3 m3 s6">
+                    <div class="col s12">
                       <mat-form-field>
                         <mat-label>Sexo</mat-label>
                         <mat-select formControlName="genero" required>
@@ -139,10 +131,10 @@
                     </div>
                   </div>
                 </div>
-                <div class="col l6 m12 s12">
+                <div class="col l12 m12 s12">
                   <label class="label-custom">Estado civil:</label>
                   <div class="row">
-                    <div class="col l3 m3 s6">
+                    <div class="col s12">
                       <mat-form-field>
                         <mat-label>Estado civil</mat-label>
                         <mat-select formControlName="edo_civil" required>
@@ -153,10 +145,10 @@
                     </div>
                   </div>
                 </div>
-                <div class="col l6 m12 s12">
+                <div class="col l12 m12 s12">
                   <label class="label-custom">Grupo Sanguíneo:</label>
                   <div class="row">
-                    <div class="col l3 m3 s6">
+                    <div class="col s12">
                       <mat-form-field>
                         <mat-label>Tipo de sangre</mat-label>
                         <mat-select formControlName="gruposan" required>
@@ -171,7 +163,7 @@
               <div class="row">
                 <div class="col l12 m12 s12"><label>Ubicación geográfica del lugar de nacimiento:</label>
                   <div class="row">
-                    <div class="col l3 m6 s6">
+                    <div class="col s12">
                       <mat-form-field>
                         <mat-label>Estado</mat-label>
                         <mat-select  [(ngModel)]="estadoSelectedNacimiento" (ngModelChange)="onEstadoselectedNacimiento($event)" (ngModelChange)="onMunicipioselectedNacimiento($event)" formControlName="estadoNacimiento" required>
@@ -180,7 +172,7 @@
                         </mat-select>
                       </mat-form-field>
                     </div>
-                    <div class="col l3 m6 s6">
+                    <div class="col s12">
                       <mat-form-field>
                         <mat-label>Municipio</mat-label>
                         <mat-select [(ngModel)]="municipioSelectedNacimiento" (ngModelChange)="onMunicipioselectedNacimiento($event)" formControlName="municipioNacimiento" required>
@@ -189,7 +181,7 @@
                         </mat-select>
                       </mat-form-field>
                     </div>
-                    <div class="col l3 m6 s6">
+                    <div class="col s12">
                       <mat-form-field>
                         <mat-label>Parroquia</mat-label>
                         <mat-select formControlName="parroquiaNacimiento" required>
@@ -204,7 +196,7 @@
               <div class="row">
                 <div class="col l12 m12 s12"><label>Información complementaria:</label>
                   <div class="row">
-                    <div class="col l3 m6 s6">
+                    <div class="col s12">
                       <mat-form-field>
                         <mat-label>Etnia</mat-label>
                         <mat-select formControlName="etnia" required>
@@ -213,7 +205,7 @@
                         </mat-select>
                       </mat-form-field>
                     </div>
-                    <div class="col l3 m6 s6">
+                    <div class="col s12">
                       <mat-form-field>
                         <mat-label>Discapacidad</mat-label>
                         <mat-select [(ngModel)]="discapacidad2" name="discapacidad" id="discapacidad" formControlName="discapacidad" required>
@@ -229,7 +221,7 @@
                     </div>
                   </div>
                   <div class="row">
-                    <div class="col l3 m6 s6">
+                    <div class="col s12">
                       <mat-form-field>
                         <mat-label>¿Trabaja actualmente?</mat-label>
                         <mat-select [(ngModel)]="indresp2" formControlName="trabajo" required>
@@ -238,7 +230,7 @@
                         </mat-select>
                       </mat-form-field>
                     </div>
-                    <div *ngIf="(indresp2 !== '' && indresp2 !== '2' )" class="col l3 m6 s6">
+                    <div *ngIf="(indresp2 !== '' && indresp2 !== '2' )" class="col s12">
                       <mat-form-field>
                         <mat-label>Sector</mat-label>
                         <mat-select formControlName="sectortrabajo" required>
@@ -246,7 +238,7 @@
                         </mat-select>
                       </mat-form-field>
                     </div>
-                    <div class="col l3 m6 s6">
+                    <div class="col s12">
                       <mat-form-field>
                         <mat-label>¿Tiene hijos?</mat-label>
                         <mat-select [(ngModel)]="indresp3" formControlName="hijos" required>
@@ -255,7 +247,7 @@
                         </mat-select>
                       </mat-form-field>
                     </div>
-                    <div *ngIf="(indresp3 !== '' && indresp3 !== '2' )" class="col l3 m6 s6">
+                    <div *ngIf="(indresp3 !== '' && indresp3 !== '2' )" class="col s12">
                       <mat-form-field>
                         <mat-label>Cantidad de hijos</mat-label>
                         <input  type="number" min="1" matInput formControlName="canthijos">
@@ -300,7 +292,7 @@
             <div class="row">
               <div class="col l12 m12 s12"><label>Ubicación geográfica:</label>
                 <div class="row">
-                  <div class="col l3 m6 s6">
+                  <div class="col s12">
                     <mat-form-field>
                       <mat-label>Estado</mat-label>
                       <mat-select  [(ngModel)]="estadoSelectedResidencia" (ngModelChange)="onEstadoselectedResidencia($event)" (ngModelChange)="onMunicipioselectedResidencia($event)" formControlName="estado" required>
@@ -309,7 +301,7 @@
                       </mat-select>
                     </mat-form-field>
                   </div>
-                  <div class="col l3 m6 s6">
+                  <div class="col s12">
                     <mat-form-field>
                       <mat-label>Municipio</mat-label>
                       <mat-select [(ngModel)]="municipioSelectedResidencia" (ngModelChange)="onMunicipioselectedResidencia($event)" formControlName="municipio" required>
@@ -318,7 +310,7 @@
                       </mat-select>
                     </mat-form-field>
                   </div>
-                  <div class="col l3 m6 s6">
+                  <div class="col s12">
                     <mat-form-field>
                       <mat-label>Parroquia</mat-label>
                       <mat-select formControlName="parroquia" required>
@@ -332,11 +324,11 @@
             </div>
             <div class="row">
               <div class="col l12 m12 s12">
-                <label class="label-custom">Vía:</label>
+                <label class="label-custom">Tipo de vía donde reside:</label>
                 <div class="row">
-                  <div class="col-xs-5">
+                  <div class="col s12">
                     <mat-form-field>
-                      <mat-label>Tipo de vía:</mat-label>
+                      <mat-label>Seleccione tipo de vía:</mat-label>
                       <mat-select formControlName="tipovia" required>
                         <mat-option [value]="item.codelemento"
                           *ngFor="let item of tipovia">{{item.descripcion}}</mat-option>
@@ -346,9 +338,9 @@
                 </div>
               </div>
               <div class="col l12 m12 s12">
-                <label class="label-custom">Nombre vía:</label>
+                <label class="label-custom">Nombre de la vía:</label>
                 <div class="row">
-                  <div class="col l4 m6 s6">
+                  <div class="col s12">
                     <mat-form-field>
                       <mat-label>Nombre vía:</mat-label>
                       <input style='text-transform:uppercase' formControlName="nombrevia" matInput required>
@@ -359,9 +351,60 @@
             </div>
             <div class="row">
               <div class="col l12 m12 s12">
+                <label class="label-custom">Construcción:</label>
+                <div class="row">
+                  <div class="col s12">
+                    <mat-form-field>
+                      <mat-label>Tipo de contrucción:</mat-label>
+                      <mat-select [(ngModel)]="tipoconstruccionvalue" name="tipoconstruccion" formControlName="tipoconstruccion" required>
+                        <mat-option [value]="item.codelemento"
+                          *ngFor="let item of tipoconstruccion">{{item.descripcion}}</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+              <div class="col l12 m12 s12">
+                <label class="label-custom">Detalles de la construcción:</label>
+                <div class="row">
+                  <div class="col s12">
+                    <mat-form-field>
+                      <mat-label>Nombre de la construcción:</mat-label>
+                      <input style='text-transform:uppercase' formControlName="nombreconstruccion" matInput required>
+                    </mat-form-field>
+                    <div class="row" *ngIf="(tipoconstruccionvalue == '2' || tipoconstruccionvalue == '5' || tipoconstruccionvalue == '8')">
+                          <div class="col s12">
+                            <mat-form-field>
+                              <mat-label>Piso</mat-label>
+                              <input style='text-transform:uppercase' formControlName="piso" matInput required>
+                            </mat-form-field>
+                          </div>
+                          <div class="col s12">
+                            <mat-form-field>
+                              <mat-label>Apartamento</mat-label>
+                              <input style='text-transform:uppercase' formControlName="apto" matInput required>
+                            </mat-form-field>
+                          </div>
+                    </div>
+                    <div class="row" *ngIf="(tipoconstruccionvalue == '3' || tipoconstruccionvalue == '6' )">
+                      <div class="col s12">
+                        <mat-form-field>
+                          <mat-label>Número</mat-label>
+                          <input style='text-transform:uppercase' formControlName="nrocasa" matInput>
+                        </mat-form-field>
+                      </div>
+                </div>
+                  </div>
+                </div>
+
+
+              </div>
+            </div>
+            <div class="row">
+              <div class="col l12 m12 s12">
                 <label class="label-custom">Núcleo:</label>
                 <div class="row">
-                  <div class="col-xs-5">
+                  <div class="col s12">
                     <mat-form-field>
                       <mat-label>Tipo de núcleo:</mat-label>
                       <mat-select formControlName="tiponucleo" required>
@@ -375,7 +418,7 @@
               <div class="col l12 m12 s12">
                 <label class="label-custom">Nombre del núcleo:</label>
                 <div class="row">
-                  <div class="col l4 m6 s6">
+                  <div class="col s12">
                     <mat-form-field>
                       <mat-label>Nombre del núcleo:</mat-label>
                       <input style='text-transform:uppercase' formControlName="nombrenucleo" matInput required>
@@ -384,48 +427,6 @@
                 </div>
               </div>
             </div>
-            <div class="row">
-              <div class="col l12 m12 s12">
-                <label class="label-custom">Construcción:</label>
-                <div class="row">
-                  <div class="col-xs-5">
-                    <mat-form-field>
-                      <mat-label>Tipo de contrucción:</mat-label>
-                      <mat-select [(ngModel)]="tipoconstruccionvalue" name="tipoconstruccion" formControlName="tipoconstruccion" required>
-                        <mat-option [value]="item.codelemento"
-                          *ngFor="let item of tipoconstruccion">{{item.descripcion}}</mat-option>
-                      </mat-select>
-                    </mat-form-field>
-                  </div>
-                </div>
-              </div>
-              <div class="col l12 m12 s12">
-                <label class="label-custom">Nombre de la construcción:</label>
-                <div class="row">
-                  <div class="col l4 m6 s6">
-                    <mat-form-field>
-                      <mat-label>Nombre de la construcción:</mat-label>
-                      <input style='text-transform:uppercase' formControlName="nombreconstruccion" matInput required>
-                    </mat-form-field>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="row" *ngIf="(tipoconstruccionvalue == '5' || tipoconstruccionvalue == '7' )">
-              <div class="col l12 m12 s12">
-                <label class="label-custom">Complemento:</label>
-                <div class="row">
-                  <div class="col-xs-5">
-                    <mat-form-field>
-                      <mat-label>Piso, Apto, Nivel, etc:</mat-label>
-                      <input style='text-transform:uppercase' formControlName="complemento" matInput>
-                    </mat-form-field>
-                  </div>
-                </div>
-              </div>
-              
-            </div>
-
           </mat-expansion-panel>
 
 
@@ -440,7 +441,7 @@
               <div class="row">
                 <div class="col l12 m12 s12"><label>Teléfono móvil:</label>
                   <div class="row mar-b-0">
-                    <div class="col l6 m6 s12">
+                    <div class="col s12">
                       <mat-form-field>
                         <mat-label>Operadora:</mat-label>
                       <mat-select  formControlName="opermovil" required>
@@ -449,7 +450,7 @@
                       </mat-select>
                       </mat-form-field>
                     </div>
-                    <div class="col l6 m6 s12">
+                    <div class="col s12">
                       <mat-form-field>
                         <mat-label>Número:</mat-label>
                         <input  maxlength="7" minlength="7"
@@ -461,14 +462,14 @@
                 </div>
                 <div class="col l12 m12 s12"><label>Teléfono residencial:</label>
                   <div class="row mar-b-0">
-                    <div class="col l6 m6 s12"><mat-form-field>
+                    <div class="col s12"><mat-form-field>
                         <mat-label>Operadora</mat-label>
                         <mat-select formControlName="operres">
                           <mat-option [value]="operr.codelemento"
                             *ngFor="let operr of operres">{{operr.codelemento}}</mat-option>
                         </mat-select>
                       </mat-form-field></div>
-                    <div class="col l6 m6 s12"><mat-form-field>
+                    <div class="col s12"><mat-form-field>
                         <mat-label>Número</mat-label>
                         <input maxlength="7" minlength="7"
                         oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength); this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" 
@@ -480,7 +481,7 @@
             <div class="row">
               <div class="col l12 m12 s12"><label>Teléfono de emergencia:</label>
                   <div class="row mar-b-0">
-                    <div class="col l6 m6 s12">
+                    <div class="col s12">
                       <mat-form-field>
                         <mat-label>Operadora:</mat-label>
                       <mat-select  formControlName="operemer" required>
@@ -489,7 +490,7 @@
                       </mat-select>
                       </mat-form-field>
                     </div>
-                    <div class="col l6 m6 s12">
+                    <div class="col s12">
                       <mat-form-field>
                         <mat-label>Número:</mat-label>
                         <input maxlength="7" minlength="7"
@@ -501,7 +502,7 @@
                 </div>
                 <div class="col l12 m12 s12"><label>Datos del contacto de emergencia</label>
                   <div class="row mar-b-0">
-                    <div class="col l6 m6 s12">
+                    <div class="col s12">
                       <mat-form-field>
                         <mat-label>Parentesco:</mat-label>
                       <mat-select  formControlName="parenemer" required>
@@ -510,7 +511,7 @@
                       </mat-select>
                       </mat-form-field>
                     </div>
-                    <div class="col l6 m6 s12">
+                    <div class="col s12">
                       <mat-form-field>
                         <mat-label>Nombre y apellido (contacto):</mat-label>
                         <input style='text-transform:uppercase' formControlName="nombreemer" matInput required>
@@ -522,13 +523,13 @@
               <div class="row">
                 <div class="col l12 m12 s12"><label>Correo electrónico:</label>
                   <div class="row mar-b-0">
-                    <div class="col l6 m6 s12">
+                    <div class="col s12">
                       <mat-form-field>
                         <mat-label>Principal:</mat-label>
                         <input type="email" style='text-transform:lowercase' formControlName="emailppal" matInput  required>
                       </mat-form-field>
                     </div>
-                    <div class="col l6 m6 s12">
+                    <div class="col s12">
                       <mat-form-field>
                         <mat-label>Alternativo:</mat-label>
                         <input type="email" style='text-transform:lowercase' formControlName="emailalter"  matInput >
@@ -583,9 +584,9 @@
               </mat-panel-title>
             </mat-expansion-panel-header>
             <div class="row">
-              <div class="col l6 m12 s12"><label>Completa la siguiente información:</label>
-                <div class="row mar-b-0">
-                  <div class="col l3 m6 s6">
+              <div class="col l12 m12 s12"><label>Completa la siguiente información:</label>
+                <div class="row">
+                <div class="col s12">
                     <mat-form-field>
                       <mat-label>Título:</mat-label>
                       <mat-select  formControlName="tbachiller" required>
@@ -594,23 +595,23 @@
                       </mat-select>
                     </mat-form-field>
                   </div>
-                  <div class="col l3 m6 s6">
+                  <div class="col s12">
                     <mat-form-field >
                       <mat-label>Fecha de graduación</mat-label>
-                      <input matInput [min]="minDate2" [max]="maxDate2" [matDatepicker]="pickergradobachiller" formControlName="fechagradobachiller" required>
+                      <input matInput [min]="minDate2" [max]="maxDate2" [matDatepicker]="pickergradobachiller" formControlName="fechagradobachiller" readonly required>
                       <mat-datepicker-toggle matIconSuffix [for]="pickergradobachiller"></mat-datepicker-toggle>
                       <mat-datepicker #pickergradobachiller [startView]="'multi-year'"></mat-datepicker>
                     </mat-form-field>
                     
                   </div>
-                  <div class="col l3 m6 s6">
+                  <div class="col s12">
                     <mat-form-field>
                       <mat-label>N° SNI/RUSNIES</mat-label>
-                      <input *ngIf="(aspirante.trayecto == '0')" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" type="number" min="1" matInput formControlName="sni" required>
-                      <input *ngIf="(aspirante.trayecto == '3')" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" type="number" min="1" matInput formControlName="sni">
+                      <input *ngIf="(aspirante.mod_ingreso == '001')" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" type="number" min="1" matInput formControlName="sni" required>
+                      <input *ngIf="(aspirante.mod_ingreso != '001')" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" type="number" min="1" matInput formControlName="sni">
                     </mat-form-field>
                   </div>
-                  <div class="col l3 m6 s6">
+                  <div class="col s12">
                     <mat-form-field>
                       <mat-label>Índice</mat-label>
                       <input matInput type="number" mask="00.00"  min="10.00" max="20.00" formControlName="indbachiller">
@@ -620,7 +621,7 @@
               </div>
             </div>
             <div class="row">
-                <div class="col l4 m4 s12">
+                <div class="col s12">
                   <mat-form-field>
                     <mat-label>Estado</mat-label>
                     <mat-select  [(ngModel)]="estadoSelectedEducacionMedia" (ngModelChange)="onEstadoselectedEducacionMedia($event)" (ngModelChange)="onMunicipioselectedEducacionMedia($event)" (ngModelChange)="onParroquiaselectedEducacionMedia($event)" formControlName="estadoplantel" required>
@@ -629,7 +630,7 @@
                     </mat-select>
                   </mat-form-field>
                 </div>
-                <div class="col l4 m4 s12">
+                <div class="col s12">
                   <mat-form-field>
                     <mat-label>Municipio</mat-label>
                     <mat-select [(ngModel)]="municipioSelectedEducacionMedia" (ngModelChange)="onMunicipioselectedEducacionMedia($event)" (ngModelChange)="onParroquiaselectedEducacionMedia($event)" formControlName="municipioplantel" required>
@@ -638,7 +639,7 @@
                     </mat-select>
                   </mat-form-field>
                 </div>
-                <div class="col l4 m4 s12">
+                <div class="col s12">
                   <mat-form-field>
                     <mat-label>Parroquia</mat-label>
                     <mat-select [(ngModel)]="parroquiaSelectedEducacionMedia" (ngModelChange)="onParroquiaselectedEducacionMedia($event)" formControlName="parroquiaplantel" required>
@@ -647,51 +648,55 @@
                     </mat-select>
                   </mat-form-field>
                 </div>
-                  <div class="col l12 m12 s12">
-                    <mat-form-field>
-                      <mat-label>Nombre del Plantel</mat-label>
-                      <mat-select [(ngModel)]="selectedValue"  formControlName="nombreplantel">
-                        <mat-option *ngFor="let colegio of listPlantel" [value]="colegio.cod_ce">
-                          {{colegio.cod_dea_sigla}}-{{colegio.nombre}}</mat-option>
-                      </mat-select> 
-                      <!-- <mat-label>Nombre del plantel</mat-label>
-                      <mat-select  required>
-                        <mat-option value="S">CIENCIAS</mat-option>
-                        <mat-option value="C">HUMANIDADES</mat-option>
-                        <mat-option value="V">TÉCNICO MEDIO</mat-option>
-                      </mat-select> -->
-                    </mat-form-field>
-                  </div>&nbsp;
-                  <button  [cModalToggle]="selectedPlantelModal.id" color="accent" mat-mini-fab=""  type="button"
-        class="mat-mini-fab mat-accent">
-        <span class="mat-button-wrapper"><mat-icon aria-hidden="true">search</mat-icon></span>
-      </button>
+                  
             </div>
-            <c-modal #selectedPlantelModal backdrop="static" id="selectedPlantelModal"  scrollable>
-              <c-modal-header>
-                <h1 cModalTitle>Seleccionar plantel</h1> &nbsp;<button [cModalToggle]="" cButton color="info" size="sm"> <svg cIcon class="me-2" name="cil-building"></svg>Añadir institución educativa</button>
-              </c-modal-header>
-              <c-modal-body>
-                <ng-container *ngTemplateOutlet="longContent"></ng-container>
-              </c-modal-body>
-              <c-modal-footer>
-                <button [cModalToggle]="selectedPlantelModal.id" cButton color="secondary">
-                  Cerrar
-                </button>
-              </c-modal-footer>
-            </c-modal>
-            <ng-template #longContent>
-              <table mat-table [dataSource]="dataSource" [hover]="true" cTable>
-                <tr>
-                  <ng-container matColumnDef="nombre">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre de la institución educativa</th>
-                    <td mat-cell *matCellDef="let colegio" (click)="selectedValue =  colegio.cod_ce" [cModalToggle]="selectedPlantelModal.id">{{colegio.nombre}}</td>
-                  </ng-container>
-                </tr>
-                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                  <tr mat-row *matRowDef="let colegio; columns: displayedColumns;"></tr>
-              </table>
-            </ng-template>
+            <div class="row">
+              <div class="col s12">
+                <mat-form-field>
+                  <mat-label>Nombre del Plantel</mat-label>
+                  <mat-select [(ngModel)]="selectedValue"  formControlName="nombreplantel">
+                    <mat-option *ngFor="let colegio of listPlantel" [value]="colegio.cod_ce">
+                     {{colegio.nombre}}</mat-option>
+                  </mat-select> 
+                  <!-- <mat-label>Nombre del plantel</mat-label>
+                  <mat-select  required>
+                    <mat-option value="S">CIENCIAS</mat-option>
+                    <mat-option value="C">HUMANIDADES</mat-option>
+                    <mat-option value="V">TÉCNICO MEDIO</mat-option>
+                  </mat-select> -->
+                </mat-form-field>
+              </div>&nbsp;
+              <button  (click)="myModalColegios.show()" color="accent" mat-mini-fab=""  type="button"
+    class="mat-mini-fab mat-accent">
+    <span class="mat-button-wrapper"><mat-icon aria-hidden="true">search</mat-icon></span>
+  </button>
+            </div>
+            
+            <div bsModal #myModalColegios="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                  <h2 class="modal-title">Selecciona el plantel donde cursaste estudios</h2>
+                </div>
+                <div class="modal-body" >
+                  <p>En caso de que NO aparezcan resultados para las opciones seleccionadas envia un correo soportesice@unetrans.edu.ve con una foto de tu cédula y título de bachiller, para realizar la inclusión.</p>
+                  <table mat-table [dataSource]="dataSource" [hover]="true" cTable>
+                    <tr>
+                      <ng-container matColumnDef="nombre">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre de la institución educativa</th>
+                        <td mat-cell *matCellDef="let colegio" (click)="selectedValue = colegio.cod_ce" (click)="myModalColegios.hide()">{{colegio.nombre}}</td>
+                      </ng-container>
+                    </tr>
+                      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                      <tr mat-row *matRowDef="let colegio; columns: displayedColumns;"></tr>
+                  </table>                  
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" (click)="myModalColegios.hide()">Cerrar</button>
+                </div>
+                </div><!-- /.modal-content -->
+              </div><!-- /.modal-dialog -->
+              </div><!-- /.modal -->
           </mat-expansion-panel>
 
 
@@ -703,15 +708,15 @@
               </mat-panel-title>
             </mat-expansion-panel-header>
             <div class="row">
-              <div class="col l6 m12 s12"><label>Completa la siguiente información:</label>
+              <div class="col l6 m12 s12 col-sm-12"><label>Completa la siguiente información:</label>
                 <div class="row mar-b-0">
-                  <div class="col l3 m6 s6">
+                  <div class="col s12">
                     <mat-form-field>
                       <mat-label>Nombre Instituto/Universidad</mat-label>
                       <input type="string" style='text-transform:uppercase' formControlName="nombreies" matInput required> 
                     </mat-form-field>
                   </div>
-                  <div class="col l3 m6 s6">
+                  <div class="col s12">
                     <mat-form-field>
                       <mat-label>Título obtenido</mat-label>
                       <mat-select formControlName="tituloies" required>
@@ -721,16 +726,16 @@
                       </mat-select>
                     </mat-form-field>
                   </div>
-                  <div class="col l3 m6 s6">
+                  <div class="col s12">
                     <mat-form-field>
                       <mat-label>Mención</mat-label>
                       <input type="string" style='text-transform:uppercase' formControlName="mencionies" matInput required> 
                     </mat-form-field>
                   </div>
-                  <div class="col l3 m6 s6">
+                  <div class="col s12">
                     <mat-form-field >
                       <mat-label>Fecha de graduación</mat-label>
-                      <input matInput [min]="minDate2" [max]="maxDate2" [matDatepicker]="pickergradoies" formControlName="fechagradoies" required>
+                      <input matInput [min]="minDate2" [max]="maxDate2" [matDatepicker]="pickergradoies" formControlName="fechagradoies" readonly required>
                       <mat-datepicker-toggle matIconSuffix [for]="pickergradoies"></mat-datepicker-toggle>
                       <mat-datepicker #pickergradoies [startView]="'multi-year'"></mat-datepicker>
                     </mat-form-field>
@@ -772,9 +777,19 @@
         aria-orientation="horizontal"></mat-divider>
       <mat-card-content>
         <div class="row">
+          <div class="col l12 m12 s12"><label>Cohorte:</label>
+            <div class="row mar-b-0">
+              <div class="col s12">
+                <mat-form-field>
+                  <mat-label>Cohorte</mat-label>
+                  <input [readonly] = "true" [(ngModel)]="aspirante.cohorte" matInput formControlName="cohorte" name="cohorte" >
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
           <div class="col l12 m12 s12"><label>Sede:</label>
             <div class="row mar-b-0">
-              <div class="col l6 m6 s12">
+              <div class="col s12">
                 <mat-form-field>
                   <mat-label>Sede:</mat-label>
                   <mat-select [(value)]="sede" name= "sede" [disabled]="true">
@@ -786,7 +801,7 @@
           </div>
           <div class="col l12 m12 s12"><label>Turno:</label>
             <div class="row mar-b-0">
-              <div class="col l6 m6 s12">
+              <div class="col s12">
                 <mat-form-field>
                   <mat-label>Turno:</mat-label>
                   <mat-select [(ngModel)]="turno" formControlName="turno" >
@@ -800,26 +815,21 @@
           </div>
           <div class="col l12 m12 s12"><label>Modalidad de ingreso:</label>
             <div class="row mar-b-0">
-              <div class="col l6 m6 s12">
+              <div class="col s12">
                 <mat-form-field>
                   <mat-label>Modalidad de ingreso:</mat-label>
-                  <mat-select  *ngIf="(aspirante.trayecto == '0')" [(ngModel)]="mingresoopsu" formControlName="mingreso">
+                  <mat-select  [(ngModel)]="aspirante.mod_ingreso" formControlName="mingreso">
                     <mat-option [value]="modin.codelemento"
                     *ngFor="let modin of moding">{{modin.descripcion}}</mat-option>
                   </mat-select>
-                  <mat-select  *ngIf="(aspirante.trayecto == '3')" [(ngModel)]="mingresopostula" formControlName="mingreso">
-                    <mat-option [value]="modin.codelemento"
-                    *ngFor="let modin of moding">{{modin.descripcion}}</mat-option>
-                  </mat-select>
-                  <input *ngIf="(aspirante.trayecto == '0')" type="hidden" [(ngModel)]="mingresoopsu"  formControlName="mingreso2" >
-                  <input *ngIf="(aspirante.trayecto == '3')" type="hidden" [(ngModel)]="mingresopostula"  formControlName="mingreso2" >
+                  <input type="hidden" [(ngModel)]="aspirante.mod_ingreso"  formControlName="mingreso2" >
                 </mat-form-field>
               </div>
             </div>
           </div>
         </div>
         <div class="row">
-          <div class="col-12 col-md-6"><label>Carrera:</label>
+          <div class="col s12"><label>Carrera:</label>
                 <mat-form-field>
                   <mat-label>PNF:</mat-label>
                   <mat-select  [(ngModel)]="aspirante.pnf" formControlName="pnf">
@@ -829,7 +839,7 @@
                   <input type="hidden" [(ngModel)]="aspirante.pnf"  formControlName="pnf2" >
                 </mat-form-field>
           </div>
-          <div class="col-12 col-md-3"><label>Trayecto de ingreso:</label>
+          <div class="col s12"><label>Trayecto de ingreso:</label>
             <mat-form-field>
               <mat-label>Trayecto:</mat-label>
               <mat-select  [(ngModel)]="aspirante.trayecto" formControlName="trayecto">
@@ -839,7 +849,7 @@
                   <input type="hidden" [(ngModel)]="aspirante.trayecto"  formControlName="trayecto2" >
             </mat-form-field>
           </div>
-          <div class="col-12 col-md-3"><label>Censo para transporte:</label>
+          <div class="col s12"><label>Censo para transporte:</label>
             <mat-form-field>
               <mat-label>Zona de procedencia:</mat-label>
               <mat-select  formControlName="zonaprocedencia">
@@ -849,8 +859,13 @@
             </mat-form-field>
       </div>
         </div>
-        <div class="col-12 col-md-12"><label>Unidades Curriculares a cursar en el trayecto:</label>
-          <table mat-table [dataSource]="materias" [hover]="true" cTable>
+        <div class="col s12"><label>Unidades Curriculares a cursar en el trayecto:</label>
+          <table mat-table [dataSource]="materias"  [hover]="true"
+          [responsive]="true"
+          [striped]="true"
+          align="middle"
+          cTable
+          class="mb-0 border" cTable>
             <tr>
               <ng-container matColumnDef="seleccion">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Selección</th>
@@ -930,7 +945,7 @@
                 <div class="row">
                   <div class="col l12 m12 s12"><label>Usuario de acceso:</label>
                     <div class="row mar-b-0">
-                      <div class="col l6 m6 s12">
+                      <div class="col s12">
                         <mat-form-field>
                           <mat-label>Usuario:</mat-label>
                           <input [readonly] = "true" style='text-transform:uppercase' [(ngModel)]="aspirante.usrsice" matInput formControlName="usrsice" >
@@ -942,13 +957,13 @@
                 <div class="row">
                   <div class="col l12 m12 s12"><label>Contraseña de acceso:</label>
                     <div class="row mar-b-0">
-                      <div class="col l6 m6 s12">
+                      <div class="col s12">
                         <mat-form-field>
                           <mat-label>Contraseña:</mat-label>
                           <input type="password" (keyup)="validarContrasena()" [(ngModel)]="pass" matInput formControlName="pass">
                         </mat-form-field>
                       </div>
-                      <div class="col l6 m6 s12">
+                      <div class="col s12">
                         <mat-form-field>
                           <mat-label>Confirme contraseña:</mat-label>
                           <input type="password" (keyup)="validarConfirmacion()" [(ngModel)]="confpass" matInput formControlName="confpass">
@@ -1002,7 +1017,7 @@
               <div class="col l12 m12 s12">
                 <label class="label-custom">Pregunta 1:</label>
                 <div class="row">
-                  <div class="col-xs-5">
+                  <div class="col s12">
                     <mat-form-field>
                       <mat-label>Pregunta 1:</mat-label>
                       <mat-select formControlName="quest1" required>
@@ -1016,7 +1031,7 @@
               <div class="col l12 m12 s12">
                 <label class="label-custom">Respuesta 1:</label>
                 <div class="row">
-                  <div class="col l4 m6 s6">
+                  <div class="col s12">
                     <mat-form-field>
                       <mat-label>Respuesta 1:</mat-label>
                       <input style='text-transform:uppercase' formControlName="answ1" matInput required>
@@ -1029,7 +1044,7 @@
               <div class="col l12 m12 s12">
                 <label class="label-custom">Pregunta 2:</label>
                 <div class="row">
-                  <div class="col-xs-5">
+                  <div class="col s12">
                     <mat-form-field>
                       <mat-label>Pregunta 2:</mat-label>
                       <mat-select formControlName="quest2" required>
@@ -1043,7 +1058,7 @@
               <div class="col l12 m12 s12">
                 <label class="label-custom">Respuesta 2:</label>
                 <div class="row">
-                  <div class="col l4 m6 s6">
+                  <div class="col s12">
                     <mat-form-field>
                       <mat-label>Respuesta 2:</mat-label>
                       <input style='text-transform:uppercase' formControlName="answ2" matInput required>
@@ -1056,7 +1071,7 @@
               <div class="col l12 m12 s12">
                 <label class="label-custom">Pregunta 3:</label>
                 <div class="row">
-                  <div class="col-xs-5">
+                  <div class="col s12">
                     <mat-form-field>
                       <mat-label>Pregunta 3:</mat-label>
                       <mat-select formControlName="quest3" required>
@@ -1070,7 +1085,7 @@
               <div class="col l12 m12 s12">
                 <label class="label-custom">Respuesta 3:</label>
                 <div class="row">
-                  <div class="col l4 m6 s6">
+                  <div class="col s12">
                     <mat-form-field>
                       <mat-label>Respuesta 3:</mat-label>
                       <input style='text-transform:uppercase' formControlName="answ3" matInput required>
@@ -1080,19 +1095,18 @@
               </div>
             </div>
           </mat-expansion-panel>
-        </mat-accordion>
+        </mat-accordion> 
         <div align="right">
           <button matStepperPrevious color="accent" mat-mini-fab="" matstepperprevious="" type="button"
           class="mat-mini-fab mat-accent">
           <span class="mat-button-wrapper"><mat-icon aria-hidden="true">arrow_back</mat-icon></span>
         </button>
-        <button matStepperNext color="accent" mat-mini-fab="" matstepperprevious="" type="button"
+        <!-- <button matStepperNext color="accent" mat-mini-fab="" matstepperprevious="" type="button"
           class="mat-mini-fab mat-accent"  [disabled]="!(fiveFormGroup.valid && validacion1 && validacion2 && validacion3 && validacion4 && validacion5 && validacion6)">
           <span class="mat-button-wrapper"><mat-icon aria-hidden="true">arrow_forward</mat-icon></span>
-        </button>
-
-        <button  type="button"   [disabled]="!(fiveFormGroup.valid && validacion1 && validacion2 && validacion3 && validacion4 && validacion5 && validacion6)" (click)="guardar()">Guardar Datos 
-        </button> 
+        </button> -->
+        &nbsp;&nbsp;
+        <button cButton btn btn-primary size="sm" [disabled]="!(fiveFormGroup.valid && validacion1 && validacion2 && validacion3 && validacion4 && validacion5 && validacion6)" (click)="guardar()"> <svg cIcon class="me-2" name="cil-cloud-upload"></svg>Inscribir</button>
         </div>
       </mat-card-content>
     </mat-card>
