@@ -1,0 +1,131 @@
+<c-col xs="12">
+    <c-card class="mb-4">
+        <c-card-header>
+            <strong>Calendario académico</strong> &nbsp; <small>Módulo para gestión de los procesos administrativos y
+                sus fechas correspondientes</small>
+        </c-card-header>
+        <c-card-body>
+            <div *ngIf="hayResultadosProcesos">
+                <table mat-table [dataSource]="Procesos" [hover]="true" [responsive]="true" [striped]="true"
+                    align="middle" cTable class="mb-0 border" cTable>
+                    <ng-container matColumnDef="estatus">
+                        <th class="det-ancho" mat-header-cell *matHeaderCellDef> Estatus </th>
+                        <td class="det-ancho" mat-cell *matCellDef="let calendar">
+                            <div class="container" cTooltip="{{calendar.estatus}}" cTooltipPlacement="top" align="left">
+                                <svg *ngIf="calendar.estatus == 'ACTIVO'" cIcon width="30" height="30" name="cilLoopCircular" style="color: #2eb85c;" ></svg>
+                                <svg *ngIf="calendar.estatus == 'FINALIZADO'" cIcon width="30" height="30" name="cilLockLocked" style="color: orangered;"></svg>
+                                <svg *ngIf="calendar.estatus == 'NO INICIADO'" cIcon width="30" height="30" name="cilClock" style="color: #f9b115;"></svg>
+                              </div>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="periodo">
+                        <th class="det-ancho" mat-header-cell *matHeaderCellDef> Periodo </th>
+                        <td class="det-ancho" mat-cell *matCellDef="let calendar"> {{calendar.periodo}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="periodicidad">
+                        <th class="det-ancho" mat-header-cell *matHeaderCellDef> Periodicidad </th>
+                        <td class="det-ancho" mat-cell *matCellDef="let calendar"> {{calendar.periodicidad}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="proceso">
+                        <th mat-header-cell *matHeaderCellDef> Nombre proceso </th>
+                        <td mat-cell *matCellDef="let calendar"> {{calendar.proceso}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="fec_ini">
+                        <th mat-header-cell *matHeaderCellDef> Fecha desde </th>
+                        <td mat-cell *matCellDef="let calendar"> {{calendar.fec_ini}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="fec_fin">
+                        <th mat-header-cell *matHeaderCellDef> Fecha hasta </th>
+                        <td mat-cell *matCellDef="let calendar"> {{calendar.fec_fin}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="gestion">
+                        <th mat-header-cell *matHeaderCellDef> Gestionar </th>
+                        <td mat-cell *matCellDef="let calendar">
+                            <div>
+                                <button cButton class="btn-primary" data-toggle="modal" (click)="gestionProcesoCalendar.show()">
+                                    <svg cIcon name="cil-pencil"></svg></button>
+                            </div>
+                            <!-- Modal -->
+                            <div bsModal #gestionProcesoCalendar="bs-modal" class="modal fade" tabindex="-1" role="dialog"
+                                aria-labelledby="myModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h2 class="modal-title">Actualización de datos del proceso:
+                                                {{calendar.proceso}}</h2>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+
+                                            <div class="row">
+                                                <div class="col l12 m12 s12 col-sm-12"> 
+                                                  <label class="label-custom">Nombre y periodo actual del proceso:</label>
+                                                  <div class="row">
+                                                    <div class="col s12">
+                                                      <mat-form-field >
+                                                        <mat-label>Proceso</mat-label>
+                                                        <input [(ngModel)]="calendar.proceso" style='text-transform:uppercase'  matInput required>
+                                                      </mat-form-field>
+                                                    </div>
+                                                    <div class="col s12">
+                                                        <mat-form-field >
+                                                            <mat-label>Periodo</mat-label>
+                                                            <input [(ngModel)]="calendar.periodo" style='text-transform:uppercase'  readonly matInput required>
+                                                          </mat-form-field>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                              <div class="row" >
+                                                <div class="col l12 m12 s12 col-sm-12"><label>Fechas del proceso:</label>
+                                                  <div class="row">
+                                                    <div class="col s12">
+                                                        <mat-form-field>
+                                                            <mat-label>Fecha inicial</mat-label>
+                                                            <input  [(ngModel)]="calendar.fec_ini" matInput [matDatepicker]="fec_ini" [matDatepickerFilter]="myFilter" readonly required>
+                                                            <mat-datepicker-toggle matIconSuffix [for]="fec_ini"></mat-datepicker-toggle>
+                                                            <mat-datepicker #fec_ini></mat-datepicker>
+                                                          </mat-form-field>
+                                                    </div>
+                                                    <div class="col s12">
+                                                        <mat-form-field>
+                                                            <mat-label>Fecha final</mat-label>
+                                                            <input [(ngModel)]="calendar.fec_fin" matInput [matDatepicker]="fec_fin" [matDatepickerFilter]="myFilter" readonly required>
+                                                            <mat-datepicker-toggle matIconSuffix [for]="fec_fin"></mat-datepicker-toggle>
+                                                            <mat-datepicker #fec_fin></mat-datepicker>
+                                                          </mat-form-field>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                (click)="gestionProcesoCalendar.hide()">Salir</button>
+                                            <button type="button" class="btn btn-primary"> <svg cIcon class="me-2" name="cil-save"></svg>Guardar cambios</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="displayedColumnsProcesos"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumnsProcesos;"></tr>
+                </table>
+
+            </div>
+            <div *ngIf="sinResultadosProcesos">
+                <c-alert color="danger" class="d-flex align-items-center">
+                    <svg cIcon class="me-2" width="24" height="24" name="cilXCircle"></svg>
+                    <div>No existen procesos administrativos cargados </div>
+                </c-alert>
+            </div>
+            <mat-paginator [hidePageSize]="true" [pageSize]="10" #paginatorProcesos></mat-paginator>
+        </c-card-body>
+    </c-card>
+</c-col>
+
+<ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" size="default" type="ball-atom">
+    <p style="color: white" align="center">Por favor espere... <br>¡Validando información!</p>
+</ngx-spinner>

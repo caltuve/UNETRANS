@@ -1,0 +1,206 @@
+<c-col xs="12">
+    <c-card class="mb-4">
+      <c-card-header>
+        <strong>Periodo Académico</strong> &nbsp; <small>Módulo para gestión de los periodos académicos</small>&nbsp; 
+        <button  cButton color="primary" size="sm" data-toggle="modal" (click)="gestionNewPeriodo.show()"> <svg cIcon class="me-2" name="cil-playlist-add"></svg>Nuevo periodo</button>
+      </c-card-header>
+      <c-card-body >
+        <c-nav variant="tabs">
+            <c-nav-item>
+              <a [cTabContent]="tabContent1" [routerLink] [tabPaneIdx]="0" cNavLink>
+                <svg cIcon class="me-2" name="cilNoteAdd"></svg>
+                Actuales
+              </a>
+            </c-nav-item>
+            <c-nav-item>
+              <a [cTabContent]="tabContent1" [routerLink] [tabPaneIdx]="1" cNavLink>
+                <svg cIcon class="me-2" name="cilTask"></svg>
+                Finalizados
+              </a>
+            </c-nav-item>
+            <!-- <c-nav-item>
+              <a [cTabContent]="tabContent1" [routerLink] [tabPaneIdx]="2" cNavLink [disabled]="tabContent1.activeTabPaneIdx < 1">
+                <svg cIcon class="me-2" name="cilCode"></svg>
+                Contact
+              </a>
+            </c-nav-item> -->
+          </c-nav>
+          <c-tab-content #tabContent1="cTabContent" [activeTabPaneIdx]="0" cRounded="bottom">
+            <c-tab-pane class="p-3 preview" role="tabpanel">
+                <div *ngIf="hayResultadosPeriodosActuales">
+                      <table mat-table [dataSource]="actuales" [hover]="true"
+                      [responsive]="true"
+                      [striped]="true"
+                      align="middle"
+                      cTable
+                      class="mb-0 border" cTable>
+                      <ng-container matColumnDef="estatus">
+                        <th class="det-ancho" mat-header-cell *matHeaderCellDef> Estatus </th>
+                        <td class="det-ancho" mat-cell *matCellDef="let peracad">
+                            <div class="container" cTooltip="{{peracad.estatus}}" cTooltipPlacement="top" align="left">
+                                <svg *ngIf="peracad.estatus == 'EN CURSO'" cIcon width="30" height="30" name="cilLoopCircular" style="color: #2eb85c;" ></svg>
+                                <svg *ngIf="peracad.estatus == 'FINALIZADO'" cIcon width="30" height="30" name="cilLockLocked" style="color: orangered;"></svg>
+                                <svg *ngIf="peracad.estatus == 'PREINICIADO'" cIcon width="30" height="30" name="cilClock" style="color: #f9b115;"></svg>
+                              </div>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="periodo">
+                        <th class="det-ancho" mat-header-cell *matHeaderCellDef> Periodo </th>
+                        <td class="det-ancho" mat-cell *matCellDef="let peracad"> {{peracad.periodo}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="periodicidad">
+                        <th class="det-ancho" mat-header-cell *matHeaderCellDef> Periodicidad </th>
+                        <td class="det-ancho" mat-cell *matCellDef="let peracad"> {{peracad.periodicidad}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="fec_ini">
+                        <th mat-header-cell *matHeaderCellDef> Fecha desde </th>
+                        <td mat-cell *matCellDef="let peracad"> {{peracad.fec_ini}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="fec_fin">
+                        <th mat-header-cell *matHeaderCellDef> Fecha hasta </th>
+                        <td mat-cell *matCellDef="let peracad"> {{peracad.fec_fin}} </td>
+                    </ng-container>
+                        <ng-container matColumnDef="detalles">
+                            <th mat-header-cell *matHeaderCellDef> Detalles </th>
+                            <td mat-cell *matCellDef="let peracad">
+                                <div>
+                                    <button cButton class="btn-primary" data-toggle="modal" >
+                                      <svg cIcon name="cilMagnifyingGlass"></svg></button>
+                                  </div>
+                            </td>
+                          </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="displayedColumnsPeriodosActuales"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumnsPeriodosActuales;"></tr>
+                      </table>
+                      
+                </div>
+                <div *ngIf="sinResultadosPeriodosActuales">
+                    <c-alert color="success" class="d-flex align-items-center">
+                      <svg cIcon class="me-2" width="24" height="24" name="cilNoteAdd"></svg>
+                      <div>No existen periodos académicos actuales</div>
+                    </c-alert>
+                  </div>
+                  <mat-paginator  [hidePageSize]="true" [pageSize]="5"  #paginatorActuales></mat-paginator>
+            </c-tab-pane>
+
+            <c-tab-pane class="p-3 preview" role="tabpanel">
+                <div *ngIf="hayResultadosPeriodosFinalizados">
+                    <mat-form-field>
+                        <input matInput (keyup)="applyFilterProcesadas($event)" placeholder="Buscar solicitud procesada" #input>
+                      </mat-form-field>
+                      <table mat-table [dataSource]="finalizadas"  [hover]="true"
+                      [responsive]="true"
+                      [striped]="true"
+                      align="middle"
+                      cTable
+                      class="mb-0 border" cTable>
+                        <ng-container matColumnDef="estatus">
+                            <th mat-header-cell *matHeaderCellDef> Estatus </th>
+                            <td mat-cell *matCellDef="let solicitud">
+                                <div class="container" cTooltip="{{solicitud.desc_estatus}}" cTooltipPlacement="right">
+                                    <svg *ngIf="solicitud.estatus == '0'" cIcon width="30" height="30" name="cilCheckCircle" style="color: #2EB85C;" ></svg>
+                                    <svg *ngIf="solicitud.estatus == '4'" cIcon width="30" height="30" name="cilXCircle" style="color: orangered;"></svg>
+                                  </div>
+                            </td>
+                          </ng-container>
+                        <ng-container matColumnDef="fecha_solicitud">
+                          <th mat-header-cell *matHeaderCellDef> Fecha de solicitud </th>
+                          <td mat-cell *matCellDef="let solicitud"> {{solicitud.fecha_solicitud}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="id_estudiante">
+                          <th mat-header-cell *matHeaderCellDef> Identificación </th>
+                          <td mat-cell *matCellDef="let solicitud"> {{solicitud.id_estudiante}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="nombre_completo">
+                          <th mat-header-cell *matHeaderCellDef> Apellido y nombre </th>
+                          <td mat-cell *matCellDef="let solicitud"> {{solicitud.nombre_completo}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="edad">
+                          <th mat-header-cell *matHeaderCellDef> Edad </th>
+                          <td mat-cell *matCellDef="let solicitud"> {{solicitud.edad}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="tipoaspirante">
+                          <th mat-header-cell *matHeaderCellDef> Tipo de aspirante </th>
+                          <td mat-cell *matCellDef="let solicitud"> {{solicitud.tipoaspirante}} </td>
+                        </ng-container>
+                       
+                        <tr mat-header-row *matHeaderRowDef="displayedColumnsProcesadas"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumnsProcesadas;"></tr>
+                      </table>
+                </div>
+                <div *ngIf="sinResultadosPeriodosFinalizados">
+                    <c-alert color="info" class="d-flex align-items-center">
+                      <svg cIcon class="me-2" width="24" height="24" name="cilTask"></svg>
+                      <div>No existen periodos académicos finalizados</div>
+                    </c-alert>
+                  </div>
+                  <mat-paginator [hidePageSize]="true" [pageSize]="5" #paginatorFinalizados></mat-paginator>
+            </c-tab-pane>
+          </c-tab-content>
+      </c-card-body>
+    </c-card>
+  </c-col>
+<!-- Modal -->
+<div bsModal #gestionNewPeriodo="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title" >Gestión de nuevo periodo académico: </h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col l12 m12 s12 col-sm-12"> 
+                  <label class="label-custom">Datos del periodo lectivo:</label>
+                  <div class="row">
+                    <div class="col s12">
+                      <mat-form-field >
+                        <mat-label>Nombre periodo</mat-label>
+                        <input  style='text-transform:uppercase'  matInput required>
+                      </mat-form-field>
+                    </div>
+                    <div class="col s12">
+                        <mat-form-field>
+                            <mat-label>Periodicidad</mat-label>
+                            <mat-select  required>
+                              <mat-option [value]="item.codelemento"
+                                *ngFor="let item of periodicidad">{{item.descripcion}}</mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row" >
+                <div class="col l12 m12 s12 col-sm-12"><label>Fechas del periodo:</label>
+                  <div class="row">
+                    <div class="col s12">
+                        <mat-form-field>
+                            <mat-label>Fecha inicial</mat-label>
+                            <input [min]="minfechaDesde"  [(ngModel)]="fechaDesde" matInput [matDatepicker]="fec_ini" [matDatepickerFilter]="myFilter" readonly required>
+                            <mat-datepicker-toggle matIconSuffix [for]="fec_ini"></mat-datepicker-toggle>
+                            <mat-datepicker #fec_ini></mat-datepicker>
+                          </mat-form-field>
+                    </div>
+                    <div class="col s12">
+                        <mat-form-field>
+                            <mat-label>Fecha final</mat-label>
+                            <input [min]="fechaDesde" [disabled]="!fechaDesde" matInput [matDatepicker]="fec_fin" [matDatepickerFilter]="myFilter" readonly required>
+                            <mat-datepicker-toggle matIconSuffix [for]="fec_fin"></mat-datepicker-toggle>
+                            <mat-datepicker #fec_fin></mat-datepicker>
+                          </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+              </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="gestionNewPeriodo.hide()">Cerrar</button>
+          <button type="button" class="btn btn-primary">Comprendido</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" size="default" type="ball-atom">
+		<p style="color: white" align="center">Por favor espere... <br>¡Validando información!</p>
+	  </ngx-spinner>
