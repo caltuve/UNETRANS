@@ -65,50 +65,99 @@
                                   </div>
  <!-- Modal -->
  <div bsModal #gestionAutopostulado="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
+  <div class="modal-dialog modal-xl">
     <div class="modal-content">
       <div class="modal-header">
         <h2 class="modal-title" >Gestión de solicitud de autopostulación: {{solicitud.id_estudiante}}</h2>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        
-        <strong>Cédula:</strong> {{solicitud.id_estudiante}} <strong>Solicitante:</strong> {{solicitud.nombre_completo2}} <br> 
-        <strong>Fecha de solicitud:</strong> {{solicitud.fecha_solicitud}} <br>
-        <strong>PNF solicitados: </strong><br>
+        <p>
+<div class="d-flex">
+          <div class="flex-goew-1"><strong>Cédula:</strong> {{solicitud.id_estudiante}} &nbsp;</div>
+          <div class="flex-goew-1"><strong>Solicitante:</strong> {{solicitud.nombre_completo2}}  &nbsp;</div>
+          <div class="flex-goew-1"><strong>Edad:</strong> {{solicitud.edad}} años</div>
+      </div>
 
-        <table mat-table [dataSource]="solicitud.pnf"  
-        [hover]="true"
-        [responsive]="true"
-        [striped]="true"
-        align="middle"
-        cTable
-        class="mb-0 border" cTable>
-                      <ng-container matColumnDef="radio">
-                          <th mat-header-cell *matHeaderCellDef>
-                            Opción
-                          </th>
-                        <td mat-cell *matCellDef="let row">
-                          <mat-radio-group [(ngModel)]="selectedOption">
-                            <mat-radio-button [value]="row.codigo_pnf" color="primary"></mat-radio-button>
-                          </mat-radio-group>
-                        </td>
+        <p>
+      <div class="d-flex">
+        <div class="flex-goew-1"><strong>Tipo de aspirante:</strong> {{solicitud.tipoaspirante}} &nbsp;</div>
+        <div *ngIf="solicitud.tipoaspirante== 'Universitario'" class="flex-goew-1"><strong>Título:</strong> {{solicitud.tituloies}} EN {{solicitud.mencionies}}</div>
+    </div>
+    <p>
+    <div class="d-flex">
+      <div class="flex-goew-1"><strong>Exposición de motivos:</strong> {{solicitud.exp_motivos}} </div>
+  </div>
+  <p><p>
+
+    <form #f="ngForm" [formGroup]="firstFormGroup" >
+      <strong>Seleccione el PNF que va a cursar el aspirante:</strong><br>
+      <table mat-table [dataSource]="solicitud.pnf"  
+      [hover]="true"
+      [responsive]="true"
+      [striped]="true"
+      align="middle"
+      class="mb-0 border" cTable>
+                    <ng-container matColumnDef="radio">
+                        <th mat-header-cell *matHeaderCellDef>
+                          Opción
+                        </th>
+                      <td mat-cell *matCellDef="let row">
+                        <mat-radio-group [(ngModel)]="selectedOption" formControlName="optionPnf">
+                          <mat-radio-button [value]="row.codigo_pnf" color="primary"></mat-radio-button>
+                        </mat-radio-group>
+                      </td>
+                    </ng-container>
+                      <ng-container matColumnDef="codigo">
+                          <th mat-header-cell *matHeaderCellDef> Código OPSU </th>
+                        <td mat-cell *matCellDef="let row"> {{row.codigo_pnf}} </td>
                       </ng-container>
-                        <ng-container matColumnDef="codigo">
-                            <th mat-header-cell *matHeaderCellDef> Código OPSU </th>
-                          <td mat-cell *matCellDef="let row"> {{row.codigo_pnf}} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="pnf">
-                            <th mat-header-cell *matHeaderCellDef> PNF </th>
-                          <td mat-cell *matCellDef="let row"> {{row.descripcion}} </td>
-                        </ng-container>                      
-                        <thead cTableColor="light"> <tr mat-header-row *matHeaderRowDef="displayedColumnsPnf"></tr></thead>
-                        <tr mat-row *matRowDef="let row; columns: displayedColumnsPnf;"></tr>
-                      </table>
+                      <ng-container matColumnDef="pnf">
+                          <th mat-header-cell *matHeaderCellDef> PNF </th>
+                        <td mat-cell *matCellDef="let row"> {{row.nombre_programa}} </td>
+                      </ng-container>                      
+                      <thead cTableColor="light"> <tr mat-header-row *matHeaderRowDef="displayedColumnsPnf"></tr></thead>
+                      <tr mat-row *matRowDef="let row; columns: displayedColumnsPnf;"></tr>
+                    </table>
+<p>
+
+                    <div class="row">
+                      <div class="col s12"><label>Trayecto de ingreso:</label>
+                            <mat-form-field>
+                              <mat-label>Trayecto:</mat-label>
+                              <mat-select  [(ngModel)]="trayecto" formControlName="trayecto">
+                                  <mat-option [value]="tray.codelemento"
+                                      *ngFor="let tray of trayectos">{{tray.descripcion}}</mat-option>
+                                    </mat-select>
+                            </mat-form-field>
+                      </div>
+                      <div class="col s12"><label>Modalidad de ingreso:</label>
+                          <mat-form-field>
+                              <mat-label>Modalidad de ingreso:</mat-label>
+                              <mat-select  [(ngModel)]="mod_ingreso" formControlName="mingreso">
+                                <mat-option [value]="modin.codelemento"
+                                *ngFor="let modin of moding">{{modin.descripcion}}</mat-option>
+                              </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="col s12"><label>Resolución:</label>
+                          <mat-form-field>
+                            <mat-label>Resolución:</mat-label>
+                            <mat-select  [(ngModel)]="reso" formControlName="reso">
+                              <mat-option [value]="conv.codelemento"
+                                  *ngFor="let conv of resolucion">{{conv.descripcion}}</mat-option>
+                                </mat-select>
+                          </mat-form-field>
+                        </div>
+                    </div>
+                    <input type="hidden" [(ngModel)]="solicitud.ced_pas"  formControlName="cedula" >
+                    <input type="hidden" [(ngModel)]="usr.usrsice"  formControlName="usrsice" >
+
+    </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="gestionAutopostulado.hide()">Cerrar</button>
-        <button type="button" class="btn btn-primary">Comprendido</button>
+        <button type="button" class="btn btn-primary" [disabled]="!firstFormGroup.valid" (click)="guardar()"><svg cIcon class="me-2" name="cil-save"></svg>Procesar solicitud</button>
       </div>
     </div>
   </div>
@@ -144,6 +193,7 @@
                             <td mat-cell *matCellDef="let solicitud">
                                 <div class="container" cTooltip="{{solicitud.desc_estatus}}" cTooltipPlacement="right">
                                     <svg *ngIf="solicitud.estatus == '0'" cIcon width="30" height="30" name="cilCheckCircle" style="color: #2EB85C;" ></svg>
+                                    <svg *ngIf="solicitud.estatus == '1'" cIcon width="30" height="30" name="cilToggleOn" style="color: #2EB85C;" ></svg>
                                     <svg *ngIf="solicitud.estatus == '4'" cIcon width="30" height="30" name="cilXCircle" style="color: orangered;"></svg>
                                   </div>
                             </td>
@@ -167,6 +217,10 @@
                         <ng-container matColumnDef="tipoaspirante">
                           <th mat-header-cell *matHeaderCellDef> Tipo de aspirante </th>
                           <td mat-cell *matCellDef="let solicitud"> {{solicitud.tipoaspirante}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="usrproceso">
+                          <th mat-header-cell *matHeaderCellDef> Procesado por </th>
+                          <td mat-cell *matCellDef="let solicitud"> {{solicitud.nombre_corto}} </td>
                         </ng-container>
                        
                         <tr mat-header-row *matHeaderRowDef="displayedColumnsProcesadas"></tr>

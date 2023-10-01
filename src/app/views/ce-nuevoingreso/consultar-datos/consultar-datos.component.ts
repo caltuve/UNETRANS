@@ -1,5 +1,5 @@
 import { Component,OnInit } from '@angular/core';
-import { ControlEstudiosService } from '../control-estudios.service';
+import { ControlEstudiosService } from '../../control-estudios/control-estudios.service';
 
 @Component({
   selector: 'app-consultar-datos',

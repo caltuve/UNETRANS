@@ -79,7 +79,7 @@
                     <mat-label>Seleccione una fecha</mat-label>
                     <input matInput [matDatepicker]="fec_nac"matInput [min]="minDate1" [max]="maxDate1" formControlName="fec_nac" [(ngModel)]="fecnac" name="fecnac" readonly required>
                     <mat-datepicker-toggle matIconSuffix [for]="fec_nac"></mat-datepicker-toggle>
-                    <mat-datepicker class="abrir"touchUi #fec_nac [startView]="'multi-year'"></mat-datepicker>
+                    <mat-datepicker #fec_nac [startView]="'multi-year'"></mat-datepicker> 
                   </mat-form-field>
                 </div>
               </div>

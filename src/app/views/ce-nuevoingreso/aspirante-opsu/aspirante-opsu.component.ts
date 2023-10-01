@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, Validators,FormControl} from '@angular/forms';
-import { ControlEstudiosService } from '../control-estudios.service';
+import { ControlEstudiosService } from '../../control-estudios/control-estudios.service';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
 import { NgxSpinnerService } from "ngx-spinner";

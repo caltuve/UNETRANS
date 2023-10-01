@@ -40,4 +40,12 @@ showWarning(message: string | undefined){
     })
 }
 
+showError2(message: string | undefined){
+  this.toastr.error(message, '¡Notificación!', {
+    progressBar : true,
+    progressAnimation : 'decreasing',
+    timeOut: 10000
+  })
+}
+
 }

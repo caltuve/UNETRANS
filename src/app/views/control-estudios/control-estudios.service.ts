@@ -107,6 +107,10 @@ getAspirantes() {
   return this.http.get(`${this.url}resumen_opsu_dace.php`);
 }
 
+getAspirantesConvenio() {
+  return this.http.get(`${this.url}resumen_convenio_dace.php`);
+}
+
 getAutopostulado() {
   return this.http.get(`${this.url}resumen_autopostulados_dace.php`);
 }
@@ -124,5 +128,45 @@ getAutopostulado() {
 
   getPeriodicidad() {
     return this.http.get(`${this.url}periodicidad.php`);
+  }
+
+  getTrayectos() {
+    return this.http.get(`${this.url}trayectos.php`);
+  }
+
+  getResolucion() {
+    return this.http.get(`${this.url}resolucion.php`);
+  }
+
+  getEmpConvenio() {
+    return this.http.get(`${this.url}emp_convenio.php`);
+  }
+
+  createPersonConvenio(datospersona : any): Observable<any>{
+    return this.http.post(`${this.url}crearpersonaconvenio.php`, JSON.stringify(datospersona))
+  }
+
+  procesarAutopostulado(datospersona : any): Observable<any>{
+    return this.http.post(`${this.url}procesarAutopostulacion.php`, JSON.stringify(datospersona))
+  }
+
+  createPeriodoAcademico(datospersona : any): Observable<any>{
+    return this.http.post(`${this.url}crearperiodo.php`, JSON.stringify(datospersona))
+  }
+
+  getOfertaAcademica(carreraSeleccionada: string, periodoSeleccionado:string): Observable<any>{
+    return this.http.get(`${this.url}resumen_cupos_dace.php?pnf=${carreraSeleccionada}&periodo=${periodoSeleccionado}`);
+  }
+
+  getPeriodoOfPnfSeleccionado(carreraSeleccionada: string): Observable<any>{
+    return this.http.get(`${this.url}cupos_periodos.php?pnf=${carreraSeleccionada}`)
+  }
+
+  getTipoSeccion() {
+    return this.http.get(`${this.url}tipo_seccion.php`);
+  }
+
+  createSeccion(datospersona : any): Observable<any>{
+    return this.http.post(`${this.url}crearseccion.php`, JSON.stringify(datospersona))
   }
 }

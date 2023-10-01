@@ -9,6 +9,7 @@ import { RegisterComponent } from './views/pages/register/register.component';
 import { LoginAspiranteComponent } from './views/aspirante/login-aspirante/login-aspirante.component';
 import { AutomatriculacionComponent } from './views/aspirante/automatriculacion/automatriculacion.component';
 import { AutopostulacionComponent } from './views/aspirante/autopostulacion/autopostulacion.component';
+import { LogoutComponent } from './views/pages/logout/logout.component';
 
 import { AuthGuard } from './guards/auth.guard';
 
@@ -50,6 +51,9 @@ const routes: Routes = [
       loadChildren: () => 
           import('./views/ce-academico/ce-academico.module').then(m => m.CeAcademicoModule) 
       },
+      { path: 'ce-nuevoingreso', canActivate: [AuthGuard],
+        loadChildren: () => 
+          import('./views/ce-nuevoingreso/ce-nuevoingreso.module').then(m => m.CeNuevoingresoModule) },
       /* Fin de rutas UNETRANS */
       {
         path: 'theme',
@@ -147,6 +151,14 @@ const routes: Routes = [
       title: 'Autopostulación'
     }
   },
+  {
+    path: 'logout',
+    component: LogoutComponent,
+    data: {
+      title: 'Salir'
+    }
+  },
+  
 
   
 

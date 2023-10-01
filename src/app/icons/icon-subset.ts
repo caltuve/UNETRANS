@@ -114,6 +114,10 @@ import {
   cilLoopCircular,
   cilPlaylistAdd,
   cilHandshake,
+  cilToggleOn,
+  cilToggleOff,
+  cilExitToApp,
+  cilBellExclamation,
 } from '@coreui/icons';
 
 export const iconSubset = {
@@ -231,8 +235,11 @@ export const iconSubset = {
   cilBook,
   cilLoopCircular,
   cilPlaylistAdd,
-  cilHandshake
-
+  cilHandshake,
+  cilToggleOn,
+  cilToggleOff,
+  cilExitToApp,
+  cilBellExclamation,
 };
 
 export enum IconSubset {
@@ -351,5 +358,10 @@ export enum IconSubset {
   cilLoopCircular = 'cilLoopCircular',
   cilPlaylistAdd = 'cilPlaylistAdd',
   cilHandshake= 'cilHandshake',
+  cilToggleOn = 'cilToggleOn',
+  cilToggleOff ='cilToggleOff',
+  cilExitToApp = 'cilExitToApp',
+  cilBellExclamation = 'cilBellExclamation'
+  
   
 }

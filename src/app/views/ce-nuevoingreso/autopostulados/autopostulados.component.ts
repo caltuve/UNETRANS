@@ -1,10 +1,11 @@
 import { AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, Validators,FormControl} from '@angular/forms';
-import { ControlEstudiosService } from '../control-estudios.service';
+import { ControlEstudiosService } from '../../control-estudios/control-estudios.service';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import { NgxSpinnerService } from "ngx-spinner";
+import { NotificacionService } from './../../../notificacion.service'
 import {ModalDirective} from 'ngx-bootstrap/modal';
 
 @Component({
@@ -21,7 +22,7 @@ export class AutopostuladosComponent implements AfterViewInit {
   pnfRecibidas = new MatTableDataSource();
   procesadas = new MatTableDataSource();
   displayedColumnsRecibidas: string[] = ['fecha_solicitud', 'id_estudiante', 'nombre_completo', 'edad', 'tipoaspirante', 'gestion'];
-  displayedColumnsProcesadas: string[] = ['estatus','fecha_solicitud', 'id_estudiante', 'nombre_completo', 'edad', 'tipoaspirante'];
+  displayedColumnsProcesadas: string[] = ['estatus','fecha_solicitud', 'id_estudiante', 'nombre_completo', 'edad', 'tipoaspirante','usrproceso'];
   displayedColumnsPnf: string[] = ['radio','codigo','pnf'];
   hayResultadosRecibidas: boolean = false;
   sinResultadosRecibidas: boolean = false;
@@ -31,6 +32,27 @@ export class AutopostuladosComponent implements AfterViewInit {
 
   fecha_solicitud: string;
 
+  moding: any []= [];
+  trayectos: any []= [];
+  resolucion: any []= [];
+
+  trayecto!: string;
+  mod_ingreso!: string;
+  reso!: string;
+
+  usr={
+    nac:null,
+    cedula:null,
+    nombre_completo:null,
+    nombre_corto:null,
+    fecnac:null,
+    carnet:null,
+    pnf:null,
+    email: null,
+    saludo: null,
+    usrsice: null,
+  }
+
   @ViewChild('paginatorRecibidas') paginatorRecibidas: MatPaginator;
   @ViewChild('paginatorProcesadas') paginatorProcesadas: MatPaginator;
   //paginatorIntl: MatPaginatorIntl;
@@ -39,6 +61,7 @@ export class AutopostuladosComponent implements AfterViewInit {
 
   constructor(private _formBuilder: FormBuilder,
     public controlestudiosService: ControlEstudiosService,
+    private notifyService : NotificacionService,
     private SpinnerService: NgxSpinnerService,) {
     }
 
@@ -58,7 +81,11 @@ export class AutopostuladosComponent implements AfterViewInit {
     
     this.recibidas.paginator = this.paginatorRecibidas;
     this.procesadas.paginator = this.paginatorProcesadas;
-    this.findAutopostulados();  
+    this.findAutopostulados();
+    this.findModIngreso();
+    this.findTrayectos();
+    this.findResolucion(); 
+    this.usr = JSON.parse(sessionStorage.getItem('currentUser')!); 
 }
 
 findAutopostulados() {
@@ -70,8 +97,6 @@ findAutopostulados() {
       this.hayResultadosProcesadas = false;
       this.sinResultadosProcesadas = false; 
       this.recibidas.data = data.recibidas;
-      this.pnfs = data.recibidas[0].pnf;
-      console.log(this.pnfs);
       this.procesadas.data = data.procesadas;
     if (this.recibidas.data.length == 0) {
       this.sinResultadosRecibidas = this.recibidas.data.length == 0;
@@ -80,6 +105,7 @@ findAutopostulados() {
      } else{
       this.recibidas.paginator = this.paginatorRecibidas;
       this.recibidas.data = data.recibidas;
+      this.pnfs = data.recibidas[0].pnf;
       this.hayResultadosRecibidas = this.recibidas.data.length > 0;
       this.SpinnerService.hide();
      }
@@ -95,6 +121,31 @@ findAutopostulados() {
       this.SpinnerService.hide();
      }
     }
+  );
+}
+
+findModIngreso(){
+  this.controlestudiosService.getModIngreso().subscribe(
+    (result: any) => {
+      const opcionesFiltradas = [ '011']; // Aquí colocas los valores codelemento que deseas mostrar
+      this.moding = result.filter((moding: { codelemento: string; }) => opcionesFiltradas.includes(moding.codelemento));
+  }
+  );
+}
+
+findTrayectos(){
+  this.controlestudiosService.getTrayectos().subscribe(
+    (result: any) => {
+        this.trayectos = result;
+  }
+  );
+}
+
+findResolucion(){
+  this.controlestudiosService.getResolucion().subscribe(
+    (result: any) => {
+        this.resolucion = result;
+  }
   );
 }
 
@@ -116,5 +167,50 @@ applyFilterProcesadas(event: Event) {
     this.procesadas.paginator.firstPage();
   }
 }
+
+
+guardar(): void {
+  this.SpinnerService.show(); 
+      
+  // Esta función se ejecutará cuando se haga clic en "Guardar Datos" en el último step
+  // Puedes acceder a los datos de cada step utilizando this.step1Form.value, this.step2Form.value, etc.
+  const datosStep1 = this.firstFormGroup.value;
+
+    const datosCompletos = {
+      step1: datosStep1,
+    };
+    const cedula = datosCompletos.step1.cedula;
+
+    this.controlestudiosService.procesarAutopostulado(datosCompletos).subscribe(datos => {
+      switch (datos['estatus']) {
+        case 'ERROR':
+              this.SpinnerService.hide(); 
+              this.notifyService.showError2('Ha ocurrido un error, verifique nuevamente y si persiste comuníquese con sistemas.');
+              this.gestionAutopostulado.hide(); 
+              this.firstFormGroup.reset();
+              break;
+        default:
+          this.SpinnerService.hide();
+          this.notifyService.showSuccess('Solicitud de autopostulación procesada');
+          this.gestionAutopostulado.hide(); 
+          this.firstFormGroup.reset();
+          this.findAutopostulados();
+          break;
+      }
+    });
+}
+
+
+
+firstFormGroup = this._formBuilder.group({
+  cedula: ['', Validators.required],
+  mingreso:  [{value: ''}, Validators.required],
+  trayecto:       [{value: '', }, Validators.required],
+  reso:  [{value: '', }, Validators.required],
+  optionPnf: ['', Validators.required],
+  usrsice : ['', Validators.required],
+});
+
+
 
 }

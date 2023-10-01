@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { ControlEstudiosRoutingModule } from './control-estudios-routing.module';
-import { CrearNuevoComponent } from './crear-nuevo/crear-nuevo.component';
-
-import { ExpedienteDigitalComponent } from './expediente-digital/expediente-digital.component';
-
+import { ConsultarDatosComponent } from './consultar-datos/consultar-datos.component';
+import { CeNuevoingresoRoutingModule } from './ce-nuevoingreso-routing.module';
+import { AspiranteOpsuComponent } from './aspirante-opsu/aspirante-opsu.component' ;
+import { AutopostuladosComponent } from './autopostulados/autopostulados.component';
+import { ConvenioComponent } from './convenio/convenio.component';
 
 import { MatStepperModule } from '@angular/material/stepper'; 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -24,7 +24,7 @@ import {MatButtonModule} from '@angular/material/button';
 import { GridModule } from '@coreui/angular';
 import { FormModule } from '@coreui/angular';
 import {MatExpansionModule} from '@angular/material/expansion';
-import { ControlEstudiosService } from './control-estudios.service';
+import { ControlEstudiosService } from './../control-estudios/control-estudios.service';
 import { HttpClientModule } from '@angular/common/http';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatTabsModule} from '@angular/material/tabs';
@@ -71,15 +71,16 @@ import {MatRadioModule} from '@angular/material/radio';
 
 
 
-
 @NgModule({
   declarations: [
-    CrearNuevoComponent,
-    ExpedienteDigitalComponent,
+    ConsultarDatosComponent,
+    AspiranteOpsuComponent,
+    AutopostuladosComponent,
+    ConvenioComponent
   ],
   imports: [
     CommonModule,
-    ControlEstudiosRoutingModule,
+    CeNuevoingresoRoutingModule,
     MatStepperModule,
     FormsModule,
     AlertModule,
@@ -127,7 +128,6 @@ import {MatRadioModule} from '@angular/material/radio';
   MatSortModule,
   MatCheckboxModule,
   MatRadioModule
-  ],
-  providers: [{provide: MAT_DATE_LOCALE, useValue: 'es-VE'}, {provide: ControlEstudiosService}],
+  ]
 })
-export class ControlEstudiosModule { }
+export class CeNuevoingresoModule { }

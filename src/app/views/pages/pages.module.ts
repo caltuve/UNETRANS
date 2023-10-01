@@ -17,6 +17,7 @@ import { NgxSpinnerModule } from "ngx-spinner";
 
 import {MatDialogModule} from '@angular/material/dialog';
 import { ModalModule } from 'ngx-bootstrap/modal';
+import { LogoutComponent } from './logout/logout.component';
 
 
 @NgModule({
@@ -24,7 +25,8 @@ import { ModalModule } from 'ngx-bootstrap/modal';
     LoginComponent,
     RegisterComponent,
     Page404Component,
-    Page500Component
+    Page500Component,
+    LogoutComponent
   ],
   imports: [
     CommonModule,
