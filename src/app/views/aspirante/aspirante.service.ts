@@ -2,15 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { EstadoI, MunicipioI } from '../control-estudios/crear-nuevo/model.interface';
 import { Observable } from "rxjs";
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AspiranteService {
-
-  url = 'http://localhost/unetrans/'; //Desarrollo
-  //url = 'http://172.20.1.50/'; //Produccion local desa
-  //url = 'http://190.202.27.122/'; //Produccion Produccion
+  url:string  = environment.url; 
   url2 = 'https://petroapp-price.petro.gob.ve/price/';
   constructor(private http: HttpClient) { } 
   datosAspirante: any;

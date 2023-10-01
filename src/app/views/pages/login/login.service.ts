@@ -2,6 +2,7 @@ import { Injectable, Output, EventEmitter} from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { map } from 'rxjs/operators';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: "root",
@@ -10,9 +11,7 @@ export class LoginService {
 
   public token!: string;
 
-  url = 'http://localhost/unetrans/'; //Desarrollo
-  //url = 'http://172.20.1.50/'; //Produccion local desa
-  //url = 'http://190.202.27.122/'; //Produccion Produccion
+  url:string  = environment.url; 
  @Output() getLoggedInName: EventEmitter<any> = new EventEmitter();
  constructor(private http: HttpClient) {}
 

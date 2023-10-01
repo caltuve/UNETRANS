@@ -5,14 +5,14 @@ import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { Observable } from "rxjs";
 import { tap, map} from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ControlEstudiosService {
-  url = 'http://localhost/unetrans/'; //Desarrollo
-  //url = 'http://172.20.1.50/'; //Produccion local desa
-  //url = 'http://190.202.27.122/'; //Produccion Produccion
+
+  url:string  = environment.url; 
   url2 = 'https://petroapp-price.petro.gob.ve/price/';
   constructor(private http: HttpClient) { }
 
