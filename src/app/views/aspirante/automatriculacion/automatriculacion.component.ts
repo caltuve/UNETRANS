@@ -23,7 +23,7 @@ export class AutomatriculacionComponent  implements OnInit, AfterViewInit {
   displayedColumns: string[] = ['nombre'];
 
   materias = new MatTableDataSource();
-  displayedColumnsUniCurricular: string[] = ['seleccion','trayecto','código', 'nombre', 'créditos','seccion'];
+  displayedColumnsUniCurricular: string[] = ['seleccion','periodo','trayecto','código', 'nombre', 'créditos','seccion'];
   
   estudiante: any;
 
