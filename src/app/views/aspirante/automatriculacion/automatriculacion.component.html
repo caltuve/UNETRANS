@@ -680,7 +680,7 @@
                   <h2 class="modal-title">Selecciona el plantel donde cursaste estudios</h2>
                 </div>
                 <div class="modal-body" >
-                  <p>En caso de que NO aparezcan resultados para las opciones seleccionadas envia un correo soportesice@unetrans.edu.ve con una foto de tu cédula y título de bachiller, para realizar la inclusión.</p>
+                  <p>En caso de que NO aparezcan resultados para las opciones seleccionadas envia un correo soportesice@unetrans.edu.ve con una foto de tu cédula, título de bachiller Y CERTIFICADO DE PARTICIPACIÓN de la OPSU, para realizar la inclusión.</p>
                   <table mat-table [dataSource]="dataSource" [hover]="true" cTable>
                     <tr>
                       <ng-container matColumnDef="nombre">
@@ -1028,8 +1028,8 @@
                     <mat-form-field>
                       <mat-label>Pregunta 1:</mat-label>
                       <mat-select formControlName="quest1" required>
-                        <mat-option [value]="pregunta.descripcion"
-                        *ngFor="let pregunta of questsec">{{pregunta.descripcion}}</mat-option>
+                        <mat-option [value]="pregunta1.descripcion"
+                        *ngFor="let pregunta1 of questsec1">{{pregunta1.descripcion}}</mat-option>
                       </mat-select>
                     </mat-form-field>
                   </div>
@@ -1055,8 +1055,8 @@
                     <mat-form-field>
                       <mat-label>Pregunta 2:</mat-label>
                       <mat-select formControlName="quest2" required>
-                        <mat-option [value]="pregunta.descripcion"
-                        *ngFor="let pregunta of questsec">{{pregunta.descripcion}}</mat-option>
+                        <mat-option [value]="pregunta2.descripcion"
+                        *ngFor="let pregunta2 of questsec2">{{pregunta2.descripcion}}</mat-option>
                       </mat-select>
                     </mat-form-field>
                   </div>
@@ -1082,8 +1082,8 @@
                     <mat-form-field>
                       <mat-label>Pregunta 3:</mat-label>
                       <mat-select formControlName="quest3" required>
-                        <mat-option [value]="pregunta.descripcion"
-                        *ngFor="let pregunta of questsec">{{pregunta.descripcion}}</mat-option>
+                        <mat-option [value]="pregunta3.descripcion"
+                        *ngFor="let pregunta3 of questsec3">{{pregunta3.descripcion}}</mat-option>
                       </mat-select>
                     </mat-form-field>
                   </div>

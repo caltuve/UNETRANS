@@ -1,23 +1,21 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
-import { EstadoI, MunicipioI } from './crear-nuevo/model.interface';
-import { catchError } from 'rxjs/operators';
-import { throwError } from 'rxjs';
+import { EstadoI, MunicipioI } from '../control-estudios/crear-nuevo/model.interface';
 import { Observable } from "rxjs";
-import { tap, map} from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ControlEstudiosService {
+export class AdministrativoService {
 
   url:string  = environment.url; 
   url2 = 'https://petroapp-price.petro.gob.ve/price/';
-  constructor(private http: HttpClient) { }
-
+  constructor(private http: HttpClient) { } 
+  datosAspirante: any;
+  materiasAspirante: any;
   estados: EstadoI []= [];
-  municipios: MunicipioI []= [];
+  municipios: MunicipioI []= []; 
 
   getNac() {
     return this.http.get(`${this.url}nacionalidad.php`);
@@ -91,6 +89,13 @@ getPlantelOfSelectedParroquia(selectedParroquiaId: string): Observable<any>{
   return this.http.get(`${this.url}centro_educativo.php?codparr=${selectedParroquiaId}`)
 }
 
+getAdministrativo(identificacion: any): Observable<any>{
+    return this.http.post(`${this.url}verify_administrativo.php`, JSON.stringify(identificacion))
+}
+getEstudianteAspirante(identificacion: any): Observable<any>{
+  return this.http.post(`${this.url}dat_estudiante.php`, JSON.stringify(identificacion))
+}
+
 getBachiller() {
   return this.http.get(`${this.url}tipo_bachiller.php`);
 }
@@ -103,78 +108,40 @@ getTurnos() {
   return this.http.get(`${this.url}turnos.php`);
 }
 
+getTrayectos() {
+  return this.http.get(`${this.url}trayectos.php`);
+}
+
+getZonaPTransporte() {
+  return this.http.get(`${this.url}zonaptransporte.php`);
+}
+
+getParentescoEmer() {
+  return this.http.get(`${this.url}parentescoemer.php`);
+}
+
+getSectorTrabajo() {
+  return this.http.get(`${this.url}sector_trabajo.php`);
+}
+
+getQuestSec() {
+  return this.http.get(`${this.url}questsec.php`);
+}
+
 getAspirantes() {
-  return this.http.get(`${this.url}resumen_opsu_dace.php`);
+  return this.http.get(`${this.url}aspirante_opsu.php`);
 }
 
-getAspirantesConvenio() {
-  return this.http.get(`${this.url}resumen_convenio_dace.php`);
+createPerson(datospersona : any): Observable<any>{
+  return this.http.post(`${this.url}crearpersona.php`, JSON.stringify(datospersona))
 }
 
-getAutopostulado() {
-  return this.http.get(`${this.url}resumen_autopostulados_dace.php`);
+createPersonAutopostulado(datospersona : any): Observable<any>{
+  return this.http.post(`${this.url}crearautopostulado.php`, JSON.stringify(datospersona))
 }
-  getEstudiante() {
-    return this.http.get(`${this.url}dat_estudiante.php`);
-  }
 
-  getProcesosCalendar() {
-    return this.http.get(`${this.url}calendar_procesos.php`);
-  }
+createPersonAdministrativo(datospersona : any): Observable<any>{
+  return this.http.post(`${this.url}crearadministrativo.php`, JSON.stringify(datospersona))
+}
 
-  getPeriodos() {
-    return this.http.get(`${this.url}periodos.php`);
-  }
-
-  getPeriodicidad() {
-    return this.http.get(`${this.url}periodicidad.php`);
-  }
-
-  getTrayectos() {
-    return this.http.get(`${this.url}trayectos.php`);
-  }
-
-  getResolucion() {
-    return this.http.get(`${this.url}resolucion.php`);
-  }
-
-  getEmpConvenio() {
-    return this.http.get(`${this.url}emp_convenio.php`);
-  }
-
-  createPersonConvenio(datospersona : any): Observable<any>{
-    return this.http.post(`${this.url}crearpersonaconvenio.php`, JSON.stringify(datospersona))
-  }
-
-  procesarAutopostulado(datospersona : any): Observable<any>{
-    return this.http.post(`${this.url}procesarAutopostulacion.php`, JSON.stringify(datospersona))
-  }
-
-  createPeriodoAcademico(datospersona : any): Observable<any>{
-    return this.http.post(`${this.url}crearperiodo.php`, JSON.stringify(datospersona))
-  }
-
-  getOfertaAcademica(carreraSeleccionada: string, periodoSeleccionado:string): Observable<any>{
-    return this.http.get(`${this.url}resumen_cupos_dace.php?pnf=${carreraSeleccionada}&periodo=${periodoSeleccionado}`);
-  }
-
-  getPeriodoOfPnfSeleccionado(carreraSeleccionada: string): Observable<any>{
-    return this.http.get(`${this.url}cupos_periodos.php?pnf=${carreraSeleccionada}`)
-  }
-
-  getTipoSeccion() {
-    return this.http.get(`${this.url}tipo_seccion.php`);
-  }
-
-  createSeccion(datospersona : any): Observable<any>{
-    return this.http.post(`${this.url}crearseccion.php`, JSON.stringify(datospersona))
-  }
-
-  findPersona(dato: any){
-    return this.http.post(`${this.url}findpersona.php`, JSON.stringify(dato));
-  }
-
-  pushNotify(identificacion: any): Observable<any>{
-    return this.http.post(`${this.url}enviacorreo.php`, JSON.stringify(identificacion))
-  }
 }

@@ -22,7 +22,7 @@ export class CalendarioAcademicoComponent implements AfterViewInit {
   sinResultadosProcesos: boolean = false;
   minDate1!: Date;
   maxDate1!: Date;
-  fec_ini!: any;
+  fec_ini_modal!: Date;
 
   @ViewChild('paginatorProcesos') paginatorProcesos: MatPaginator;
   @ViewChild('gestionProcesoCalendar') public gestionProcesoCalendar: ModalDirective;
@@ -71,7 +71,9 @@ findProcesosCalendar() {
       this.hayResultadosProcesos = false;
       this.sinResultadosProcesos= false; 
       this.Procesos.data = data;
-      this.fec_ini = this.datePipe.transform(data.fec_ini ?? new Date(), 'yyyy-MM-dd');
+      this.fec_ini_modal = new Date(data.fec_ini);
+this.fec_ini_modal.setDate(this.fec_ini_modal.getDate() + 1);
+      console.log(this.Procesos.data);
 
     if (this.Procesos.data.length == 0) {
       this.sinResultadosProcesos = this.Procesos.data.length == 0;

@@ -9,6 +9,8 @@ import { RegisterComponent } from './views/pages/register/register.component';
 import { LoginAspiranteComponent } from './views/aspirante/login-aspirante/login-aspirante.component';
 import { AutomatriculacionComponent } from './views/aspirante/automatriculacion/automatriculacion.component';
 import { AutopostulacionComponent } from './views/aspirante/autopostulacion/autopostulacion.component';
+import { LoginAdministrativoComponent } from './views/administrativo/login-administrativo/login-administrativo.component';
+import { AutoregistroComponent } from './views/administrativo/autoregistro/autoregistro.component';
 import { LogoutComponent } from './views/pages/logout/logout.component';
 
 import { AuthGuard } from './guards/auth.guard';
@@ -53,7 +55,13 @@ const routes: Routes = [
       },
       { path: 'ce-nuevoingreso', canActivate: [AuthGuard],
         loadChildren: () => 
-          import('./views/ce-nuevoingreso/ce-nuevoingreso.module').then(m => m.CeNuevoingresoModule) },
+          import('./views/ce-nuevoingreso/ce-nuevoingreso.module').then(m => m.CeNuevoingresoModule) 
+      },
+      { path: 'administrativo', 
+          loadChildren: () => 
+            import('./views/administrativo/administrativo.module').then(m => m.AdministrativoModule) 
+      },
+
       /* Fin de rutas UNETRANS */
       {
         path: 'theme',
@@ -152,12 +160,28 @@ const routes: Routes = [
     }
   },
   {
+    path: 'autoregistro',
+    component: AutoregistroComponent,
+    data: {
+      title: 'Autoregistro'
+    }
+  },
+  
+  {
+    path: 'login-administrativo',
+    component: LoginAdministrativoComponent,
+    data: {
+      title: 'Login Administrativo'
+    }
+  },
+  {
     path: 'logout',
     component: LogoutComponent,
     data: {
       title: 'Salir'
     }
   },
+  
   
 
   

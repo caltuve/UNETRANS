@@ -1,0 +1,122 @@
+<!-- <form (submit)="buscar()">
+    <label> Campo 1: <input type="text" name="campo1"> </label>
+    <label> Campo 2: <input type="text" name="campo2"> </label>
+    <button type="submit"> Buscar </button>
+  </form>
+  
+  <div *ngIf="resultados && resultados.length > 0">
+    <table mat-table>
+     Aquí van las columnas de la tabla 
+    </table>
+  </div>
+  
+  <div *ngIf="!resultados || resultados.length === 0">
+    Aquí va el modal 
+  </div> -->
+
+  <c-row>
+    <c-col xs="12">
+      <c-card class="mb-4">
+        <c-card-header ngPreserveWhitespaces>
+          <strong>Consulta de datos de estudiantes</strong>
+          <!-- <small>Ingresa la cédula sin puntos o el nombre del cliente</small> -->
+        </c-card-header>
+        <c-card-body>
+          <p class="text-medium-emphasis small">
+            Ingresa el Carnet, la cédula sin puntos o el nombre del estudiante
+          </p>
+          <form #formSearchPersona="ngForm" (ngSubmit)="searchPersona(formSearchPersona)">
+          <c-input-group class="mb-3">
+            <input cFormControl placeholder="Carnet" sizing="sm" type="text" [(ngModel)]="codpercli" maxlength="10" name="carnet"/> &nbsp;
+            <input  cFormControl placeholder="Cédula" sizing="sm" type="number" min="0" [(ngModel)]="cirif" name="cedula" /> &nbsp;
+            <input  cFormControl placeholder="Nombre" sizing="sm" type="text" [(ngModel)]="nombre_cliente" name="nombre" /> &nbsp;
+            <button cButton color="primary" type="submit"> <svg cIcon class="me-2" name="cilMagnifyingGlass"></svg>&nbsp;Buscar</button>
+          </c-input-group>
+        </form>
+        </c-card-body>      
+      </c-card>
+      <div *ngIf="hayResultados" class="mat-elevation-z8">
+        <table mat-table [dataSource]="dataSource" [hover]="true"
+        [responsive]="true"
+        [striped]="true"
+        align="middle"
+        cTable
+        class="mb-0 border" cTable>
+        
+          <ng-container matColumnDef="estatus">
+            <th mat-header-cell *matHeaderCellDef> Estatus </th>
+            <td mat-cell *matCellDef="let row">
+                <div class="container" cTooltip="{{row.desc_estatus}}" cTooltipPlacement="right">
+                    <svg *ngIf="row.estatus == 'OKSICE'" cIcon width="30" height="30" name="cilToggleOn" style="color: #2EB85C;" ></svg>
+                    <svg *ngIf="row.estatus == 'OPSUAWAIT'" cIcon width="30" height="30" name="cilclock" style="color: #f9b115;"></svg>
+                  </div>
+            </td>
+          </ng-container>
+
+        <!-- Columna de nombre -->
+        <ng-container matColumnDef="carnet">
+            <th mat-header-cell *matHeaderCellDef  > Carnet </th>
+            <td mat-cell *matCellDef="let row"> {{row.carnet}}</td>
+          </ng-container>
+
+          <!-- Columna de cedula / rif -->
+          <ng-container matColumnDef="cedula">
+            <th class="cedula-ancho" mat-header-cell *matHeaderCellDef > C.I.</th>
+            <td class="cedula-ancho" mat-cell *matCellDef="let row"> 
+              <div *ngIf="row.nac== 'V' || row.nac== 'E' || row.nac== 'P'" class="flex-goew-1">{{row.nac}}-{{row.ced_pas}}</div>
+              
+            </td>
+          </ng-container>
+  
+          <!-- Columna de nombre -->
+          <ng-container matColumnDef="nombre_cliente">
+            <th mat-header-cell *matHeaderCellDef  > Nombre estudiante </th>
+            <td mat-cell *matCellDef="let row"> {{row.nombre_completo}}</td>
+          </ng-container>
+
+          <!-- Columna de edad -->
+          <ng-container matColumnDef="edad">
+            <th mat-header-cell *matHeaderCellDef  > Edad </th>
+            <td mat-cell *matCellDef="let row"> {{row.edad}}</td>
+          </ng-container>
+
+          <!-- Columna de edad -->
+          <ng-container matColumnDef="pnf">
+            <th mat-header-cell *matHeaderCellDef  > PNF </th>
+            <td mat-cell *matCellDef="let row"> {{row.pnf}}</td>
+          </ng-container>
+  
+          <!-- Columna de detalle -->
+          <ng-container matColumnDef="detalles">
+            <th class="det-ancho" mat-header-cell *matHeaderCellDef > Detalles </th>
+            <td class="det-ancho" mat-cell *matCellDef="let row">
+              <div>
+                <button  cButton color="vcbu" variant="outline">
+                  <svg cIcon name="cilMagnifyingGlass"></svg></button>
+              </div>
+
+            </td>
+  
+          </ng-container>
+  
+          
+  
+          <tr mat-header-row *matHeaderRowDef="displayedColumns" align="center"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      
+          <!-- Row shown when there is no matching data. -->
+          
+        </table>
+      </div>
+      <div *ngIf="sinResultados">
+        <c-alert color="danger" class="d-flex align-items-center">
+          <svg cIcon class="me-2" width="24" height="24" name="cilWarning"></svg>
+          <div>No se han encontrado resultados o el aspirante no es nuevo ingreso OPSU.</div>
+        </c-alert>
+      </div>
+  
+    </c-col>
+  </c-row>
+  <ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" size="default" type="ball-atom">
+    <p style="color: white" align="center">Por favor espere... <br>¡Consultando información!</p>
+  </ngx-spinner>

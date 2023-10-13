@@ -22,7 +22,7 @@ export class AutopostuladosComponent implements AfterViewInit {
   pnfRecibidas = new MatTableDataSource();
   procesadas = new MatTableDataSource();
   displayedColumnsRecibidas: string[] = ['fecha_solicitud', 'id_estudiante', 'nombre_completo', 'edad', 'tipoaspirante', 'gestion'];
-  displayedColumnsProcesadas: string[] = ['estatus','fecha_solicitud', 'id_estudiante', 'nombre_completo', 'edad', 'tipoaspirante','usrproceso'];
+  displayedColumnsProcesadas: string[] = ['estatus', 'id_estudiante', 'nombre_completo', 'edad', 'tipoaspirante','usrproceso'];
   displayedColumnsPnf: string[] = ['radio','codigo','pnf'];
   hayResultadosRecibidas: boolean = false;
   sinResultadosRecibidas: boolean = false;
@@ -35,6 +35,8 @@ export class AutopostuladosComponent implements AfterViewInit {
   moding: any []= [];
   trayectos: any []= [];
   resolucion: any []= [];
+
+  cedulaAuto!: string;
 
   trayecto!: string;
   mod_ingreso!: string;
@@ -52,6 +54,9 @@ export class AutopostuladosComponent implements AfterViewInit {
     saludo: null,
     usrsice: null,
   }
+
+
+  valorCampo: any;
 
   @ViewChild('paginatorRecibidas') paginatorRecibidas: MatPaginator;
   @ViewChild('paginatorProcesadas') paginatorProcesadas: MatPaginator;
@@ -84,11 +89,11 @@ export class AutopostuladosComponent implements AfterViewInit {
     this.findAutopostulados();
     this.findModIngreso();
     this.findTrayectos();
-    this.findResolucion(); 
-    this.usr = JSON.parse(sessionStorage.getItem('currentUser')!); 
+    this.findResolucion();  
 }
 
 findAutopostulados() {
+  this.usr = JSON.parse(sessionStorage.getItem('currentUser')!); 
   this.SpinnerService.show();
   this.controlestudiosService.getAutopostulado().subscribe(
     (data: any) => {
@@ -168,6 +173,14 @@ applyFilterProcesadas(event: Event) {
   }
 }
 
+abrirModal(campo: any) {
+  this.valorCampo = campo;
+  this.firstFormGroup.patchValue({
+    cedula: this.valorCampo
+  });
+  this.gestionAutopostulado.show(); // Abre el modal
+}
+
 
 guardar(): void {
   this.SpinnerService.show(); 
@@ -190,17 +203,38 @@ guardar(): void {
               this.firstFormGroup.reset();
               break;
         default:
-          this.SpinnerService.hide();
+          this.SpinnerService.hide(); 
           this.notifyService.showSuccess('Solicitud de autopostulación procesada');
           this.gestionAutopostulado.hide(); 
           this.firstFormGroup.reset();
           this.findAutopostulados();
+          this.enviarNotificacion(cedula);
           break;
       }
     });
 }
 
+setSelectedCedulaAuto(cedula: any) {
+  this.cedulaAuto = cedula;
+}
 
+enviarNotificacion(cedula: any){
+  this.SpinnerService.show(); 
+  const user = {cedula};
+
+    this.controlestudiosService.pushNotify(user).subscribe(datos => {
+      switch (datos['estatus']) {
+        case 'ERROR':
+              this.SpinnerService.hide(); 
+              this.notifyService.showError2('Ha ocurrido un error enviando el correo de notificación.');
+              break;
+        default:
+          this.SpinnerService.hide();
+          this.notifyService.showSuccess('Correo de notificación enviado');
+          break;
+      }
+    });
+  }
 
 firstFormGroup = this._formBuilder.group({
   cedula: ['', Validators.required],

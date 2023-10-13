@@ -49,7 +49,7 @@
                             </mat-expansion-panel-header>
                             <br>
                             <ng-container *ngIf="dato3.oferta.length > 0; else noData">
-                                <button cButton color="light" size="sm" (click)="gestionNewSeccion.show()"> <svg cIcon
+                                <button cButton color="light" size="sm" (click)="gestionNewSeccion.show()" [attr.data-target]="'#modal-' + dato3.cod_ucurr"> <svg cIcon
                                         class="me-2" name="cilPlaylistAdd"></svg>Abrir sección</button>
                                 <table mat-table [dataSource]="dato3.oferta" [hover]="true" cTable>
                                     <tr>
@@ -100,7 +100,7 @@
 
                             </ng-container>
                             <ng-template #noData>
-                                <button cButton color="light" size="sm" (click)="gestionNewSeccion.show()"> <svg cIcon
+                                <button cButton color="light" size="sm" (click)="gestionNewSeccion.show()" [attr.data-target]="'#modal-' + dato3.cod_ucurr"> <svg cIcon
                                         class="me-2" name="cilPlaylistAdd"></svg>Abrir sección</button>
                                 <c-alert color="info" class="d-flex align-items-center">
                                     <svg cIcon class="me-2" width="24" height="24" name="cilBellExclamation"></svg>
@@ -109,12 +109,11 @@
                             </ng-template>
 
 <!-- Modal -->
-<div bsModal #gestionNewSeccion="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div bsModal #gestionNewSeccion="bs-modal" [id]="'modal-' + dato3.cod_ucurr" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
       <div class="modal-content">
         <div class="modal-header">
           <h2 class="modal-title" >Crear nueva sección: {{dato3.nombre_uni_curr}}</h2>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
             <form #f="ngForm" [formGroup]="firstFormGroup" >
@@ -170,7 +169,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" (click)="gestionNewSeccion.hide()">Cerrar</button>
-          <button type="button" class="btn btn-primary" [disabled]="!firstFormGroup.valid" (click)="guardar()"><svg cIcon class="me-2" name="cil-cloud-upload"></svg>Crear sección</button>
+          <button type="button" class="btn btn-primary" [disabled]="!firstFormGroup.valid" (click)="gestionNewSeccion.hide()" (click)="guardar()"><svg cIcon class="me-2" name="cil-cloud-upload"></svg>Crear sección</button>
         </div>
       </div>
     </div>

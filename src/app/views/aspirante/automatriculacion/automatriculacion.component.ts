@@ -84,7 +84,9 @@ export class AutomatriculacionComponent  implements OnInit, AfterViewInit {
   procedencia: any []= [];
   parentesco: any []= [];
   sectortrab: any []= [];
-  questsec: any []= [];
+  questsec1: any []= [];
+  questsec2: any []= [];
+  questsec3: any []= [];
   sede: string ='001';
   turno: string='X';
   mingresoopsu: string='001';
@@ -106,7 +108,6 @@ export class AutomatriculacionComponent  implements OnInit, AfterViewInit {
   segundo_nombre!: string;
   primer_apellido!: string;
   segundo_apellido!: string;
-
 
   quest1: string;
   quest2: string;
@@ -408,7 +409,16 @@ findSectorTrabajo(){
 findQuestSec(){
   this.aspiranteService.getQuestSec().subscribe(
     (result: any) => {
-        this.questsec = result;
+      const opcionesFiltradas1 = ['Q1', 'Q2', 'Q3']; // Aquí colocas los valores codelemento que deseas mostrar
+      this.questsec1 = result.filter((questsec1: { codelemento: string; }) => opcionesFiltradas1.includes(questsec1.codelemento));
+
+      const opcionesFiltradas2 = ['Q4', 'Q5', 'Q6']; // Aquí colocas los valores codelemento que deseas mostrar
+      this.questsec2 = result.filter((questsec2: { codelemento: string; }) => opcionesFiltradas2.includes(questsec2.codelemento));
+
+      const opcionesFiltradas3 = ['Q7', 'Q8', 'Q9']; // Aquí colocas los valores codelemento que deseas mostrar
+      this.questsec3 = result.filter((questsec3: { codelemento: string; }) => opcionesFiltradas3.includes(questsec3.codelemento));
+
+      
   }
   );
 }
@@ -452,16 +462,12 @@ guardar(): void {
         this.SpinnerService.hide();
         this.notifyService.showInfo('Se ha iniciado la descarga del reporte de inscripción.');
         this.notifyService.showSuccess('Proceso de inscripción finalizado');
-        setTimeout(() => {
-          this.router.navigateByUrl('/login-aspirante');
-        }, 10000); // 6000 milisegundos = 6 segundos
+        this.router.navigateByUrl('/login-aspirante');
+      
       }else {
         this.SpinnerService.hide();
         this.notifyService.showWarning('Ha ocurrido un error, notifíquelo al correo: soportesice@unetrans.edu.ve indicando su cédula de identidad.');
-        setTimeout(() => {
-          this.router.navigateByUrl('/login-aspirante');
-        }, 10000); // 6000 milisegundos = 6 segundos
-       
+        this.router.navigateByUrl('/login-aspirante');       
       }
     });
 }

@@ -27,8 +27,8 @@ export class GestionCuposComponent implements OnInit {
   docente: string;
   tseccion: any[] = [];
 
-  carreraSeleccionada: string;
-  periodoSeleccionado: string;
+  carreraSeleccionada: any;
+  periodoSeleccionado: any;
   tiposeccion: string;
 
   usr={
@@ -91,16 +91,17 @@ export class GestionCuposComponent implements OnInit {
   //   );
   // }
 
-  onPnfSeleccionado(carreraSeleccionada: any){
+  onPnfSeleccionado(carreraSeleccionada: any) {
     this.SpinnerService.show();
     this.controlestudiosService.getPeriodoOfPnfSeleccionado(carreraSeleccionada).subscribe(
-      data=>{
-        this.periodos = data
+      (data: any) => {
+        this.periodos = data;
+        this.periodoSeleccionado = null; // Reiniciar el valor del segundo mat-select
+        this.mostrarTrayectos = false; // Ocultar la información mostrada
         this.SpinnerService.hide();
       }
-    )
+    );
   }
-
   onPeriodoSeleccionado(carreraSeleccionada: any,periodoSeleccionado: any ){
     this.SpinnerService.show();
     this.controlestudiosService.getOfertaAcademica(carreraSeleccionada,periodoSeleccionado).subscribe(
@@ -118,7 +119,6 @@ export class GestionCuposComponent implements OnInit {
 
 setSelectedCodUcurr(codUcurr: any) {
   this.selectedCodUcurr = codUcurr;
-  console.log(this.selectedCodUcurr)
 }
 guardar(): void {
   this.SpinnerService.show(); 
@@ -133,31 +133,28 @@ guardar(): void {
     };
 
     this.controlestudiosService.createSeccion(datosCompletos).subscribe(datos => {
-      this.mostrarTrayectos = true;
       switch (datos['estatus']) {
         case 'SECCIONDUPLICADA':
               this.SpinnerService.hide(); 
               this.notifyService.showWarning('La sección está duplicada para esa Unidad Curricular, verifique e intente de nuevo.');
-              this.gestionNewSeccion.hide(); 
+              //this.gestionNewSeccion.hide(); 
               this.firstFormGroup.reset();
               this.mostrarTrayectos = false;
-              this.ngOnInit();
               break;
             case 'ERROR':
               this.SpinnerService.hide(); 
               this.notifyService.showError2('Ha ocurrido un error, verifique y si persiste comuníquese con sistemas.');
-              this.gestionNewSeccion.hide(); 
+              //this.gestionNewSeccion.hide(); 
               this.firstFormGroup.reset();
               this.mostrarTrayectos = false;
-              this.ngOnInit();
               break;
         default:
-          this.notifyService.showSuccess('Sección creada para el periodo seleccionado');
-          this.gestionNewSeccion.hide(); 
-          this.firstFormGroup.reset();
-          this.ngOnInit();
-          this.mostrarTrayectos = false;
+          //this.gestionNewSeccion.hide();
           this.SpinnerService.hide();
+          this.notifyService.showSuccess('Sección creada para el periodo seleccionado');
+           
+          this.firstFormGroup.reset();
+          this.mostrarTrayectos = false;
           break;
       }
     });

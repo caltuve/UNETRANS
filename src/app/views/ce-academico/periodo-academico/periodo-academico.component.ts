@@ -36,7 +36,7 @@ usr={
   selectedOption: any;
   actuales = new MatTableDataSource();
   finalizadas = new MatTableDataSource();
-  displayedColumnsPeriodosActuales: string[] = ['estatus','periodo', 'periodicidad', 'fec_ini', 'fec_fin', 'cargado', 'modificado','acciones'];
+  displayedColumnsPeriodosActuales: string[] = ['estatus','periodo', 'periodicidad', 'fec_ini', 'fec_fin', 'cargado', 'modificado'];
   displayedColumnsProcesadas: string[] = ['estatus','fecha_solicitud', 'id_estudiante', 'nombre_completo', 'edad', 'tipoaspirante'];
   displayedColumnsPnf: string[] = ['radio','codigo','pnf'];
   

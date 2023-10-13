@@ -675,6 +675,56 @@ doc.text(splitText, 55, 100);
      doc.save('etiqueta.pdf');
   }
 
+  createConstanciaInscripcion() {
+    const doc = new jsPDF('p', 'pt', 'letter');
+    // Agregar encabezado en cada página
+    const headerImg = new Image();
+    headerImg.src = 'assets/img/brand/cintillo_unetrans_082023.png';
+    
+    //doc.addPage();
+    doc.addImage(headerImg, 'PNG', 42, 10, 1052/2, 87/2);
+    
+    const nacionalidad = this.estudiante[0].nac;
+    const cedula = this.estudiante[0].ced_pas;
+    const carnet = this.estudiante[0].carnet.toString();
+    const nombres = this.estudiante[0].nombres;
+    const apellidos = this.estudiante[0].apellidos;
+    const pnf = this.estudiante[0].pnf;
+    const mod_ingreso = this.estudiante[0].mod_ingreso;
+    const nombre_corto = this.estudiante[0].nombre_corto;
+
+    let x = 50; // Columna 1
+    let y = 70; // Fila 1
+    
+    const column1Content = [
+      'Cedula de identidad',
+      'Nombres y apellidos',
+      'Programa',
+      'Mención',
+      'Sede'
+    ];
+    
+    const column2Content = [
+      '1234567890', // Variable para cédula de identidad
+      'Christian Smith', // Variable para nombres y apellidos
+      'Programa A', // Variable para programa
+      'Mención B', // Variable para mención
+      'Sede Central' // Variable para sede
+    ];
+    doc.setFontSize(10);
+    doc.setFont('Arial', 'normal');
+    column1Content.forEach((content, index) => {
+      doc.text(content, x, y);
+      
+      // Imprimir el contenido de la columna 2 al lado del contenido de la columna 1
+      doc.text(column2Content[index], x + 85, y);
+      
+      y += 10;
+    });
+     // Guardar el archivo
+     doc.save('constancia.pdf');
+  }
+
   findEstudiante(){
     this.controlestudiosService.getEstudiante().subscribe(
       (result: any) => {
@@ -684,8 +734,8 @@ doc.text(splitText, 55, 100);
         const nombre = this.estudiante[0].conapdis;
         console.log(nombre)
         //this.generatedPDFFile();
-        this.createEtiqueta();
-
+        //this.createEtiqueta();
+        this.createConstanciaInscripcion();
       }
     );
   }
