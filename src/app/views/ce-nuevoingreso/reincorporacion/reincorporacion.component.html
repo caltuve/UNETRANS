@@ -1,10 +1,13 @@
 <c-col xs="12">
     <c-card class="mb-4">
       <c-card-header>
-        <strong>Solicitudes de Autopostulación</strong> &nbsp; <small>Módulo para gestión de aspirantes por Autopostulación</small>
+        <strong>Reincorporación de estudiantes</strong> &nbsp; <small>Módulo para gestión de las reincorporaciones</small>  &nbsp; 
+        <button  cButton color="primary" size="sm" data-toggle="modal" (click)="gestionNewReincorporacion.show()"> <svg cIcon class="me-2" name="cilUserPlus"></svg>Cargar solicitud</button>
       </c-card-header>
       <c-card-body >
-        <c-nav variant="tabs">
+          Listado de estudiantes que solicitaron reincorporarse para el periodo académico actual.
+          <br>
+          <c-nav variant="tabs">
             <c-nav-item>
               <a [cTabContent]="tabContent1" [routerLink] [tabPaneIdx]="0" cNavLink>
                 <svg cIcon class="me-2" name="cilNoteAdd"></svg>
@@ -60,107 +63,9 @@
                             <th mat-header-cell *matHeaderCellDef> Gestionar </th>
                             <td mat-cell *matCellDef="let solicitud">
                                 <div>
-                                    <button cButton class="btn-primary" data-toggle="modal" (click)="setSelectedCedulaAuto(solicitud.ced_pas)" (click)="gestionAutopostulado.show()">
+                                    <button cButton class="btn-primary">
                                       <svg cIcon name="cilMagnifyingGlass"></svg></button>
                                   </div>
- <!-- Modal -->
- <div bsModal #gestionAutopostulado="bs-modal" id="solicitud.id_estudiante" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2 class="modal-title" >Gestión de solicitud de autopostulación: {{solicitud.id_estudiante}}</h2>
-      </div>
-      <div class="modal-body">
-        <p>
-<div class="d-flex">
-          <div class="flex-goew-1"><strong>Cédula:</strong> {{solicitud.id_estudiante}} &nbsp;</div>
-          <div class="flex-goew-1"><strong>Solicitante:</strong> {{solicitud.nombre_completo2}}  &nbsp;</div>
-          <div class="flex-goew-1"><strong>Edad:</strong> {{solicitud.edad}} años</div>
-      </div>
-
-        <p>
-      <div class="d-flex">
-        <div class="flex-goew-1"><strong>Tipo de aspirante:</strong> {{solicitud.tipoaspirante}} &nbsp;</div>
-        <div *ngIf="solicitud.tipoaspirante== 'Universitario'" class="flex-goew-1"><strong>Título:</strong> {{solicitud.tituloies}} EN {{solicitud.mencionies}}</div>
-    </div>
-    <p>
-    <div class="d-flex">
-      <div class="flex-goew-1"><strong>Exposición de motivos:</strong> {{solicitud.exp_motivos}} </div>
-  </div>
-  <p><p>
-
-    <form #f="ngForm" [formGroup]="firstFormGroup" >
-      <strong>Seleccione el PNF que va a cursar el aspirante:</strong><br>
-      <table mat-table [dataSource]="solicitud.pnf"  
-      [hover]="true"
-      [responsive]="true"
-      [striped]="true"
-      align="middle"
-      class="mb-0 border" cTable>
-                    <ng-container matColumnDef="radio">
-                        <th mat-header-cell *matHeaderCellDef>
-                          Opción
-                        </th>
-                      <td mat-cell *matCellDef="let row">
-                        <mat-radio-group [(ngModel)]="selectedOption" formControlName="optionPnf">
-                          <mat-radio-button [value]="row.codigo_pnf" color="primary"></mat-radio-button>
-                        </mat-radio-group>
-                      </td>
-                    </ng-container>
-                      <ng-container matColumnDef="codigo">
-                          <th mat-header-cell *matHeaderCellDef> Código OPSU </th>
-                        <td mat-cell *matCellDef="let row"> {{row.codigo_pnf}} </td>
-                      </ng-container>
-                      <ng-container matColumnDef="pnf">
-                          <th mat-header-cell *matHeaderCellDef> PNF </th>
-                        <td mat-cell *matCellDef="let row"> {{row.nombre_programa}} </td>
-                      </ng-container>                      
-                      <thead cTableColor="light"> <tr mat-header-row *matHeaderRowDef="displayedColumnsPnf"></tr></thead>
-                      <tr mat-row *matRowDef="let row; columns: displayedColumnsPnf;"></tr>
-                    </table>
-<p>
-
-                    <div class="row">
-                      <div class="col s12"><label>Trayecto de ingreso:</label>
-                            <mat-form-field>
-                              <mat-label>Trayecto:</mat-label>
-                              <mat-select  [(ngModel)]="trayecto" formControlName="trayecto">
-                                  <mat-option [value]="tray.codelemento"
-                                      *ngFor="let tray of trayectos">{{tray.descripcion}}</mat-option>
-                                    </mat-select>
-                            </mat-form-field>
-                      </div>
-                      <div class="col s12"><label>Modalidad de ingreso:</label>
-                          <mat-form-field>
-                              <mat-label>Modalidad de ingreso:</mat-label>
-                              <mat-select  [(ngModel)]="mod_ingreso" formControlName="mingreso">
-                                <mat-option [value]="modin.codelemento"
-                                *ngFor="let modin of moding">{{modin.descripcion}}</mat-option>
-                              </mat-select>
-                            </mat-form-field>
-                        </div>
-                        <div class="col s12"><label>Resolución:</label>
-                          <mat-form-field>
-                            <mat-label>Resolución:</mat-label>
-                            <mat-select  [(ngModel)]="reso" formControlName="reso">
-                              <mat-option [value]="conv.codelemento"
-                                  *ngFor="let conv of resolucion">{{conv.descripcion}}</mat-option>
-                                </mat-select>
-                          </mat-form-field>
-                        </div>
-                    </div>
-                    <input type="hidden" [(ngModel)]="cedulaAuto" formControlName="cedula">
-                    <input type="hidden" [(ngModel)]="usr.usrsice"  formControlName="usrsice" >
-
-    </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" (click)="gestionAutopostulado.hide()">Cerrar</button>
-        <button type="button" class="btn btn-primary" [disabled]="!firstFormGroup.valid" (click)="guardar()"><svg cIcon class="me-2" name="cil-save"></svg>Procesar solicitud</button>
-      </div>
-    </div>
-  </div>
-</div>
                             </td>
                           </ng-container>
                         <tr mat-header-row *matHeaderRowDef="displayedColumnsRecibidas"></tr>
@@ -205,13 +110,13 @@
                           <th mat-header-cell *matHeaderCellDef> Apellido y nombre </th>
                           <td mat-cell *matCellDef="let solicitud"> {{solicitud.nombre_completo}} </td>
                         </ng-container>
-                        <ng-container matColumnDef="telefono">
-                          <th mat-header-cell *matHeaderCellDef> Teléfono </th>
-                          <td mat-cell *matCellDef="let solicitud"> {{solicitud.celular}} </td>
+                        <ng-container matColumnDef="edad">
+                          <th mat-header-cell *matHeaderCellDef> Edad </th>
+                          <td mat-cell *matCellDef="let solicitud"> {{solicitud.edad}} </td>
                         </ng-container>
-                        <ng-container matColumnDef="pnf">
-                          <th mat-header-cell *matHeaderCellDef> PNF </th>
-                          <td mat-cell *matCellDef="let solicitud"> {{solicitud.nombre_programa}} </td>
+                        <ng-container matColumnDef="tipoaspirante">
+                          <th mat-header-cell *matHeaderCellDef> Tipo de aspirante </th>
+                          <td mat-cell *matCellDef="let solicitud"> {{solicitud.tipoaspirante}} </td>
                         </ng-container>
                         <ng-container matColumnDef="usrproceso">
                           <th mat-header-cell *matHeaderCellDef> Procesado por </th>
@@ -235,6 +140,121 @@
     </c-card>
   </c-col>
 
+<!-- Modal -->
+<div bsModal #gestionNewReincorporacion="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title" >Cargar nueva solicitud de reincorporación: </h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form #f="ngForm" [formGroup]="firstFormGroup" >
+                <div class="row">
+                    <div class="col l6 m12 s12"> 
+                      <label class="label-custom">Documento de identidad:</label>
+                      <div class="row">
+                        <div class="col s12">
+                          <mat-form-field appearance="fill">
+                            <mat-label>Nro de documento</mat-label>
+                            <input [(ngModel)]="cedula" (blur)="buscar_datos_student()" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" type="number" min="1" max="100000000" matInput formControlName="cedula"
+                              name="cedula" required>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col s12">
+                      <label class="label-custom">Programa Nacional de Formación</label>
+                      <div class="row">
+                        <div class="col s12">
+                            <mat-form-field>
+                                <mat-label>PNF:</mat-label>
+                                <mat-select  [(ngModel)]="pnf" formControlName="pnf">
+                                    <mat-option [value]="item.codelemento"
+                                    *ngFor="let item of carreras2">{{item.descripcion}}</mat-option>
+                                  </mat-select>
+                              </mat-form-field>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+    
+                  <div class="row">
+                    <div class="col l12 m12 s12">
+                      <label>{{datos_consultados.nombre_completo}}</label>
+                      <div class="row mar-b-0">
+                        <div class="col s12">
+                          <mat-form-field>
+                            <mat-label>Primer:</mat-label>
+                            <input [(ngModel)]="datos_consultados.nombre_completo" matInput formControlName="nombre_completo" name="nombre_completo">
+                          </mat-form-field>
+                        </div>
+                        <div class="col s12">
+                          <mat-form-field>
+                            <mat-label>Segundo:</mat-label>
+                            <input style='text-transform:uppercase' [(ngModel)]="segundo_nombre" matInput formControlName="segundo_nombre" name="segundo_nombre">
+                          </mat-form-field>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col l12 m12 s12">
+                      <label>Apellidos:</label>
+                      <div class="row mar-b-0">
+                        <div class="col s12">
+                          <mat-form-field>
+                            <mat-label>Primer</mat-label>
+                            <input style='text-transform:uppercase' [(ngModel)]="primer_apellido" matInput formControlName="primer_apellido" name="primer_apellido">
+                          </mat-form-field>
+                        </div>
+                        <div class="col s12">
+                          <mat-form-field>
+                            <mat-label>Segundo</mat-label>
+                            <input style='text-transform:uppercase' [(ngModel)]="segundo_apellido" matInput formControlName="segundo_apellido" name="segundo_apellido">
+                          </mat-form-field>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col s12"><label>Trayecto de ingreso:</label>
+                          <mat-form-field>
+                            <mat-label>Trayecto:</mat-label>
+                            <mat-select  [(ngModel)]="trayecto" formControlName="trayecto">
+                                <mat-option [value]="tray.codelemento"
+                                    *ngFor="let tray of trayectos">{{tray.descripcion}}</mat-option>
+                                  </mat-select>
+                          </mat-form-field>
+                    </div>
+                    <div class="col s12"><label>Modalidad de ingreso:</label>
+                        <mat-form-field>
+                            <mat-label>Modalidad de ingreso:</mat-label>
+                            <mat-select  [(ngModel)]="mod_ingreso" formControlName="mingreso">
+                              <mat-option [value]="modin.codelemento"
+                              *ngFor="let modin of moding">{{modin.descripcion}}</mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                      </div>
+                      <div class="col s12"><label>Convenio:</label>
+                        <mat-form-field>
+                          <mat-label>Convenio:</mat-label>
+                          <mat-select  [(ngModel)]="convenio" formControlName="convenio">
+                            <mat-option [value]="conv.codelemento"
+                                *ngFor="let conv of convenios">{{conv.descripcion}}</mat-option>
+                              </mat-select>
+                        </mat-form-field>
+                      </div>
+                  </div>
+
+            </form>
+            
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="gestionNewReincorporacion.hide()">Cerrar</button>
+          <button type="button" class="btn btn-primary" [disabled]="!firstFormGroup.valid" (click)="guardar()"><svg cIcon class="me-2" name="cil-cloud-upload"></svg>Cargar aspirante</button>
+        </div>
+      </div>
+    </div>
+  </div>
   <ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" size="default" type="ball-atom">
 		<p style="color: white" align="center">Por favor espere... <br>¡Validando información!</p>
 	  </ngx-spinner>

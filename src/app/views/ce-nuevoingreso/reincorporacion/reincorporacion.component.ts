@@ -3,17 +3,17 @@ import {FormBuilder, Validators,FormControl} from '@angular/forms';
 import { ControlEstudiosService } from '../../control-estudios/control-estudios.service';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
-import {MatSort} from '@angular/material/sort';
 import { NgxSpinnerService } from "ngx-spinner";
 import { NotificacionService } from './../../../notificacion.service'
 import {ModalDirective} from 'ngx-bootstrap/modal';
 
 @Component({
-  selector: 'app-autopostulados',
-  templateUrl: './autopostulados.component.html',
-  styleUrls: ['./autopostulados.component.scss']
+  selector: 'app-reincorporacion',
+  templateUrl: './reincorporacion.component.html',
+  styleUrls: ['./reincorporacion.component.scss']
 })
-export class AutopostuladosComponent implements AfterViewInit {
+export class ReincorporacionComponent implements AfterViewInit {
+
   arrayDatos : any []= [];
 
   pnfs: any []= [];
@@ -22,7 +22,7 @@ export class AutopostuladosComponent implements AfterViewInit {
   pnfRecibidas = new MatTableDataSource();
   procesadas = new MatTableDataSource();
   displayedColumnsRecibidas: string[] = ['fecha_solicitud', 'id_estudiante', 'nombre_completo', 'edad', 'tipoaspirante', 'gestion'];
-  displayedColumnsProcesadas: string[] = ['estatus', 'id_estudiante', 'nombre_completo','telefono' ,'pnf','usrproceso'];
+  displayedColumnsProcesadas: string[] = ['estatus', 'id_estudiante', 'nombre_completo', 'edad', 'tipoaspirante','usrproceso'];
   displayedColumnsPnf: string[] = ['radio','codigo','pnf'];
   hayResultadosRecibidas: boolean = false;
   sinResultadosRecibidas: boolean = false;
@@ -31,6 +31,9 @@ export class AutopostuladosComponent implements AfterViewInit {
   sinResultadosProcesadas: boolean = false;
 
   fecha_solicitud: string;
+
+  hayResultados: boolean = false;
+  sinResultados: boolean = false;
 
   moding: any []= [];
   trayectos: any []= [];
@@ -55,14 +58,31 @@ export class AutopostuladosComponent implements AfterViewInit {
     usrsice: null,
   }
 
-
+  nac!: string;
+  cedula!: number;
+  fecnac!: Date;
+  primer_nombre!: string;
+  segundo_nombre!: string;
+  primer_apellido!: string;
+  segundo_apellido!: string;
+  pnf!: string;
+  convenio!: string;
   valorCampo: any;
+
+  dato: any []= [];
+  nacs: any []= [];
+  genero: any []= [];
+  carreras: any []= [];
+  carreras2: any []= [];
+  aspirantes: any []= [];
+  turnos: any []= [];
+  convenios: any []= [];
+  datos_consultados: any = {}; 
 
   @ViewChild('paginatorRecibidas') paginatorRecibidas: MatPaginator;
   @ViewChild('paginatorProcesadas') paginatorProcesadas: MatPaginator;
   //paginatorIntl: MatPaginatorIntl;
   @ViewChild('gestionAutopostulado') public gestionAutopostulado: ModalDirective;
-  @ViewChild(MatSort) sort: MatSort;
 
   constructor(private _formBuilder: FormBuilder,
     public controlestudiosService: ControlEstudiosService,
@@ -237,14 +257,42 @@ enviarNotificacion(cedula: any){
   }
 
 firstFormGroup = this._formBuilder.group({
+  nac:['', Validators.required],
   cedula: ['', Validators.required],
+  nombre_completo: ['', Validators.compose([Validators.required, Validators.pattern(/^[^\s]+(\s+[^\s]+)*$/)])],
+  segundo_nombre: [null, Validators.compose([Validators.nullValidator, Validators.pattern(/^[^\s]+(\s+[^\s]+)*$/)])],
+  primer_apellido: ['', Validators.compose([Validators.required, Validators.pattern(/^[^\s]+(\s+[^\s]+)*$/)])],
+  segundo_apellido:[null, Validators.compose([Validators.nullValidator, Validators.pattern(/^[^\s]+(\s+[^\s]+)*$/)])] ,
   mingreso:  [{value: ''}, Validators.required],
-  trayecto:       [{value: '', }, Validators.required],
-  reso:  [{value: '', }, Validators.required],
-  optionPnf: ['', Validators.required],
-  usrsice : ['', Validators.required],
+  pnf:       [{value: '', }, Validators.required],
+  trayecto:  [{value: '', }, Validators.required],
+  convenio:  [{value: '', }, Validators.required],
 });
 
+buscar_datos_student() {
+  const cedula = this.cedula;
+  console.log(cedula);
+  this.controlestudiosService.findPersonaReincorporacion(cedula).subscribe(
+    (result: any) => {
+        this.hayResultados = false;
+        this.sinResultados = false;
+        this.datos_consultados = result;
+        if (this.datos_consultados.length == 0) {
+          this.SpinnerService.hide();
+          this.sinResultados = this.datos_consultados.length ==0
+          this.hayResultados = false;
+          //this.formSearchPersona.reset();
+        }
+        else{
+          this.notifyService.showSuccess('Consulta de datos de estudiante');
+          this.SpinnerService.hide();
+          this.hayResultados = this.datos_consultados.length >0
+         // this.formSearchPersona.reset();
+        }   
+  
+  }
+  );
+}
 
 
 }

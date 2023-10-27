@@ -6,6 +6,7 @@ import { CeNuevoingresoRoutingModule } from './ce-nuevoingreso-routing.module';
 import { AspiranteOpsuComponent } from './aspirante-opsu/aspirante-opsu.component' ;
 import { AutopostuladosComponent } from './autopostulados/autopostulados.component';
 import { ConvenioComponent } from './convenio/convenio.component';
+import { ReincorporacionComponent } from './reincorporacion/reincorporacion.component';
 
 import { MatStepperModule } from '@angular/material/stepper'; 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -70,13 +71,13 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatRadioModule} from '@angular/material/radio';
 
 
-
 @NgModule({
   declarations: [
     ConsultarDatosComponent,
     AspiranteOpsuComponent,
     AutopostuladosComponent,
-    ConvenioComponent
+    ConvenioComponent,
+    ReincorporacionComponent
   ],
   imports: [
     CommonModule,

@@ -32,6 +32,14 @@ showInfo(message: string | undefined,){
     })
 }
 
+showError3(message: string | undefined,){
+  this.toastr.error(message, '¡Proceso no autorizado!', {
+    progressBar : true,
+    progressAnimation : 'decreasing',
+    timeOut: 10000
+  })
+}
+
 showWarning(message: string | undefined){
     this.toastr.warning(message, '¡Alerta!', {
       progressBar : true,

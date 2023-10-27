@@ -174,6 +174,10 @@ getAutopostulado() {
     return this.http.post(`${this.url}findpersona.php`, JSON.stringify(dato));
   }
 
+  findPersonaReincorporacion(dato: any){
+    return this.http.post(`${this.url}findpersona_reincorpora.php`, JSON.stringify(dato));
+  }
+
   pushNotify(identificacion: any): Observable<any>{
     return this.http.post(`${this.url}enviacorreo.php`, JSON.stringify(identificacion))
   }

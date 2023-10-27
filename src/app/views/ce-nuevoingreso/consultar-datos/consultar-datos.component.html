@@ -27,9 +27,9 @@
           </p>
           <form #formSearchPersona="ngForm" (ngSubmit)="searchPersona(formSearchPersona)">
           <c-input-group class="mb-3">
-            <input cFormControl placeholder="Carnet" sizing="sm" type="text" [(ngModel)]="codpercli" maxlength="10" name="carnet"/> &nbsp;
-            <input  cFormControl placeholder="Cédula" sizing="sm" type="number" min="0" [(ngModel)]="cirif" name="cedula" /> &nbsp;
-            <input  cFormControl placeholder="Nombre" sizing="sm" type="text" [(ngModel)]="nombre_cliente" name="nombre" /> &nbsp;
+            <input cFormControl placeholder="Carnet" sizing="sm" type="text" [(ngModel)]="carnet" maxlength="10" name="carnet"/> &nbsp;
+            <input  cFormControl placeholder="Cédula" sizing="sm" type="number" min="0" [(ngModel)]="cedula" name="cedula" /> &nbsp;
+            <input  cFormControl placeholder="Nombre" sizing="sm" type="text" [(ngModel)]="nombre" name="nombre" /> &nbsp;
             <button cButton color="primary" type="submit"> <svg cIcon class="me-2" name="cilMagnifyingGlass"></svg>&nbsp;Buscar</button>
           </c-input-group>
         </form>
@@ -44,20 +44,39 @@
         class="mb-0 border" cTable>
         
           <ng-container matColumnDef="estatus">
-            <th mat-header-cell *matHeaderCellDef> Estatus </th>
-            <td mat-cell *matCellDef="let row">
+            <th class="estatus-ancho" mat-header-cell *matHeaderCellDef> Estatus </th>
+            <td class="estatus-ancho" mat-cell *matCellDef="let row">
                 <div class="container" cTooltip="{{row.desc_estatus}}" cTooltipPlacement="right">
                     <svg *ngIf="row.estatus == 'OKSICE'" cIcon width="30" height="30" name="cilToggleOn" style="color: #2EB85C;" ></svg>
-                    <svg *ngIf="row.estatus == 'OPSUAWAIT'" cIcon width="30" height="30" name="cilclock" style="color: #f9b115;"></svg>
+                    <svg *ngIf="row.estatus == 'NOKSICE'" cIcon width="30" height="30" name="cilToggleOff" style="color: #e55353;" ></svg>
+                    <svg *ngIf="row.estatus == 'OPSUAWAIT'" cIcon width="30" height="30" name="cilClock" style="color: #f9b115;"></svg>
                   </div>
             </td>
           </ng-container>
 
-        <!-- Columna de nombre -->
+        <!-- Columna de carnet -->
         <ng-container matColumnDef="carnet">
-            <th mat-header-cell *matHeaderCellDef  > Carnet </th>
-            <td mat-cell *matCellDef="let row"> {{row.carnet}}</td>
+            <th class="carnet-ancho" mat-header-cell *matHeaderCellDef  > Carnet </th>
+            <td class="carnet-ancho" mat-cell *matCellDef="let row"> {{row.carnet}}</td>
           </ng-container>
+
+        <!-- Columna de  Ult. Periodo -->
+        <ng-container matColumnDef="ult_per_ins">
+          <th class="ult-per-ancho" mat-header-cell *matHeaderCellDef  > Ult. Periodo</th>
+          <td class="ult-per-ancho" mat-cell *matCellDef="let row"> {{row.ult_per_inscrito}}</td>
+        </ng-container>
+
+        <!-- Columna de cohorte -->
+        <ng-container matColumnDef="cohorte">
+          <th class="cohorte-ancho" mat-header-cell *matHeaderCellDef  > Cohorte</th>
+          <td class="cohorte-ancho" mat-cell *matCellDef="let row"> {{row.cohorte}}</td>
+        </ng-container>
+
+         <!-- Columna de año -->
+         <ng-container matColumnDef="annio">
+          <th class="trayecto-ancho" mat-header-cell *matHeaderCellDef  > Año</th>
+          <td class="trayecto-ancho" mat-cell *matCellDef="let row"> {{row.trayecto}}</td>
+        </ng-container>
 
           <!-- Columna de cedula / rif -->
           <ng-container matColumnDef="cedula">
@@ -69,35 +88,31 @@
           </ng-container>
   
           <!-- Columna de nombre -->
-          <ng-container matColumnDef="nombre_cliente">
+          <ng-container matColumnDef="nombre_persona">
             <th mat-header-cell *matHeaderCellDef  > Nombre estudiante </th>
             <td mat-cell *matCellDef="let row"> {{row.nombre_completo}}</td>
           </ng-container>
 
-          <!-- Columna de edad -->
-          <ng-container matColumnDef="edad">
-            <th mat-header-cell *matHeaderCellDef  > Edad </th>
-            <td mat-cell *matCellDef="let row"> {{row.edad}}</td>
-          </ng-container>
-
-          <!-- Columna de edad -->
+          <!-- Columna de PNF -->
           <ng-container matColumnDef="pnf">
             <th mat-header-cell *matHeaderCellDef  > PNF </th>
             <td mat-cell *matCellDef="let row"> {{row.pnf}}</td>
           </ng-container>
+
   
           <!-- Columna de detalle -->
-          <ng-container matColumnDef="detalles">
+          <!-- <ng-container matColumnDef="detalles">
             <th class="det-ancho" mat-header-cell *matHeaderCellDef > Detalles </th>
             <td class="det-ancho" mat-cell *matCellDef="let row">
               <div>
                 <button  cButton color="vcbu" variant="outline">
                   <svg cIcon name="cilMagnifyingGlass"></svg></button>
-              </div>
+              </div> 
 
             </td>
   
           </ng-container>
+          -->
   
           
   

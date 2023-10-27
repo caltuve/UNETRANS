@@ -4,12 +4,13 @@ import { AspiranteOpsuComponent } from './aspirante-opsu/aspirante-opsu.componen
 import { AutopostuladosComponent } from './autopostulados/autopostulados.component';
 import { ConvenioComponent } from './convenio/convenio.component';
 import { ConsultarDatosComponent } from './consultar-datos/consultar-datos.component';
+import { ReincorporacionComponent } from './reincorporacion/reincorporacion.component';
 
 const routes: Routes = [
   {
     path: '',
     data: {
-      title: 'Control de Estudios - Nuevo Ingreso'
+      title: 'Control de Estudios'
     },
     children: [
       {
@@ -28,21 +29,28 @@ const routes: Routes = [
         path: 'aspirante-opsu',
         component: AspiranteOpsuComponent,
         data: {
-          title: 'Aspirante OPSU'
+          title: 'Nuevo Ingreso - Aspirante OPSU'
         }
       },
       {
         path: 'convenio',
         component: ConvenioComponent,
         data: {
-          title: 'Convenio institucional'
+          title: 'Nuevo Ingreso - Convenio institucional'
         }
       },
       {
         path: 'autopostulados',
         component: AutopostuladosComponent,
         data: {
-          title: 'Autopostulados'
+          title: 'Nuevo Ingreso - Autopostulados'
+        }
+      },
+      {
+        path: 'reincorporacion',
+        component: ReincorporacionComponent,
+        data: {
+          title: 'Reincorporaciones'
         }
       },
     ]

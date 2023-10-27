@@ -11,7 +11,7 @@ import { NotificacionService } from './../../../notificacion.service'
   styleUrls: ['./consultar-datos.component.scss']
 })
 export class ConsultarDatosComponent {
-  displayedColumns: string[] = ['estatus','carnet','cedula','nombre_cliente', 'edad','pnf','detalles'];
+  displayedColumns: string[] = ['estatus','carnet', 'ult_per_ins', 'cohorte', 'annio', 'cedula','nombre_persona','pnf'];
   dataSource = new MatTableDataSource();
   hayResultados: boolean = false;
   sinResultados: boolean = false;
@@ -20,9 +20,9 @@ export class ConsultarDatosComponent {
 
   
 
-  codpercli!: string;
-  cirif!: string;
-  nombre_cliente!: string;
+  carnet!: string;
+  cedula!: string;
+  nombre!: string;
   resultados!: string[];
 
   @ViewChild('formSearchPersona') formSearchPersona!: NgForm;
@@ -46,7 +46,7 @@ export class ConsultarDatosComponent {
             this.formSearchPersona.reset();
           }
           else{
-            this.notifyService.showSuccess('Consulta de datos de cliente');
+            this.notifyService.showSuccess('Consulta de datos de estudiante');
             this.SpinnerService.hide();
             this.hayResultados = this.dataSource.data.length >0
             console.log(result);

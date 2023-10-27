@@ -69,7 +69,7 @@ export class LoginAspiranteComponent {
                 break;
             case 'apregistrado':
               this.SpinnerService.hide(); 
-              this.notifyService.showWarning('Usted ya cumplió con el proceso de autopostulación, debe esperar la notificación por correo.');
+              this.notifyService.showWarning('Usted ya cumplió con el proceso de autopostulación, debe esperar la notificación por correo de la resolución de su solicitud.');
               //this.notifyService.showInfo('Usted ya cumplió con el proceso de autopostulación, debe esperar la notificación por correo.');
               this.router.navigateByUrl('/login-aspirante');
               this.firstFormGroup.reset();
@@ -93,6 +93,12 @@ export class LoginAspiranteComponent {
             case 'NEGADO':
                   this.SpinnerService.hide(); 
                   this.notifyService.showWarning('Estimado aspirante su solicitud ha sido rechazada.');
+                  this.router.navigateByUrl('/login-aspirante');
+                  this.firstFormGroup.reset();
+                  break;
+            case 'REINCORPORACION':
+                  this.SpinnerService.hide(); 
+                  this.notifyService.showError3('Usted ya es estudiante de la UNETRANS, debe crear su cuenta en el SICE como estudiante.');
                   this.router.navigateByUrl('/login-aspirante');
                   this.firstFormGroup.reset();
                   break;

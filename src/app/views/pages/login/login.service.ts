@@ -46,4 +46,8 @@ setToken(userlogin: string) {
   return false;
   }
 
+  getMenuSice(){
+    return this.http.get(`${this.url}get_menu_sice.php`);
+  }
+
 }
