@@ -61,6 +61,14 @@ const routes: Routes = [
           loadChildren: () => 
             import('./views/administrativo/administrativo.module').then(m => m.AdministrativoModule) 
       },
+      { path: 'dep-estudiante', canActivate: [AuthGuard],
+          loadChildren: () => 
+          import('./views/dep-estudiante/dep-estudiante.module').then(m => m.DepEstudianteModule) 
+      },
+      { path: 'dep-academico', canActivate: [AuthGuard],
+          loadChildren: () => 
+          import('./views/dep-academico/dep-academico.module').then(m => m.DepAcademicoModule) 
+      },
 
       /* Fin de rutas UNETRANS */
       {
@@ -181,11 +189,6 @@ const routes: Routes = [
       title: 'Salir'
     }
   },
-  
-  
-
-  
-
   
   {path: '**', redirectTo: '404'}
 ];

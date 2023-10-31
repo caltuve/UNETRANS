@@ -1,14 +1,15 @@
 <c-col xs="12">
     <c-card class="mb-4">
         <c-card-header>
-            <strong>Gestión de Oferta Académica</strong> &nbsp; <small>Módulo para gestión de actas por Programa</small>
+            <strong>Oferta Académica</strong> &nbsp; <small>Módulo para visualizar y asignar docentes a las actas creadas</small>
             &nbsp;
             <!-- <button  cButton color="primary" size="sm" data-toggle="modal" (click)="gestionNewSeccion.show()"> <svg cIcon class="me-2" name="cilUserPlus"></svg>Nuevo aspirante</button> -->
         </c-card-header>
         <c-card-body>
             Listado de trayectos, unidades curriculares y actas (secciones).
             <br>
-            <div class="row">
+            <div *ngIf="hayResultados">
+              <div class="row">
                 <div class="col s12"><label>Seleccione un PNF:</label>
                     <mat-form-field>
                         <mat-label>PNF:</mat-label>
@@ -49,8 +50,8 @@
                             </mat-expansion-panel-header>
                             <br>
                             <ng-container *ngIf="dato3.oferta.length > 0; else noData">
-                                <button cButton color="light" size="sm" (click)="gestionNewSeccion.show()" [attr.data-target]="'#modal-' + dato3.cod_ucurr"> <svg cIcon
-                                        class="me-2" name="cilPlaylistAdd"></svg>Abrir sección</button>
+                                <!-- <button cButton color="light" size="sm" (click)="gestionNewSeccion.show()" [attr.data-target]="'#modal-' + dato3.cod_ucurr"> <svg cIcon
+                                        class="me-2" name="cilPlaylistAdd"></svg>Abrir sección</button> -->
                                 <table mat-table [dataSource]="dato3.oferta" [hover]="true" cTable>
                                     <tr>
                                         <ng-container matColumnDef="acta">
@@ -168,8 +169,8 @@
 
                             </ng-container>
                             <ng-template #noData>
-                                <button cButton color="light" size="sm" (click)="gestionNewSeccion.show()" [attr.data-target]="'#modal-' + dato3.cod_ucurr"> <svg cIcon
-                                        class="me-2" name="cilPlaylistAdd"></svg>Abrir sección</button>
+                                <!-- <button cButton color="light" size="sm" (click)="gestionNewSeccion.show()" [attr.data-target]="'#modal-' + dato3.cod_ucurr"> <svg cIcon
+                                        class="me-2" name="cilPlaylistAdd"></svg>Abrir sección</button> -->
                                 <c-alert color="info" class="d-flex align-items-center">
                                     <svg cIcon class="me-2" width="24" height="24" name="cilBellExclamation"></svg>
                                     <div>No existen secciones creadas</div>
@@ -245,6 +246,14 @@
                         </mat-expansion-panel>
                     </mat-expansion-panel>
                 </mat-accordion>
+            </div>
+            </div>
+            <br>
+            <div *ngIf="sinResultados">
+              <c-alert color="danger" class="d-flex align-items-center">
+                <svg cIcon class="me-2" width="24" height="24" name="cilWarning"></svg>
+                <div>Usted no es Jefe de Departamento, si cree que es un error notifíquelo a: soportesice@unetrans.edu.ve</div>
+              </c-alert>
             </div>
         </c-card-body>
     </c-card>

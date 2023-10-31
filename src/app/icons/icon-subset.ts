@@ -119,6 +119,7 @@ import {
   cilExitToApp,
   cilBellExclamation,
   cilReload,
+  cilLoop,
 } from '@coreui/icons';
 
 export const iconSubset = {
@@ -242,6 +243,7 @@ export const iconSubset = {
   cilExitToApp,
   cilBellExclamation,
   cilReload,
+  cilLoop,
 };
 
 export enum IconSubset {
@@ -364,7 +366,8 @@ export enum IconSubset {
   cilToggleOff ='cilToggleOff',
   cilExitToApp = 'cilExitToApp',
   cilBellExclamation = 'cilBellExclamation',
-  cilReload = 'cilReload'
+  cilReload = 'cilReload',
+  cilLoop='cilLoop',
   
   
 }

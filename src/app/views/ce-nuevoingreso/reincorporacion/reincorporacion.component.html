@@ -146,7 +146,6 @@
       <div class="modal-content">
         <div class="modal-header">
           <h2 class="modal-title" >Cargar nueva solicitud de reincorporación: </h2>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
             <form #f="ngForm" [formGroup]="firstFormGroup" >
@@ -163,94 +162,57 @@
                         </div>
                       </div>
                     </div>
-                    <div class="col s12">
-                      <label class="label-custom">Programa Nacional de Formación</label>
-                      <div class="row">
-                        <div class="col s12">
-                            <mat-form-field>
-                                <mat-label>PNF:</mat-label>
-                                <mat-select  [(ngModel)]="pnf" formControlName="pnf">
-                                    <mat-option [value]="item.codelemento"
-                                    *ngFor="let item of carreras2">{{item.descripcion}}</mat-option>
-                                  </mat-select>
-                              </mat-form-field>
-                        </div>
-                      </div>
-                    </div>
                   </div>
-    
-                  <div class="row">
-                    <div class="col l12 m12 s12">
-                      <label>{{datos_consultados.nombre_completo}}</label>
-                      <div class="row mar-b-0">
-                        <div class="col s12">
-                          <mat-form-field>
-                            <mat-label>Primer:</mat-label>
-                            <input [(ngModel)]="datos_consultados.nombre_completo" matInput formControlName="nombre_completo" name="nombre_completo">
-                          </mat-form-field>
-                        </div>
-                        <div class="col s12">
-                          <mat-form-field>
-                            <mat-label>Segundo:</mat-label>
-                            <input style='text-transform:uppercase' [(ngModel)]="segundo_nombre" matInput formControlName="segundo_nombre" name="segundo_nombre">
-                          </mat-form-field>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col l12 m12 s12">
-                      <label>Apellidos:</label>
-                      <div class="row mar-b-0">
-                        <div class="col s12">
-                          <mat-form-field>
-                            <mat-label>Primer</mat-label>
-                            <input style='text-transform:uppercase' [(ngModel)]="primer_apellido" matInput formControlName="primer_apellido" name="primer_apellido">
-                          </mat-form-field>
-                        </div>
-                        <div class="col s12">
-                          <mat-form-field>
-                            <mat-label>Segundo</mat-label>
-                            <input style='text-transform:uppercase' [(ngModel)]="segundo_apellido" matInput formControlName="segundo_apellido" name="segundo_apellido">
-                          </mat-form-field>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col s12"><label>Trayecto de ingreso:</label>
-                          <mat-form-field>
-                            <mat-label>Trayecto:</mat-label>
-                            <mat-select  [(ngModel)]="trayecto" formControlName="trayecto">
-                                <mat-option [value]="tray.codelemento"
-                                    *ngFor="let tray of trayectos">{{tray.descripcion}}</mat-option>
-                                  </mat-select>
-                          </mat-form-field>
-                    </div>
-                    <div class="col s12"><label>Modalidad de ingreso:</label>
-                        <mat-form-field>
-                            <mat-label>Modalidad de ingreso:</mat-label>
-                            <mat-select  [(ngModel)]="mod_ingreso" formControlName="mingreso">
-                              <mat-option [value]="modin.codelemento"
-                              *ngFor="let modin of moding">{{modin.descripcion}}</mat-option>
-                            </mat-select>
-                          </mat-form-field>
-                      </div>
-                      <div class="col s12"><label>Convenio:</label>
-                        <mat-form-field>
-                          <mat-label>Convenio:</mat-label>
-                          <mat-select  [(ngModel)]="convenio" formControlName="convenio">
-                            <mat-option [value]="conv.codelemento"
-                                *ngFor="let conv of convenios">{{conv.descripcion}}</mat-option>
-                              </mat-select>
-                        </mat-form-field>
-                      </div>
-                  </div>
-
             </form>
+            <div *ngIf="hayResultados">
+              <form #f="ngForm" [formGroup]="secondFormGroup" >
+                <div>
+                  <div *ngFor="let dato of datosConsultados">
+                    <div class="d-flex">
+                      <div class="flex-goew-1"><strong>Cédula:</strong> {{dato.nac}}-{{dato.ced_pas}} &nbsp;</div>
+                      <div class="flex-goew-1"><strong>Estudiante:</strong> {{dato.nombre_completo}}  &nbsp;</div>
+                      <div class="flex-goew-1"><strong>Edad:</strong> {{dato.edad}} años  &nbsp;</div>
+                  </div>
             
+                    <p>
+                  <div class="d-flex">
+                    <div class="flex-goew-1"><strong>PNF:</strong> {{dato.pnf}} &nbsp;</div>
+                    <div class="flex-goew-1"><strong>Trayecto actual:</strong> T-{{dato.trayecto}} &nbsp;</div>
+                    <div class="flex-goew-1"><strong>Ult Periodo Inscrito:</strong> {{dato.ult_per_inscrito}}</div>
+                </div>
+                <p>
+                  <input type="hidden" [(ngModel)]="dato.nac" formControlName="nac">
+                  <input type="hidden" [(ngModel)]="dato.ced_pas" formControlName="cedula">
+                  <input type="hidden" [(ngModel)]="dato.codigo_pnf" formControlName="pnf">
+                  <input type="hidden" [(ngModel)]="usr.usrsice"  formControlName="usrsice" >
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col s12"><label>Trayecto de reincorporación:</label>
+                        <mat-form-field>
+                          <mat-label>Trayecto:</mat-label>
+                          <mat-select  [(ngModel)]="trayecto" formControlName="trayecto">
+                              <mat-option [value]="tray.codelemento"
+                                  *ngFor="let tray of trayectos">{{tray.descripcion}}</mat-option>
+                                </mat-select>
+                        </mat-form-field>
+                  </div>
+                    <div class="col s12"><label>Resolución:</label>
+                      <mat-form-field>
+                        <mat-label>Resolución:</mat-label>
+                        <mat-select  [(ngModel)]="reso" formControlName="reso">
+                          <mat-option [value]="conv.codelemento"
+                              *ngFor="let conv of resolucion">{{conv.descripcion}}</mat-option>
+                            </mat-select>
+                      </mat-form-field>
+                    </div>
+                </div>
+            </form>
+            </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" (click)="gestionNewReincorporacion.hide()">Cerrar</button>
-          <button type="button" class="btn btn-primary" [disabled]="!firstFormGroup.valid" (click)="guardar()"><svg cIcon class="me-2" name="cil-cloud-upload"></svg>Cargar aspirante</button>
+          <button type="button" class="btn btn-primary" [disabled]="!secondFormGroup.valid" (click)="guardar()"><svg cIcon class="me-2" name="cil-cloud-upload"></svg>Cargar reincorporación</button>
         </div>
       </div>
     </div>

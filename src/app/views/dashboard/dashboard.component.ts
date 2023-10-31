@@ -18,6 +18,8 @@ interface IUser {
   color: string;
 }
 
+
+
 @Component({
   templateUrl: 'dashboard.component.html',
   styleUrls: ['dashboard.component.scss']
@@ -27,6 +29,20 @@ export class DashboardComponent implements OnInit {
     private SpinnerService: NgxSpinnerService,) {
   }
 
+  usuarios:  string;
+  usr={
+     nac:null,
+     cedula:null,
+     nombre_completo:null,
+     nombre_corto:null,
+     fecnac:null,
+     carnet:null,
+     pnf:null,
+     email: null,
+     saludo: null
+   }
+
+   
   public users: IUser[] = [
     {
       name: 'Yiorgos Avraamu',
@@ -114,7 +130,8 @@ export class DashboardComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    this.initCharts();
+    //this.initCharts();
+    this.usr = JSON.parse(sessionStorage.getItem('currentUser')!);
   }
 
   initCharts(): void {

@@ -12,7 +12,7 @@ import {ModalDirective} from 'ngx-bootstrap/modal';
   templateUrl: './gestion-cupos.component.html',
   styleUrls: ['./gestion-cupos.component.scss']
 })
-export class GestionCuposComponent implements OnInit {
+export class GestionCuposComponent {
 
   arrayDatos : any []= [];
   detalle_acta : any []= [];
@@ -47,6 +47,9 @@ export class GestionCuposComponent implements OnInit {
     usrsice: null,
   }
 
+  hayResultados: boolean = false;
+  sinResultados: boolean = false;
+
   public mostrarTrayectos: boolean = true;
 
   @ViewChild('gestionNewSeccion') public gestionNewSeccion: ModalDirective;
@@ -56,22 +59,34 @@ export class GestionCuposComponent implements OnInit {
     public controlestudiosService: ControlEstudiosService,
     private notifyService : NotificacionService,
     private SpinnerService: NgxSpinnerService,) {
-
+      this.usr = JSON.parse(sessionStorage.getItem('currentUser')!); 
     }
 
     ngOnInit() { 
       //this.findAspirantesConvenio();
-      this.findCarreras();
-      this.findTipoSeccion();
+      this.findCarrerasForDep(this.usr.usrsice);
+      //this.findTipoSeccion();
       //this.findTrayectos();
 
   }
 
-  findCarreras(){
-
-    this.controlestudiosService.getCarreras().subscribe(
+  findCarrerasForDep(usrsice: any){
+    this.SpinnerService.show();
+    this.controlestudiosService.getCarrerasForDep(usrsice).subscribe(
       (result: any) => {
-          this.carreras = result;
+        this.hayResultados = false;
+        this.sinResultados = false;
+        this.carreras = result;
+        if (this.carreras.length == 0) {
+          this.SpinnerService.hide();
+          this.sinResultados = this.carreras.length ==0
+          this.hayResultados = false;
+        }
+        else{
+          this.notifyService.showSuccess('Consulta de actas');
+          this.SpinnerService.hide();
+          this.hayResultados = this.carreras.length >0
+        }  
 
     }
     );

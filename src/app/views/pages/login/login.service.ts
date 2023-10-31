@@ -46,8 +46,7 @@ setToken(userlogin: string) {
   return false;
   }
 
-  getMenuSice(){
-    return this.http.get(`${this.url}get_menu_sice.php`);
-  }
-
+  getMenuSice(usrsice: any): Observable<any>{
+    return this.http.post(`${this.url}get_menu_sice.php`, JSON.stringify(usrsice))}
+    
 }

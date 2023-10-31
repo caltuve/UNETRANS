@@ -55,6 +55,10 @@ export class ControlEstudiosService {
   getCarreras() {
     return this.http.get(`${this.url}carreras.php`);
   }
+
+  getCarrerasForDep(usrsice: any): Observable<any>{
+    return this.http.get(`${this.url}carrerasfordep.php?usrsice=${usrsice}`);
+  }
   getOperMovil() {
     return this.http.get(`${this.url}opermov.php`);
   }
@@ -114,6 +118,10 @@ getAspirantesConvenio() {
 getAutopostulado() {
   return this.http.get(`${this.url}resumen_autopostulados_dace.php`);
 }
+
+getReincorporacion() {
+  return this.http.get(`${this.url}resumen_reincorporacion_dace.php`);
+}
   getEstudiante() {
     return this.http.get(`${this.url}dat_estudiante.php`);
   }
@@ -134,6 +142,10 @@ getAutopostulado() {
     return this.http.get(`${this.url}trayectos.php`);
   }
 
+  getTrayectosAll() {
+    return this.http.get(`${this.url}trayectos_all.php`);
+  }
+
   getResolucion() {
     return this.http.get(`${this.url}resolucion.php`);
   }
@@ -150,12 +162,20 @@ getAutopostulado() {
     return this.http.post(`${this.url}procesarAutopostulacion.php`, JSON.stringify(datospersona))
   }
 
+  procesarReincorporacionDace(datospersona : any): Observable<any>{
+    return this.http.post(`${this.url}procesarReincorporacionDace.php`, JSON.stringify(datospersona))
+  }
+
   createPeriodoAcademico(datospersona : any): Observable<any>{
     return this.http.post(`${this.url}crearperiodo.php`, JSON.stringify(datospersona))
   }
 
   getOfertaAcademica(carreraSeleccionada: string, periodoSeleccionado:string): Observable<any>{
     return this.http.get(`${this.url}resumen_cupos_dace.php?pnf=${carreraSeleccionada}&periodo=${periodoSeleccionado}`);
+  }
+
+  getDetailActa(actaId: any): Observable<any>{
+    return this.http.get(`${this.url}detalle_acta.php?acta=${actaId}`);
   }
 
   getPeriodoOfPnfSeleccionado(carreraSeleccionada: string): Observable<any>{
@@ -174,7 +194,7 @@ getAutopostulado() {
     return this.http.post(`${this.url}findpersona.php`, JSON.stringify(dato));
   }
 
-  findPersonaReincorporacion(dato: any){
+  findPersonaReincorporacion(dato: any): Observable<any>{
     return this.http.post(`${this.url}findpersona_reincorpora.php`, JSON.stringify(dato));
   }
 

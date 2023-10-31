@@ -1,4 +1,24 @@
-<app-widgets-dropdown></app-widgets-dropdown>
+<c-row>
+  <c-col lg="12">
+    <c-card class="mb-3">
+      <c-card-header> Bienvenido al Sistema Integral de Control de Estudios</c-card-header>
+      <c-card-body>
+        <h4 cCardTitle>Hola! {{usr.nombre_corto}}</h4>
+        <p cCardText>
+          Del lado izquierdo encontrarás el menú de opciones dependiendo de tu perfil de usuario, en caso que creas exista algún error con tus datos de identificación 
+          por favor notifícalo al correo: soportesice@unetrans.edu.ve
+        </p>
+        <h4 cCardTitle>Datos de identificación:</h4>
+        <p cCardText>
+          <strong>Cédula: </strong> {{usr.nac}}-{{usr.cedula}} <strong>Nombre completo:</strong> {{usr.nombre_completo}} 
+          <br>
+          <strong>Fecha de nacimiento:</strong> {{usr.fecnac}} <strong>Correo:</strong> {{usr.email}}
+        </p>
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row>
+<!-- <app-widgets-dropdown></app-widgets-dropdown>
 <c-card class="mb-4">
   <c-card-body>
     <c-row>
@@ -448,3 +468,4 @@
 <ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" size="default" type="ball-atom">
   <p style="color: white" align="center">Por favor espere... <br>¡Validando información!</p>
   </ngx-spinner>
+ -->

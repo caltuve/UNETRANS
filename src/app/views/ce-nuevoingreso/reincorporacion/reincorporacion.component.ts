@@ -77,12 +77,12 @@ export class ReincorporacionComponent implements AfterViewInit {
   aspirantes: any []= [];
   turnos: any []= [];
   convenios: any []= [];
-  datos_consultados: any = {}; 
+  datosConsultados: any[] = [];
 
   @ViewChild('paginatorRecibidas') paginatorRecibidas: MatPaginator;
   @ViewChild('paginatorProcesadas') paginatorProcesadas: MatPaginator;
   //paginatorIntl: MatPaginatorIntl;
-  @ViewChild('gestionAutopostulado') public gestionAutopostulado: ModalDirective;
+  @ViewChild('gestionNewReincorporacion') public gestionNewReincorporacion: ModalDirective;
 
   constructor(private _formBuilder: FormBuilder,
     public controlestudiosService: ControlEstudiosService,
@@ -106,16 +106,16 @@ export class ReincorporacionComponent implements AfterViewInit {
     
     this.recibidas.paginator = this.paginatorRecibidas;
     this.procesadas.paginator = this.paginatorProcesadas;
-    this.findAutopostulados();
+    this.findReincorporacion();
     this.findModIngreso();
-    this.findTrayectos();
+    this.findTrayectosAll();
     this.findResolucion();  
 }
 
-findAutopostulados() {
+findReincorporacion() {
   this.usr = JSON.parse(sessionStorage.getItem('currentUser')!); 
   this.SpinnerService.show();
-  this.controlestudiosService.getAutopostulado().subscribe(
+  this.controlestudiosService.getReincorporacion().subscribe(
     (data: any) => {
       this.hayResultadosRecibidas = false;
       this.sinResultadosRecibidas= false;
@@ -158,8 +158,8 @@ findModIngreso(){
   );
 }
 
-findTrayectos(){
-  this.controlestudiosService.getTrayectos().subscribe(
+findTrayectosAll(){
+  this.controlestudiosService.getTrayectosAll().subscribe(
     (result: any) => {
         this.trayectos = result;
   }
@@ -193,42 +193,34 @@ applyFilterProcesadas(event: Event) {
   }
 }
 
-abrirModal(campo: any) {
-  this.valorCampo = campo;
-  this.firstFormGroup.patchValue({
-    cedula: this.valorCampo
-  });
-  this.gestionAutopostulado.show(); // Abre el modal
-}
-
-
 guardar(): void {
   this.SpinnerService.show(); 
       
   // Esta función se ejecutará cuando se haga clic en "Guardar Datos" en el último step
   // Puedes acceder a los datos de cada step utilizando this.step1Form.value, this.step2Form.value, etc.
-  const datosStep1 = this.firstFormGroup.value;
+  const datosStep1 = this.secondFormGroup.value;
 
     const datosCompletos = {
       step1: datosStep1,
     };
     const cedula = datosCompletos.step1.cedula;
 
-    this.controlestudiosService.procesarAutopostulado(datosCompletos).subscribe(datos => {
+    this.controlestudiosService.procesarReincorporacionDace(datosCompletos).subscribe(datos => {
       switch (datos['estatus']) {
         case 'ERROR':
               this.SpinnerService.hide(); 
               this.notifyService.showError2('Ha ocurrido un error, verifique nuevamente y si persiste comuníquese con sistemas.');
-              this.gestionAutopostulado.hide(); 
+              this.gestionNewReincorporacion.hide(); 
               this.firstFormGroup.reset();
+              this.secondFormGroup.reset();
               break;
         default:
           this.SpinnerService.hide(); 
-          this.notifyService.showSuccess('Solicitud de autopostulación procesada');
-          this.gestionAutopostulado.hide(); 
+          this.notifyService.showSuccess('Solicitud de reincorporación procesada');
+          this.gestionNewReincorporacion.hide(); 
           this.firstFormGroup.reset();
-          this.findAutopostulados();
-          this.enviarNotificacion(cedula);
+          this.findReincorporacion();
+          //this.enviarNotificacion(cedula);
           break;
       }
     });
@@ -257,41 +249,69 @@ enviarNotificacion(cedula: any){
   }
 
 firstFormGroup = this._formBuilder.group({
+  cedula: ['', Validators.required],
+});
+
+
+secondFormGroup = this._formBuilder.group({
   nac:['', Validators.required],
   cedula: ['', Validators.required],
-  nombre_completo: ['', Validators.compose([Validators.required, Validators.pattern(/^[^\s]+(\s+[^\s]+)*$/)])],
-  segundo_nombre: [null, Validators.compose([Validators.nullValidator, Validators.pattern(/^[^\s]+(\s+[^\s]+)*$/)])],
-  primer_apellido: ['', Validators.compose([Validators.required, Validators.pattern(/^[^\s]+(\s+[^\s]+)*$/)])],
-  segundo_apellido:[null, Validators.compose([Validators.nullValidator, Validators.pattern(/^[^\s]+(\s+[^\s]+)*$/)])] ,
-  mingreso:  [{value: ''}, Validators.required],
   pnf:       [{value: '', }, Validators.required],
   trayecto:  [{value: '', }, Validators.required],
-  convenio:  [{value: '', }, Validators.required],
+  reso:  [{value: '', }, Validators.required],
+  usrsice : ['', Validators.required],
 });
 
 buscar_datos_student() {
   const cedula = this.cedula;
-  console.log(cedula);
-  this.controlestudiosService.findPersonaReincorporacion(cedula).subscribe(
-    (result: any) => {
+  this.usr = JSON.parse(sessionStorage.getItem('currentUser')!); 
+  this.controlestudiosService.findPersonaReincorporacion(cedula).subscribe(datos => {
+    switch (datos['estatus']) {
+      case 'Solicitud Aprobada':
+            this.SpinnerService.hide(); 
+            this.notifyService.showInfo('Estudiante ya tiene una solicitud de reincorporación APROBADA');
+            this.gestionNewReincorporacion.hide(); 
+            this.firstFormGroup.reset();
+            this.secondFormGroup.reset();
+            break;
+      case 'Solicitud Negada':
+            this.SpinnerService.hide(); 
+            this.notifyService.showInfo('Estudiante ya tiene una solicitud de reincorporación NEGADA');
+            this.gestionNewReincorporacion.hide(); 
+            this.firstFormGroup.reset();
+            this.secondFormGroup.reset();
+            break;
+    case 'Pendiente':
+            this.SpinnerService.hide(); 
+            this.notifyService.showInfo('Estudiante ya tiene una solicitud de reincorporación PENDIENTE');
+            this.gestionNewReincorporacion.hide(); 
+            this.firstFormGroup.reset();
+            this.secondFormGroup.reset();
+            break;
+      default:
         this.hayResultados = false;
         this.sinResultados = false;
-        this.datos_consultados = result;
-        if (this.datos_consultados.length == 0) {
+        this.datosConsultados = datos;
+        if (this.datosConsultados.length == 0) {
           this.SpinnerService.hide();
-          this.sinResultados = this.datos_consultados.length ==0
+          this.sinResultados = this.datosConsultados.length ==0
           this.hayResultados = false;
-          //this.formSearchPersona.reset();
+          this.notifyService.showError('Estudiante no encontrado, verifique');
+          this.gestionNewReincorporacion.hide(); 
+          this.firstFormGroup.reset();
+          this.secondFormGroup.reset();
         }
         else{
           this.notifyService.showSuccess('Consulta de datos de estudiante');
           this.SpinnerService.hide();
-          this.hayResultados = this.datos_consultados.length >0
+          this.hayResultados = this.datosConsultados.length >0
          // this.formSearchPersona.reset();
         }   
-  
-  }
-  );
+        break;
+    }
+  });
+
+
 }
 
 
