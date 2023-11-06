@@ -201,4 +201,8 @@ getReincorporacion() {
   pushNotify(identificacion: any): Observable<any>{
     return this.http.post(`${this.url}enviacorreo.php`, JSON.stringify(identificacion))
   }
+
+  crearPlantel(datosplantel : any): Observable<any>{
+    return this.http.post(`${this.url}crearplantel.php`, JSON.stringify(datosplantel))
+  }
 }

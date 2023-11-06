@@ -208,7 +208,7 @@ guardar(): void {
           this.gestionAutopostulado.hide(); 
           this.firstFormGroup.reset();
           this.findAutopostulados();
-          this.enviarNotificacion(cedula);
+          //this.enviarNotificacion(cedula);
           break;
       }
     });

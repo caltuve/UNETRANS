@@ -52,7 +52,7 @@
                             <ng-container *ngIf="dato3.oferta.length > 0; else noData">
                                 <!-- <button cButton color="light" size="sm" (click)="gestionNewSeccion.show()" [attr.data-target]="'#modal-' + dato3.cod_ucurr"> <svg cIcon
                                         class="me-2" name="cilPlaylistAdd"></svg>Abrir sección</button> -->
-                                <table mat-table [dataSource]="dato3.oferta" [hover]="true" cTable>
+                                <table mat-table [dataSource]="dato3.oferta" [hover]="true" [responsive]="true" cTable>
                                     <tr>
                                         <ng-container matColumnDef="acta">
                                             <th mat-header-cell *matHeaderCellDef> Acta</th>
@@ -154,8 +154,8 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" (click)="openActa.hide()">Cerrar</button>
-          <button type="button" class="btn btn-primary" (click)="openActa.hide()" (click)="guardar()"><svg cIcon class="me-2" name="cil-cloud-download"></svg>Descargar Excel</button>
-          <button type="button" class="btn btn-primary" (click)="openActa.hide()" (click)="guardar()"><svg cIcon class="me-2" name="cil-cloud-download"></svg>Descargar PDF</button>
+          <!-- <button type="button" class="btn btn-primary" (click)="openActa.hide()" (click)="guardar()"><svg cIcon class="me-2" name="cil-cloud-download"></svg>Descargar Excel</button>
+          <button type="button" class="btn btn-primary" (click)="openActa.hide()" (click)="guardar()"><svg cIcon class="me-2" name="cil-cloud-download"></svg>Descargar PDF</button> -->
         </div>
       </div>
     </div>

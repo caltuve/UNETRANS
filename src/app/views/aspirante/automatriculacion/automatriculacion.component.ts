@@ -549,7 +549,7 @@ thirdFormGroup = this._formBuilder.group({
   municipioplantel: ['', Validators.required],
   parroquiaplantel: ['', Validators.required],
   nombreplantel: ['',Validators.required],
-  nombreies: [null, Validators.nullValidator],
+  nombreies: [null, Validators.compose([Validators.nullValidator, Validators.minLength(3), Validators.maxLength(10)])],
   tituloies: [null, Validators.nullValidator],
   fechagradoies: ['', Validators.nullValidator],
   mencionies: [null, Validators.nullValidator],

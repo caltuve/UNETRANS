@@ -1,1 +1,140 @@
-<p>constantes-globales works!</p>
+<c-col xs="12">
+    <c-card class="mb-4">
+      <c-card-header>
+        <strong>Constantes globales</strong> &nbsp; <small>Gestión de las variables del sistema</small>
+      </c-card-header>
+      <c-card-body >
+        <c-nav variant="tabs">
+            <c-nav-item>
+              <a [cTabContent]="tabContent1" [routerLink] [tabPaneIdx]="0" cNavLink>
+                <svg cIcon class="me-2" name="cilNoteAdd"></svg>
+                Planteles educativos
+              </a>
+            </c-nav-item>
+            <c-nav-item>
+              <a [cTabContent]="tabContent1" [routerLink] [tabPaneIdx]="1" cNavLink>
+                <svg cIcon class="me-2" name="cilTask"></svg>
+                Listas de valores
+              </a>
+            </c-nav-item>
+            <c-nav-item>
+                <a [cTabContent]="tabContent1" [routerLink] [tabPaneIdx]="2" cNavLink>
+                  <svg cIcon class="me-2" name="cilTask"></svg>
+                  Autoridades
+                </a>
+              </c-nav-item>
+              <c-nav-item>
+                <a [cTabContent]="tabContent1" [routerLink] [tabPaneIdx]="3" cNavLink>
+                  <svg cIcon class="me-2" name="cilTask"></svg>
+                  Jefes de departamento
+                </a>
+              </c-nav-item>
+            <!-- <c-nav-item>
+              <a [cTabContent]="tabContent1" [routerLink] [tabPaneIdx]="2" cNavLink [disabled]="tabContent1.activeTabPaneIdx < 1">
+                <svg cIcon class="me-2" name="cilCode"></svg>
+                Contact
+              </a>
+            </c-nav-item> -->
+          </c-nav>
+          <c-tab-content #tabContent1="cTabContent" [activeTabPaneIdx]="0" cRounded="bottom">
+            <c-tab-pane class="p-3 preview" role="tabpanel">
+                <div class="row">
+                    <div class="col s12">
+                      <mat-form-field>
+                        <mat-label>Estado</mat-label>
+                        <mat-select  [(ngModel)]="estadoSelectedEducacionMedia" (ngModelChange)="onEstadoselectedEducacionMedia($event)"   required>
+                          <mat-option *ngFor="let estado of listEstadosEducacionMedia" [value]="estado.codestado">
+                            {{estado.nombestado}}</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                    <div class="col s12">
+                      <mat-form-field>
+                        <mat-label>Municipio</mat-label>
+                        <mat-select [(ngModel)]="municipioSelectedEducacionMedia" (ngModelChange)="onMunicipioselectedEducacionMedia($event)" [disabled]="!estadoSelectedEducacionMedia"  required>
+                          <mat-option *ngFor="let municipio of listMunicipiosEducacionMedia" [value]="municipio.codmuni">
+                            {{municipio.nombmuni}}</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                    <div class="col s12">
+                      <mat-form-field>
+                        <mat-label>Parroquia</mat-label>
+                        <mat-select [(ngModel)]="parroquiaSelectedEducacionMedia" (ngModelChange)="onParroquiaselectedEducacionMedia($event)"  [disabled]="!municipioSelectedEducacionMedia" required>
+                          <mat-option *ngFor="let parroquia of listParroquiasEducacionMedia" [value]="parroquia.codparroq">
+                            {{parroquia.nombparroq}}</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                  <div *ngIf="hayResultadosPlanteles">
+                    <button cButton color="light" size="sm" (click)="gestionNewPlantel.show()"> <svg cIcon
+                      class="me-2" name="cilPlaylistAdd"></svg>Añadir plantel</button>
+                      <table mat-table [dataSource]="dataSource" [hover]="true" cTable>
+                        <tr>
+                          <ng-container matColumnDef="codigo">
+                            <th mat-header-cell *matHeaderCellDef>Código plantel</th>
+                            <td mat-cell *matCellDef="let colegio">{{colegio.cod_ce}}</td>
+                          </ng-container>
+                          <ng-container matColumnDef="nombre">
+                            <th mat-header-cell *matHeaderCellDef>Nombre de la institución educativa</th>
+                            <td mat-cell *matCellDef="let colegio">{{colegio.nombre}}</td>
+                          </ng-container>
+                        </tr>
+                          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                          <tr mat-row *matRowDef="let colegio; columns: displayedColumns;"></tr>
+                      </table>
+                  </div>
+                  <div *ngIf="sinResultadosPlanteles">
+                    <button cButton color="light" size="sm" (click)="gestionNewPlantel.show()"> <svg cIcon
+                      class="me-2" name="cilPlaylistAdd"></svg>Añadir plantel</button>
+                      <c-alert color="info" class="d-flex align-items-center">
+                        <svg cIcon class="me-2" width="24" height="24" name="cilBellExclamation"></svg>
+                        <div>No existen planteles creados para este municipio</div>
+                    </c-alert>
+                  </div>
+<!-- Modal -->
+<div bsModal #gestionNewPlantel="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"  [config]="{backdrop: false, ignoreBackdropClick: true}">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div>
+          <h2 class="modal-title" >Añadir nuevo plantel</h2>
+        </div>
+      </div>
+      <div class="modal-body">  
+        <form #f="ngForm" [formGroup]="plantelFormGroup" >
+           <div class="row">
+             <div class="col l12 m12 s12">
+               <label>Nombre del pantel educativo:</label>
+               <div class="row mar-b-0">
+                 <div class="col s12">
+                   <mat-form-field>
+                     <mat-label>Plantel:</mat-label>
+                     <input style='text-transform:uppercase' [(ngModel)]="plantel" matInput formControlName="plantel" name="plantel">
+                   </mat-form-field>
+                 </div>
+               </div>
+             </div>
+           </div>
+           <input type="hidden" [(ngModel)]="parroquiaSelectedEducacionMedia"  formControlName="codigoplantel" >
+     </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="gestionNewPlantel.hide()">Cerrar</button>
+        <button type="button" class="btn btn-primary" (click)="gestionNewPlantel.hide()" [disabled]="!plantelFormGroup.valid" (click)="guardar()"><svg cIcon class="me-2" name="cil-cloud-upload"></svg>Crear plantel</button>
+        <!-- <button type="button" class="btn btn-primary" (click)="openActa.hide()" (click)="guardar()"><svg cIcon class="me-2" name="cil-cloud-download"></svg>Descargar Excel</button>
+        <button type="button" class="btn btn-primary" (click)="openActa.hide()" (click)="guardar()"><svg cIcon class="me-2" name="cil-cloud-download"></svg>Descargar PDF</button> -->
+      </div>
+    </div>
+  </div>
+</div>
+                </div>
+            </c-tab-pane>            
+          </c-tab-content>
+      </c-card-body>
+    </c-card>
+  </c-col>
+
+  <ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" size="default" type="ball-atom">
+		<p style="color: white" align="center">Por favor espere... <br>¡Validando información!</p>
+	  </ngx-spinner>

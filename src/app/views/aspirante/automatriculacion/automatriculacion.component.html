@@ -680,7 +680,8 @@
                   <h2 class="modal-title">Selecciona el plantel donde cursaste estudios</h2>
                 </div>
                 <div class="modal-body" >
-                  <p>En caso de que NO aparezcan resultados para las opciones seleccionadas envia un correo soportesice@unetrans.edu.ve con una foto de tu cédula, título de bachiller Y CERTIFICADO DE PARTICIPACIÓN de la OPSU, para realizar la inclusión.</p>
+                  <p>En caso de que NO aparezcan resultados para las opciones seleccionadas envia un correo soportesice@unetrans.edu.ve 
+                    indicando el ESTADO, MUNICIPIO, PARROQUIA y NOMBRE DEL PLANTEL, adicionalmente de la foto del título para realizar la inclusión.</p>
                   <table mat-table [dataSource]="dataSource" [hover]="true" cTable>
                     <tr>
                       <ng-container matColumnDef="nombre">
@@ -713,8 +714,8 @@
                 <div class="row mar-b-0">
                   <div class="col s12">
                     <mat-form-field>
-                      <mat-label>Nombre Instituto/Universidad</mat-label>
-                      <input type="string" style='text-transform:uppercase' formControlName="nombreies" matInput required> 
+                      <mat-label>Siglas Instituto/Universidad</mat-label>
+                      <input type="string" style='text-transform:uppercase' formControlName="nombreies" matInput required>
                     </mat-form-field>
                   </div>
                   <div class="col s12">
