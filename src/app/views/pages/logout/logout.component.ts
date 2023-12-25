@@ -30,12 +30,6 @@ ngOnInit() {
 
 
 logout() {
-this.SpinnerService.show(); 
-this.loginService.deleteToken();
-this.loginService.deleteSession()
-this.notifyService.showSuccess('Cierre de sesión exitoso!');
-this.SpinnerService.hide();
-this.router.navigateByUrl('/login');
-
+this.loginService.logout();
 }
 }

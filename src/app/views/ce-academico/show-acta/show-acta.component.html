@@ -1,0 +1,65 @@
+
+        <div class="modal-header">
+          <div>
+            <h2 class="modal-title" >Detalle de estudiantes inscritos</h2>
+            <div class="d-flex">
+                <div class="flex-goew-1"><strong>Acta:</strong> {{detalle_acta[0][0]?.acta}}</div>
+            </div>
+            <div >
+                <div class="d-flex">
+                    <div class="flex-goew-1"><strong>Periodo académico:</strong> {{detalle_acta[0][0]?.periodo}}&nbsp;</div>
+                    <div class="flex-goew-1"><strong>PNF:</strong> {{detalle_acta[0][0]?.nombre_programa}}</div>
+                </div>
+                <div class="d-flex">
+                    <div class="flex-goew-1"><strong>Unidad Curricular:</strong> {{detalle_acta[0][0]?.cod_ucurr}} - {{detalle_acta[0][0]?.uni_curr}}  &nbsp;</div>
+                </div>
+                <div class="d-flex">
+                    <div class="flex-goew-1"><strong>Sección:</strong> {{detalle_acta[0][0]?.seccion}} - {{detalle_acta[0][0]?.tipo_sec}}  &nbsp;</div>
+                </div>
+                <div class="d-flex">
+                    <div class="flex-goew-1"><strong>Docente:</strong> {{detalle_acta[0][0]?.prof_asignado}}</div>
+                </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-body">
+          <div class="scrollable-content">
+            <table mat-table [dataSource]="inscritos" [hover]="true" cTable>
+              <tr>
+                  <ng-container matColumnDef="orden">
+                      <th class="orden-ancho"mat-header-cell *matHeaderCellDef > N°</th>
+                      <td class="orden-ancho" mat-cell *matCellDef="let row">{{row.orden}} </td>
+                    </ng-container>
+                <ng-container matColumnDef="carnet">
+                  <th class="carnet-ancho" mat-header-cell *matHeaderCellDef > Carnet</th>
+                  <td class="carnet-ancho" mat-cell *matCellDef="let row">{{row.carnet}} </td>
+                </ng-container>
+                <ng-container matColumnDef="cedula">
+                  <th class="cedula-ancho" mat-header-cell *matHeaderCellDef > Cédula</th>
+                  <td class="cedula-ancho" mat-cell *matCellDef="let row">{{row.cedula}} </td>
+                </ng-container>
+                <ng-container matColumnDef="nombre_completo">
+                  <th mat-header-cell *matHeaderCellDef > Apellidos y nombres</th>
+                  <td mat-cell *matCellDef="let row">{{row.nombre_completo}} </td>
+                </ng-container>
+                <ng-container matColumnDef="telefono">
+                  <th mat-header-cell *matHeaderCellDef > Teléfono</th>
+                  <td mat-cell *matCellDef="let row">{{row.telefono}} </td>
+                </ng-container>
+                <ng-container matColumnDef="correo">
+                  <th mat-header-cell *matHeaderCellDef > Correo electrónico</th>
+                  <td mat-cell *matCellDef="let row">{{row.correo}} </td>
+                </ng-container>
+              </tr>
+                <tr mat-header-row *matHeaderRowDef="displayedColumnsDetail"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumnsDetail;"></tr>
+            </table>
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeModal()">Cerrar</button>
+          <button type="button" class="btn btn-primary" (click)="exportarAExcel()"><svg cIcon class="me-2" name="cil-cloud-download"></svg>Descargar Excel</button>
+          <!-- <button type="button" class="btn btn-primary" (click)="openActa.hide()" (click)="guardar()"><svg cIcon class="me-2" name="cil-cloud-download"></svg>Descargar PDF</button> -->
+        </div>
+

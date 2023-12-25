@@ -93,8 +93,8 @@
                                                         <svg cIcon name="cilTrash"></svg></button> -->
                                                 </div>
 <!-- Modal -->
-<div bsModal #openActa="bs-modal" id="row.acta" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"  [config]="{backdrop: false, ignoreBackdropClick: true}">
-    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+<div bsModal #openActa="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl   ">
       <div class="modal-content">
         <div class="modal-header" *ngFor="let dato of detalle_acta">
           <div>
@@ -153,8 +153,8 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" (click)="openActa.hide()">Cerrar</button>
-          <!-- <button type="button" class="btn btn-primary" (click)="openActa.hide()" (click)="guardar()"><svg cIcon class="me-2" name="cil-cloud-download"></svg>Descargar Excel</button>
-          <button type="button" class="btn btn-primary" (click)="openActa.hide()" (click)="guardar()"><svg cIcon class="me-2" name="cil-cloud-download"></svg>Descargar PDF</button> -->
+          <button type="button" class="btn btn-primary" (click)="openActa.hide()" (click)="exportarAExcel()"><svg cIcon class="me-2" name="cil-cloud-download"></svg>Descargar Excel</button>
+          <!-- <button type="button" class="btn btn-primary" (click)="openActa.hide()" (click)="guardar()"><svg cIcon class="me-2" name="cil-cloud-download"></svg>Descargar PDF</button> -->
         </div>
       </div>
     </div>

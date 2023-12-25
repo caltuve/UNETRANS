@@ -1,0 +1,19 @@
+.custom-checkbox.mat-checkbox .mat-checkbox-frame,
+.custom-checkbox.mat-checkbox .mat-checkbox-background {
+  border-color: #003E85 !important;
+  background-color: #003E85 !important;
+}
+
+.custom-checkbox.mat-checkbox.mat-checkbox-checked .mat-checkbox-background,
+.custom-checkbox.mat-checkbox.mat-checkbox-indeterminate .mat-checkbox-background {
+  background-color: #003E85 !important;
+}
+
+.uppercase-input {
+    text-transform: uppercase;
+  }
+
+  .certificado-titulo {
+    min-width: 300px; /* Ajusta según tus necesidades */
+    max-width: 100%;  /* Asegúrate de que no exceda el ancho de su contenedor */
+  }

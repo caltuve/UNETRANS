@@ -12,6 +12,8 @@ import { AutopostulacionComponent } from './views/aspirante/autopostulacion/auto
 import { LoginAdministrativoComponent } from './views/administrativo/login-administrativo/login-administrativo.component';
 import { AutoregistroComponent } from './views/administrativo/autoregistro/autoregistro.component';
 import { LogoutComponent } from './views/pages/logout/logout.component';
+import { LoginDocenteComponent } from './views/docentes/login-docente/login-docente.component';
+import { AutoregistroDocenteComponent } from './views/docentes/autoregistro-docente/autoregistro-docente.component';
 
 import { AuthGuard } from './guards/auth.guard';
 
@@ -68,6 +70,10 @@ const routes: Routes = [
       { path: 'dep-academico', canActivate: [AuthGuard],
           loadChildren: () => 
           import('./views/dep-academico/dep-academico.module').then(m => m.DepAcademicoModule) 
+      },
+      { path: 'docentes', 
+          loadChildren: () => 
+          import('./views/docentes/docentes.module').then(m => m.DocentesModule) 
       },
 
       /* Fin de rutas UNETRANS */
@@ -182,6 +188,21 @@ const routes: Routes = [
       title: 'Login Administrativo'
     }
   },
+
+  {
+    path: 'login-docente',
+    component: LoginDocenteComponent,
+    data: {
+      title: 'Login Administrativo'
+    }
+  },
+  {
+    path: 'autoregistro-docente',
+    component: AutoregistroDocenteComponent,
+    data: {
+      title: 'Autoregistro'
+    }
+  },
   {
     path: 'logout',
     component: LogoutComponent,
@@ -189,6 +210,7 @@ const routes: Routes = [
       title: 'Salir'
     }
   },
+  
   
   {path: '**', redirectTo: '404'}
 ];

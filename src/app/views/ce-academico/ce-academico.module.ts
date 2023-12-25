@@ -74,6 +74,17 @@ import { ConstantesGlobalesComponent } from './constantes-globales/constantes-gl
 import { MallaAcademicaComponent } from './malla-academica/malla-academica.component';
 import { PeriodoAcademicoComponent } from './periodo-academico/periodo-academico.component';
 import { DateAdapter, MAT_DATE_FORMATS, } from '@angular/material/core';
+import { AddEditProgramaComponent } from './add-edit-programa/add-edit-programa.component';
+import { AddEditDepartamentoComponent } from './add-edit-departamento/add-edit-departamento.component';
+import { DepartamentoAcademicoComponent } from './departamento-academico/departamento-academico.component';
+import { ShowActaComponent } from './show-acta/show-acta.component';
+import { EditCalendarComponent } from './edit-calendar/edit-calendar.component';
+import { GestionPlanEstudiosComponent } from './gestion-plan-estudios/gestion-plan-estudios.component';
+import { GestionPlanEstudiosModalComponent } from './gestion-plan-estudios-modal/gestion-plan-estudios-modal.component';
+import { AddUnidadCurricularModalComponent } from './add-unidad-curricular-modal/add-unidad-curricular-modal.component';
+import { CalificacionesContingenciaGradoComponent } from './calificaciones-contingencia-grado/calificaciones-contingencia-grado.component';
+import { CalificacionesContingenciaMigracionComponent } from './calificaciones-contingencia-migracion/calificaciones-contingencia-migracion.component';
+import { CalificacionesCargaComponent } from './calificaciones-carga/calificaciones-carga.component';
 
 @NgModule({
   declarations: [
@@ -85,6 +96,17 @@ import { DateAdapter, MAT_DATE_FORMATS, } from '@angular/material/core';
             ConstantesGlobalesComponent,
             MallaAcademicaComponent,
             PeriodoAcademicoComponent,
+            AddEditProgramaComponent,
+            AddEditDepartamentoComponent,
+            DepartamentoAcademicoComponent,
+            ShowActaComponent,
+            EditCalendarComponent,
+            GestionPlanEstudiosComponent,
+            GestionPlanEstudiosModalComponent,
+            AddUnidadCurricularModalComponent,
+            CalificacionesContingenciaGradoComponent,
+            CalificacionesContingenciaMigracionComponent,
+            CalificacionesCargaComponent,
   ],
   imports: [
     CommonModule,

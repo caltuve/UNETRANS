@@ -130,8 +130,16 @@ getReincorporacion() {
     return this.http.get(`${this.url}calendar_procesos.php`);
   }
 
+  getProgramasActivos() {
+    return this.http.get(`${this.url}programas_vigentes.php`);
+  }
+
   getPeriodos() {
     return this.http.get(`${this.url}periodos.php`);
+  }
+
+  getPeriodosCalificaciones() {
+    return this.http.get(`${this.url}periodosCalificaciones.php`);
   }
 
   getPeriodicidad() {
@@ -205,4 +213,101 @@ getReincorporacion() {
   crearPlantel(datosplantel : any): Observable<any>{
     return this.http.post(`${this.url}crearplantel.php`, JSON.stringify(datosplantel))
   }
+
+  actualizarFechasProceso(datos: any): Observable<any> {
+    return this.http.post<any>(`${this.url}editcalendar.php`, JSON.stringify(datos));
+  }
+
+  getDepartamentos() {
+    return this.http.get(`${this.url}departamentos.php`);
+  }
+
+  getSituacion() {
+    return this.http.get(`${this.url}situacion.php`);
+  }
+
+  getTipoPrograma() {
+    return this.http.get(`${this.url}tipoprograma.php`);
+  }
+
+  getTipoCertificacion() {
+    return this.http.get(`${this.url}tipocertificacion.php`);
+  }
+
+
+  crearPrograma(datosPrograma: any): Observable<any> {
+    return this.http.post<any>(`${this.url}crearprograma.php`, JSON.stringify(datosPrograma));
+  }
+
+  obtenerPrograma(id: number): Observable<any> {
+    return this.http.get(`${this.url}obtenerPrograma.php?id=${id}`)
+  }
+
+  crearPlanEstudios(datosPlan: any): Observable<any> {
+    return this.http.post<any>(`${this.url}crearplan.php`, JSON.stringify(datosPlan));
+  }
+
+  getPlanesEstudios() {
+    return this.http.get(`${this.url}calendar_procesos.php`);
+  }
+
+  obtenerPlanesEstudios(id: number): Observable<any> {
+    return this.http.get(`${this.url}obtenerPlan.php?id=${id}`)
+  }
+
+  obtenerTrayectosPorCodigoPlan(codigoPlan: string): Observable<any> {
+    return this.http.get(`${this.url}obtenerTrayectosPorPlan.php?id=${codigoPlan}`)
+  }
+
+  agregarUnidadCurricular(datosUnidadCurricular: any): Observable<any> {
+    return this.http.post<any>(`${this.url}crearUnidadCurricular.php`, JSON.stringify(datosUnidadCurricular));
+  }
+
+  obtenerUnidadesCurriculares(planSeleccionado: string, trayectoNombre: string, semestreNumero?: number | null): Observable<any> {
+    let url = `${this.url}obtenerUC.php?plan=${planSeleccionado}&trayecto=${trayectoNombre}`;
+    if (semestreNumero !== null && semestreNumero !== undefined) {
+        url += `&semestre=${semestreNumero}`;
+    }
+    return this.http.get(url);
+}
+
+obtenerUnidadesCurricularesMencion(planSeleccionado: string, trayectoNombre: string, mencion: string): Observable<any> {
+  let url = `${this.url}obtenerUCMencion.php?plan=${planSeleccionado}&trayecto=${trayectoNombre}&mencion=${mencion}`;
+  return this.http.get(url);
+}
+
+obtenerUnidadesCurricularesGrado(planSeleccionado: string, trayectoNombre: string, carnetEstudiante: string, semestreNumero?: number | null): Observable<any> {
+  let url = `${this.url}obtenerUCCalificaciones.php?plan=${planSeleccionado}&trayecto=${trayectoNombre}&carnet=${carnetEstudiante}`;
+  if (semestreNumero !== null && semestreNumero !== undefined) {
+      url += `&semestre=${semestreNumero}`;
+  }
+  return this.http.get(url);
+}
+
+obtenerTrayectosPorCodigoPlanYTrayecto(codigoPlan: string, trayectoNombre: string): Observable<any> {
+  return this.http.get(`${this.url}obtenerTrayectosPorPlanYTrayecto.php?id=${codigoPlan}&trayecto=${trayectoNombre}`)
+}
+
+findPersonaCalificaciones(dato: any){
+  return this.http.post(`${this.url}findpersonaCalificaciones.php`, JSON.stringify(dato));
+}
+
+enviarCalificaciones(calificacionesParaEnviar: any){
+  return this.http.post(`${this.url}cargaCalificacionesContingenciaGrado.php`, JSON.stringify(calificacionesParaEnviar));
+}
+
+buscarRecordAcademico(carnet: string) {
+  // Asegúrate de que el objeto enviado tenga la estructura correcta
+  const postData = { carnet: carnet };
+  return this.http.post(`${this.url}buscarRecord.php`, JSON.stringify(postData));
+}
+
+buscarResumenAcademico(carnet: string, plan: string) {
+  // Asegúrate de que el objeto enviado tenga la estructura correcta
+  // Ahora incluye tanto el carnet como el plan
+  const postData = { carnet: carnet, plan: plan };
+
+  return this.http.post(`${this.url}buscarResumen.php`, JSON.stringify(postData));
+}
+
 }

@@ -1,0 +1,85 @@
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Añadir unidad curricular</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  
+  <div class="modal-body">
+    <form [formGroup]="unidadCurricularForm" (ngSubmit)="onSubmit()">
+        <div class="row">
+            <!-- Código UC -->
+            <div class="col">
+              <mat-form-field class="w-100">
+                <mat-label>Código UC</mat-label>
+                <input matInput formControlName="codigo_uc">
+              </mat-form-field>
+            </div>
+        
+            <!-- Nombre UC -->
+            <div class="col">
+              <mat-form-field class="w-100">
+                <mat-label>Nombre UC</mat-label>
+                <input matInput formControlName="nombre_uc">
+              </mat-form-field>
+            </div>
+        
+            <!-- Créditos -->
+            <div class="col">
+              <mat-form-field class="w-100">
+                <mat-label>Créditos</mat-label>
+                <input matInput type="number" formControlName="creditos">
+              </mat-form-field>
+            </div>
+          </div>
+        
+          <!-- Segunda línea con tres campos -->
+          <div class="row">
+            <!-- HTA -->
+            <div class="col">
+              <mat-form-field class="w-100">
+                <mat-label>Horas de trabajo acompañado</mat-label>
+                <input matInput type="number" formControlName="HTA">
+              </mat-form-field>
+            </div>
+        
+            <!-- HTI -->
+            <div class="col">
+              <mat-form-field class="w-100">
+                <mat-label>Horas de trabajo independiente</mat-label>
+                <input matInput type="number" formControlName="HTI">
+              </mat-form-field>
+            </div>
+        
+            <!-- HTL -->
+            <div class="col">
+              <mat-form-field class="w-100">
+                <mat-label>Horas de trabajo laboratorio</mat-label>
+                <input matInput type="number" formControlName="HTL">
+              </mat-form-field>
+            </div>
+          </div>
+
+        <!-- Checkbox para prelaciones -->
+         <!-- Checkbox para consultar si es proyecto -->
+        <mat-checkbox formControlName="esProyecto">¿La unidad curricular es Proyecto?</mat-checkbox>
+        <mat-checkbox formControlName="tienePrelaciones">¿Tiene prelaciones?</mat-checkbox>
+
+        <!-- Lista dinámica para agregar prelaciones -->
+        <div *ngIf="unidadCurricularForm.get('tienePrelaciones')?.value">
+            <div formArrayName="prelaciones">
+              <div *ngFor="let prelacion of prelacionesFormArray.controls; let i = index" [formGroupName]="i">
+                <mat-form-field>
+                  <mat-label>Prelación {{ i + 1 }}</mat-label>
+                  <input matInput formControlName="codigo_uc_prelacion">
+                </mat-form-field>
+              </div>
+            </div>
+            <button class="btn btn-primary" type="button" (click)="agregarPrelacion()">Agregar Prelación</button>
+          </div>
+    </form>
+</div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="bsModalRef.hide()">Cerrar</button>
+    <button type="submit" class="btn btn-primary" (click)="onSubmit()">Guardar Unidad Curricular</button>
+  </div>

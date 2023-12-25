@@ -7,6 +7,10 @@ import { GestionCuposComponent } from './gestion-cupos/gestion-cupos.component';
 import { ConstantesGlobalesComponent } from './constantes-globales/constantes-globales.component';
 import { MallaAcademicaComponent } from './malla-academica/malla-academica.component';
 import { PeriodoAcademicoComponent } from './periodo-academico/periodo-academico.component';
+import { GestionPlanEstudiosComponent } from './gestion-plan-estudios/gestion-plan-estudios.component';
+import { CalificacionesContingenciaGradoComponent } from './calificaciones-contingencia-grado/calificaciones-contingencia-grado.component';
+import { CalificacionesContingenciaMigracionComponent } from './calificaciones-contingencia-migracion/calificaciones-contingencia-migracion.component';
+import { CalificacionesCargaComponent } from './calificaciones-carga/calificaciones-carga.component';
 
 const routes: Routes = [
   {
@@ -45,7 +49,7 @@ const routes: Routes = [
         path: 'gestion-cupos',
         component: GestionCuposComponent,
         data: {
-          title: 'Gestion de cupos'
+          title: 'Gestión de cupos'
         }
       },
       {
@@ -62,6 +66,34 @@ const routes: Routes = [
           title: 'Mantenimiento de Mallas Curriculares'
         }
       },
+      { path: 'programa-academico/gestion-plan-estudios/:id', 
+        component: GestionPlanEstudiosComponent,
+        data: {
+          title: 'Programas Académicos - Gestión de planes de estudio'
+        } 
+      },
+      {
+        path: 'calificaciones-carga',
+        component: CalificacionesCargaComponent,
+        data: {
+          title: 'Carga de calificación (Periodo actual)'
+        }
+      },
+      {
+        path: 'calificaciones-contingencia-grado',
+        component: CalificacionesContingenciaGradoComponent,
+        data: {
+          title: 'Carga de calificaciones (CONTINGENCIA-GRADO)'
+        }
+      },
+      {
+        path: 'calificaciones-contingencia-migracion',
+        component: CalificacionesContingenciaMigracionComponent,
+        data: {
+          title: 'Carga de calificaciones (MIGRACIÓN)'
+        }
+      },
+
     ]
   }
 ];

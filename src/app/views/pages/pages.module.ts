@@ -18,6 +18,7 @@ import { NgxSpinnerModule } from "ngx-spinner";
 import {MatDialogModule} from '@angular/material/dialog';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { LogoutComponent } from './logout/logout.component';
+import { SessionExpiryModalComponent } from './session-expiry-modal/session-expiry-modal.component';
 
 
 @NgModule({
@@ -26,7 +27,8 @@ import { LogoutComponent } from './logout/logout.component';
     RegisterComponent,
     Page404Component,
     Page500Component,
-    LogoutComponent
+    LogoutComponent,
+    SessionExpiryModalComponent
   ],
   imports: [
     CommonModule,

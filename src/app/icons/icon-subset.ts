@@ -28,6 +28,7 @@ import {
   cilAirplaneMode,
   cilBasket,
   cilBank,
+  cilBan,
   cilBell,
   cilBold,
   cilBookmark,
@@ -53,6 +54,7 @@ import {
   cilFile,
   cilHome,
   cilInbox,
+  cilInfo,
   cilIndentDecrease,
   cilIndentIncrease,
   cilItalic,
@@ -120,6 +122,7 @@ import {
   cilBellExclamation,
   cilReload,
   cilLoop,
+  cilHistory,
 } from '@coreui/icons';
 
 export const iconSubset = {
@@ -152,6 +155,7 @@ export const iconSubset = {
   cilAirplaneMode,
   cilBasket,
   cilBank,
+  cilBan,
   cilBell,
   cilBold,
   cilBookmark,
@@ -177,6 +181,7 @@ export const iconSubset = {
   cilFile,
   cilHome,
   cilInbox,
+  cilInfo,
   cilIndentDecrease,
   cilIndentIncrease,
   cilItalic,
@@ -244,6 +249,7 @@ export const iconSubset = {
   cilBellExclamation,
   cilReload,
   cilLoop,
+  cilHistory,
 };
 
 export enum IconSubset {
@@ -276,6 +282,7 @@ export enum IconSubset {
   cilBasket = 'cilBasket',
   cilAirplaneMode = 'cilAirplaneMode',
   cilBank = 'cilBank',
+  cilBan='cilBan',
   cilBell = 'cilBell',
   cilBold = 'cilBold',
   cilBookmark = 'cilBookmark',
@@ -301,6 +308,7 @@ export enum IconSubset {
   cilFile = 'cilFile',
   cilHome = 'cilHome',
   cilInbox = 'cilInbox',
+  cilInfo = 'cilInfo',
   cilIndentDecrease = 'cilIndentDecrease',
   cilIndentIncrease = 'cilIndentIncrease',
   cilItalic = 'cilItalic',
@@ -368,6 +376,7 @@ export enum IconSubset {
   cilBellExclamation = 'cilBellExclamation',
   cilReload = 'cilReload',
   cilLoop='cilLoop',
+  cilHistory = 'cilHistory',
   
   
 }

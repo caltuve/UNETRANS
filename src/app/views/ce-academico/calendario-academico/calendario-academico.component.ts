@@ -9,6 +9,9 @@ import {ModalDirective} from 'ngx-bootstrap/modal';
 
 import { DatePipe } from '@angular/common';
 
+import { EditCalendarComponent } from './../edit-calendar/edit-calendar.component'
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+
 @Component({
   selector: 'app-calendario-academico',
   templateUrl: './calendario-academico.component.html',
@@ -16,6 +19,7 @@ import { DatePipe } from '@angular/common';
 })
 export class CalendarioAcademicoComponent implements AfterViewInit {
 
+  modalRef: BsModalRef; 
   Procesos = new MatTableDataSource();
   displayedColumnsProcesos: string[] = ['estatus','periodo', 'periodicidad', 'proceso',  'fec_ini', 'fec_fin', 'gestion'];
   hayResultadosProcesos: boolean = false;
@@ -31,6 +35,7 @@ export class CalendarioAcademicoComponent implements AfterViewInit {
     public controlestudiosService: ControlEstudiosService,
     private SpinnerService: NgxSpinnerService,
     private datePipe: DatePipe,
+    private modalService: BsModalService,
     ) {
       const currentYear = new Date().getFullYear();
       const currentMonth = new Date().getMonth();
@@ -73,7 +78,7 @@ findProcesosCalendar() {
       this.Procesos.data = data;
       this.fec_ini_modal = new Date(data.fec_ini);
 this.fec_ini_modal.setDate(this.fec_ini_modal.getDate() + 1);
-      console.log(this.Procesos.data);
+      //console.log(this.Procesos.data);
 
     if (this.Procesos.data.length == 0) {
       this.sinResultadosProcesos = this.Procesos.data.length == 0;
@@ -88,5 +93,36 @@ this.fec_ini_modal.setDate(this.fec_ini_modal.getDate() + 1);
     }
   );
 }
+
+ajustarFecha(fecha: string): Date {
+  const date = new Date(fecha);
+  return new Date(date.getTime() + date.getTimezoneOffset() * 60000);
+}
+
+openEditModal(calendar: any) {
+  calendar.fec_ini = this.ajustarFecha(calendar.fec_ini);
+  calendar.fec_fin = this.ajustarFecha(calendar.fec_fin);
+  const initialState = {
+    calendar: calendar
+  };
+
+  const modalConfig = {
+    initialState: initialState,
+    class: 'modal-lg',
+    ignoreBackdropClick: true,
+    keyboard: false
+  };
+
+  // Abrir el modal pasando 'modalConfig'
+  const modalRef = this.modalService.show(EditCalendarComponent, modalConfig);
+
+  if (modalRef.content) {
+    modalRef.content.actualizacionCompleta.subscribe(() => {
+      this.findProcesosCalendar();
+    });
+  }
+}
+
+
 
 }

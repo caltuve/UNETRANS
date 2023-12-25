@@ -1,0 +1,214 @@
+<div class="modal-header">
+    <h4 class="modal-title pull-left">{{ title }}</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  
+  <div class="modal-body">
+    <form [formGroup]="programaForm" (ngSubmit)="onSubmit()">
+
+<!-- Sección para la creación de Programas -->
+<div class="row" formGroupName="datosPrograma">
+  <div class="col l12 m12 s12">
+    <label class="label-custom">Crear Programa</label>
+  
+    <!-- Primera línea: Nombre, Departamento, Tipo de Programa -->
+    <div class="row">
+      <div class="col s12 m4 l12">
+          <mat-form-field>
+            <mat-label>Nombre del Programa</mat-label>
+            <input matInput formControlName="nombre_programa" style='text-transform:uppercase'>
+          </mat-form-field>
+      </div>
+      <div class="col s12 m4 l12">
+        <mat-form-field>
+          <mat-label>Departamento Adscrito</mat-label>
+          <mat-select formControlName="dpto_adscrito">
+            <mat-option [value]="dep.id_departamento"
+            *ngFor="let dep of departamentos">{{dep.nombre_departamento}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="col s12 m4 l12">
+        <mat-form-field>
+          <mat-label>Tipo de Programa</mat-label>
+          <mat-select formControlName="tipo_programa">
+            <mat-option [value]="tpro.codelemento"
+            *ngFor="let tpro of tprograma">{{tpro.descripcion}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Segunda línea: Código OPSU, Periodicidad, Estatus, Fechas de Vigencia -->
+    <div class="row">
+      <div class="col s12 m2 l2">
+        <mat-form-field >
+          <mat-label>Código OPSU</mat-label>
+          <input matInput type="number" formControlName="codigo_opsu">
+        </mat-form-field>
+      </div>
+      <div class="col s12 m2 l2">
+        <mat-form-field >
+          <mat-label>Periodicidad</mat-label>
+          <mat-select formControlName="periodicidad">
+            <mat-option [value]="per.codelemento"
+            *ngFor="let per of periodicidad">{{per.descripcion}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="col s12 m2 l2">
+        <mat-form-field >
+          <mat-label>Estatus</mat-label>
+          <mat-select formControlName="estatus">
+            <mat-option [value]="sit.codelemento"
+            *ngFor="let sit of situacion">{{sit.descripcion}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="col s12 m2 l2">
+        <mat-form-field >
+          <mat-label>Vigencia Desde</mat-label>
+          <input matInput [matDatepicker]="pickerDesde" formControlName="vig_desde">
+          <mat-datepicker-toggle matSuffix [for]="pickerDesde"></mat-datepicker-toggle>
+          <mat-datepicker #pickerDesde></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <div class="col s12 m2 l2">
+        <mat-form-field >
+          <mat-label>Vigencia Hasta</mat-label>
+          <input matInput [matDatepicker]="pickerHasta" formControlName="vig_hasta">
+          <mat-datepicker-toggle matSuffix [for]="pickerHasta"></mat-datepicker-toggle>
+          <mat-datepicker #pickerHasta></mat-datepicker>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Tercera línea: Checkbox para Menciones -->
+    <div class="row">
+      <div class="col s12">
+        <mat-checkbox class="custom-checkbox"  (change)="onCheckboxChange($event)">¿El programa tiene menciones?</mat-checkbox>
+      </div>
+    </div>
+  </div>
+</div>
+         
+       <!-- Sección Dinámica para Menciones, visible solo si se activa el checkbox -->
+       <div class="row" *ngIf="mostrarMenciones">
+        <div class="col l12 m12 s12">
+          <label class="label-custom">Menciones del Programa</label>
+          <div formArrayName="menciones">
+            <div *ngFor="let mencion of mencionesFormArray.controls; let i = index" [formGroupName]="i">
+              <div class="row">
+                <!-- Código de Mención -->
+                <div class="col s12 ">
+                  <mat-form-field>
+                    <mat-label>Código de Mención</mat-label>
+                    <input matInput formControlName="cod_mencion">
+                  </mat-form-field>
+                </div>
+                <!-- Nombre de Mención -->
+                <div class="col s12 ">
+                  <mat-form-field>
+                    <mat-label>Nombre de Mención</mat-label>
+                    <input matInput formControlName="nombre_mencion">
+                  </mat-form-field>
+                </div>
+                <!-- Estatus de la Mención -->
+                <div class="col s12 ">
+                  <mat-form-field>
+                    <mat-label>Estatus</mat-label>
+                    <mat-select formControlName="estatus">
+                      <mat-option [value]="sit.codelemento"
+                      *ngFor="let sit of situacion">{{sit.descripcion}}</mat-option>
+                    </mat-select> 
+                  </mat-form-field>
+                </div>
+              </div>
+              <!-- Botón Eliminar -->
+              <div class="row">
+                <div class="col s12">
+                  <button type="button" class="btn btn-danger btn-sm" (click)="eliminarMencion(i)">
+                    <svg cIcon name="cil-trash"></svg> Eliminar mención
+                  </button>
+                </div>
+              </div>
+              <br>
+            </div>
+            <div class="row">
+              <div class="col s12">
+                <button type="button" class="btn btn-primary" (click)="agregarMencion()">
+                  <svg cIcon class="me-2" name="cil-cloud-upload"></svg>Agregar mención
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+         
+      <div class="row">
+        <div class="col l12">
+          <label class="label-custom">Certificaciones/Titulaciones del Programa</label>
+          <div formArrayName="certificaciones">
+            <div *ngFor="let certificacion of certificacionesFormArray.controls; let i = index" [formGroupName]="i">
+              <div class="row align-items-center">
+                <!-- Año de Certificación -->
+                <div class="col s12 m3 l3">
+                  <mat-form-field>
+                    <mat-label>Año</mat-label>
+                    <input type="number" matInput formControlName="anio">
+                  </mat-form-field>
+                </div>
+                <!-- Tipo de Certificación -->
+                <div class="col s12 m3 l3">
+                  <mat-form-field>
+                    <mat-label>Tipo</mat-label>
+                    <mat-select formControlName="tipo_certificacion">
+                      <mat-option [value]="tcer.codelemento"
+                      *ngFor="let tcer of tcertificacion">{{tcer.descripcion}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <!-- Título de Certificación -->
+                <div class="col s12 m12 l6">
+                  <mat-form-field>
+                    <mat-label>Certificado o Título</mat-label>
+                    <input matInput formControlName="titulo_certificacion">
+                  </mat-form-field>
+                </div>
+                <!-- Botón Eliminar (visible solo si i > 0) -->
+
+              <div class="row">
+                <div class="col s12" *ngIf="i > 0">
+                  <button type="button" class="btn btn-danger btn-sm" (click)="eliminarCertificacion(i)">
+                    <svg cIcon name="cil-trash"></svg> Eliminar certificado o título
+                  </button>
+                </div>
+              </div>
+              <br>
+              </div>
+              <br>
+            </div>
+            <br>
+            <div class="row">
+              <div class="col s12">
+                <button type="button" class="btn btn-primary" (click)="agregarCertificacion()">
+                  <svg cIcon class="me-2" name="cil-cloud-upload"></svg>Agregar Otra Certificación/Titulación
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+         <br>
+         <div class="row">
+           <div class="col s12">
+            <!-- Botones de Acción -->
+           <button type="submit" class="btn btn-primary" ><svg cIcon class="me-2" name="cil-cloud-upload"></svg>Guardar Programa</button>
+           </div>
+         </div>
+           
+         </form>
+  </div>
+

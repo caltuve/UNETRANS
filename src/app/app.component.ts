@@ -10,7 +10,7 @@ import { Title } from '@angular/platform-browser';
   template: '<router-outlet></router-outlet>',
 })
 export class AppComponent implements OnInit {
-  title = 'UNETRANS';
+  title = 'SICE - UNETRANS';
 
   constructor(
     private router: Router,

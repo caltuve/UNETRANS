@@ -1,1 +1,59 @@
-<p>programa-academico works!</p>
+<c-col xs="12">
+    <c-card class="mb-4">
+        <c-card-header>
+            <strong>Programas Académicos</strong> &nbsp; <small>Módulo para gestión de programas académicos</small> 
+            &nbsp;
+             <button  cButton color="primary" size="sm" data-toggle="modal" (click)="openAddEditModal()"> <svg cIcon class="me-2" name="cilBook"></svg>Nuevo programa académico</button>
+        </c-card-header>
+        <c-card-body>
+                <table mat-table [dataSource]="programas" [hover]="true" [responsive]="true" [striped]="true"
+                    align="middle" cTable class="mb-0 border" cTable>
+                    <ng-container matColumnDef="cod_opsu">
+                        <th class="det-ancho" mat-header-cell *matHeaderCellDef> Cod. OPSU </th>
+                        <td class="det-ancho" mat-cell *matCellDef="let calendar"> {{calendar.cod_opsu}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="tipo_prog">
+                        <th class="det-ancho" mat-header-cell *matHeaderCellDef> Tipo Programa </th>
+                        <td class="det-ancho" mat-cell *matCellDef="let calendar"> {{calendar.tipo_prog}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="nom_pro">
+                        <th mat-header-cell *matHeaderCellDef> Nombre programa </th>
+                        <td mat-cell *matCellDef="let calendar"> {{calendar.nom_pro}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="regimen">
+                        <th mat-header-cell *matHeaderCellDef> Régimen </th>
+                        <td mat-cell *matCellDef="let calendar"> {{calendar.regimen}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="departamento">
+                        <th mat-header-cell *matHeaderCellDef> Dpto Adscrito </th>
+                        <td mat-cell *matCellDef="let calendar"> {{calendar.departamento}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="jefe">
+                        <th mat-header-cell *matHeaderCellDef> Jefe Dpto. </th>
+                        <td mat-cell *matCellDef="let calendar"> {{calendar.jefe}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="gestion">
+                        <th mat-header-cell *matHeaderCellDef> Gestionar </th>
+                        <td mat-cell *matCellDef="let calendar">
+                            <div>
+                                <button cButton class="btn-primary" data-toggle="modal" cTooltip="Ver detalles" cTooltipPlacement="top" >
+                                    <svg cIcon name="cil-magnifying-glass"></svg></button>&nbsp;
+                                    <button cButton class="btn-primary" (click)="irAGestionPlanEstudios(calendar.cod_opsu)" cTooltip="Plan de estudios" cTooltipPlacement="top">
+                                        <svg cIcon name="cil-list-numbered"></svg>
+                                      </button>&nbsp;
+                                <button cButton class="btn-primary" data-toggle="modal" cTooltip="Editar" cTooltipPlacement="top">
+                                    <svg cIcon name="cil-pencil"></svg></button>
+                            </div>
+                        </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="displayedColumnsProcesos"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumnsProcesos;"></tr>
+                </table>
+
+            <mat-paginator [hidePageSize]="true" [pageSize]="10" #paginatorProcesos></mat-paginator>
+        </c-card-body>
+    </c-card>
+</c-col>
+<ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" size="default" type="ball-atom">
+    <p style="color: white" align="center">Por favor espere... <br>¡Validando información!</p>
+</ngx-spinner>

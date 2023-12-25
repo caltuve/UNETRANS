@@ -57,13 +57,13 @@ export class LoginAspiranteComponent {
                 break;
             case 'FINALIZADO':
               this.SpinnerService.hide(); 
-              this.notifyService.showInfo('El proceso de inscripción OPSU/Convenio ha finalizado, en caso de algún inconveniente puede escribir al correo: soportesice@unetrans.edu.ve');
+              this.notifyService.showInfo('El proceso de inscripción OPSU/Convenio ha finalizado');
               this.router.navigateByUrl('/login-aspirante');
               this.firstFormGroup.reset();
               break;
             case 'FINALIZADO AP':
                 this.SpinnerService.hide(); 
-                this.notifyService.showInfo('El proceso de Autopostulación ha finalizado, en caso de algún inconveniente puede escribir al correo: soportesice@unetrans.edu.ve');
+                this.notifyService.showInfo('El proceso de Autopostulación ha finalizado');
                 this.router.navigateByUrl('/login-aspirante');
                 this.firstFormGroup.reset();
                 break;

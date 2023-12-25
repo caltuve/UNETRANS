@@ -1,0 +1,20 @@
+.custom-modal-scrollable .modal-body {
+    max-height: calc(100vh - 200px); /* Ajusta según la altura de tu encabezado y pie de página */
+    overflow-y: auto;
+  }
+  
+
+  .custom-checkbox.mat-checkbox .mat-checkbox-frame,
+.custom-checkbox.mat-checkbox .mat-checkbox-background {
+  border-color: #003E85 !important;
+  background-color: #003E85 !important;
+}
+
+.custom-checkbox.mat-checkbox.mat-checkbox-checked .mat-checkbox-background,
+.custom-checkbox.mat-checkbox.mat-checkbox-indeterminate .mat-checkbox-background {
+  background-color: #003E85 !important;
+}
+
+.uppercase-input {
+    text-transform: uppercase;
+  }
