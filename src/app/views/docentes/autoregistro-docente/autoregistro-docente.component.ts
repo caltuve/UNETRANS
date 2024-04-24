@@ -1,5 +1,5 @@
 import { Component, AfterViewInit, OnInit, ViewChild} from '@angular/core';
-import { NgForm, FormBuilder, FormGroup, Validators,FormControl} from '@angular/forms';
+import { NgForm, FormBuilder, FormGroup, Validators,FormControl, ValidatorFn, AbstractControl, ValidationErrors } from '@angular/forms';
 import { DocenteService } from '../docente.service';
 import {MatTableDataSource} from '@angular/material/table';
 import { EstadoI, MunicipioI, ParroquiaI } from '../../control-estudios/crear-nuevo/model.interface'
@@ -10,6 +10,28 @@ import { Router } from '@angular/router';
 import { NgxSpinnerService } from "ngx-spinner";
 import { NotificacionService } from './../../../notificacion.service'
 import {ModalDirective} from 'ngx-bootstrap/modal';
+
+export function documentoValidator(): ValidatorFn {
+  return (control: AbstractControl): { [key: string]: any } | null => {
+    const nac = control.get('nac')?.value;
+    const cedula = control.get('cedula')?.value;
+
+    if (!nac || !cedula) {
+      // Si alguno de los valores es nulo o indefinido, no aplicar la validación
+      return null;
+    }
+
+    if (nac === 'V' && (cedula < 100000 || cedula > 40000000)) {
+      return { documentoInvalido: true };
+    }
+
+    if (nac === 'E' && (cedula < 1 || (cedula > 1999999 && cedula < 80000000) || cedula > 100000000)) {
+      return { documentoInvalido: true };
+    }
+
+    return null; // Si todo está correcto, retorna null
+  };
+}
 
 @Component({
   selector: 'app-autoregistro-docente',
@@ -418,6 +440,8 @@ findQuestSec(){
   );
 }
 
+
+
 crearPersona(f: any) {
   this.DocenteService.createPerson(f.value).subscribe(datos => {
     if (datos['resultado']=='NOK' || datos['resultado']!=='OK') {
@@ -447,28 +471,24 @@ guardar(): void {
     };
     const cedula = datosCompletos.step1.cedula;
 
-    this.DocenteService.createPersonAdministrativo(datosCompletos).subscribe(datos => {
+    this.DocenteService.createPersonDocente(datosCompletos).subscribe(datos => {
       if (datos['resultado']=='OK') {
         this.notifyService.showSuccess('Proceso de autoregistro finalizado, puede iniciar sesión en SICE');
-        setTimeout(() => {
-          this.router.navigateByUrl('/login');
-        }, 10000); // 6000 milisegundos = 6 segundos
         this.SpinnerService.hide();
+        this.router.navigateByUrl('/login');
       }else {
         this.SpinnerService.hide();
         this.notifyService.showWarning('Ha ocurrido un error, notifíquelo al correo: soportesice@unetrans.edu.ve indicando su cédula de identidad.');
-        setTimeout(() => {
-          this.router.navigateByUrl('/login-administrativo');
-        }, 10000); // 6000 milisegundos = 6 segundos
+        this.router.navigateByUrl('/login-docente');
        
       }
     });
 }
 
-     
+
     firstFormGroup = this._formBuilder.group({
-      nac:[{value: '', disabled: true}, Validators.required],
-      nacpost: ['', Validators.required, ] ,
+      nac: [{value: '', disabled: true}, Validators.required],
+      nacpost: ['', Validators.required],
       cedula: [{value: '', readonly: true}, Validators.required],
       fec_nac: ['', Validators.required],
       primer_nombre: [{value: '', readonly: true}, Validators.required],
@@ -478,7 +498,7 @@ guardar(): void {
       genero: ['', Validators.required],
       edo_civil: ['', Validators.required],
       gruposan: ['', Validators.required],
-    });
+    }, { validators: documentoValidator() });
     
     secondFormGroup = this._formBuilder.group({
   estado: ['', Validators.required],
@@ -514,6 +534,9 @@ fiveFormGroup = this._formBuilder.group({
   answ1:['', Validators.required],
   answ2:['', Validators.required],
   answ3:['', Validators.required],
+  cod_dpto:['', Validators.required],
+  jefe:['', Validators.required],
+  cod_jefe:[null, Validators.nullValidator],
  });
 
 
@@ -541,4 +564,5 @@ fiveFormGroup = this._formBuilder.group({
 selectedPlantel = this._formBuilder.group({
   
  });
+
 }

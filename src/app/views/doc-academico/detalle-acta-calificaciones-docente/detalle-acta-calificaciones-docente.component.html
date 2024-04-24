@@ -1,0 +1,98 @@
+<c-col xs="12">
+    <c-card class="mb-4">
+      <c-card-header>
+        <strong>Detalle de estudiantes por acta</strong>&nbsp; <small>Revisión y carga de calificaciones por estudiante</small>
+      </c-card-header>
+      <c-card-body>
+        <c-alert *ngIf="hayResultadosSecciones && !cargandoDatos" color="info">
+          <strong>Para llenar el acta de calificaciones, siga las siguientes instrucciones:</strong>
+          <ul>
+            <li>Ingrese directamente la calificación obtenida por cada estudiante en el campo "Calificación". Las notas deben estar entre 1 y 20. Alternativamente, puede utilizar las flechas hacia arriba y hacia abajo para ajustar la calificación.</li>
+            <li>Si un estudiante ha abandonado el curso, debe asignarle la calificación mínima, que es 1. Esto indica abandono o no presentación.</li>
+            <li>Revise los iconos de condición para cada calificación ingresada:
+              <ul>
+                <li>Un <svg cIcon width="16" height="16" name="cilCheck" style="color: green;"></svg> verde indica que el estudiante ha aprobado.</li>
+                <li>Un <svg cIcon width="16" height="16" name="cilXCircle" style="color: red;"></svg> rojo indica que el estudiante ha reprobado.</li>
+                <li>Un <svg cIcon width="16" height="16" name="cilHistory" style="color: gray;"></svg> gris indica que no se ha ingresado una calificación.</li>
+                <li>Un <svg cIcon width="16" height="16" name="cilWarning" style="color: orange;"></svg> amarillo señala un error en la calificación por estar fuera del rango permitido.</li>
+              </ul>
+            </li>
+          </ul>
+          En caso de cualquier inconveniente o duda, por favor, escriba un correo a <a href="mailto:soportesice@unetrans.edu.ve">soportesice@unetrans.edu.ve</a> indicando el inconveniente, su nombre completo, y el número de acta involucrado.
+        </c-alert>
+        
+        <div *ngIf="hayResultadosSecciones && !cargandoDatos" class="uc-details mb-4">
+            <p><strong>Periodo:</strong> {{detallesUC.periodo}}</p>
+            <p><strong>Unidad Curricular:</strong>  {{detallesUC.cod_ucurr}}-{{detallesUC.uni_curr}} ({{detallesUC.nombre_programa}})</p>
+            <p><strong>Acta:</strong> {{detallesUC.acta}} | <strong>Sección - Tipo:</strong> {{detallesUC.seccion}} - {{detallesUC.tipo_sec}} | <strong>Calif. Mín Aprobatoria:</strong> {{detallesUC.nota_minima}} / 20</p>
+            <!-- Añade más detalles si es necesario -->
+          </div>
+          <div *ngIf="hayResultadosSecciones">
+            <div class="scrollable-content">
+                <form  (ngSubmit)="enviarCalificaciones()">
+                    <table mat-table [dataSource]="detalleinscritos" [hover]="true" [responsive]="true" [striped]="true"
+                    align="middle" cTable class="mb-0 border" cTable>
+                      <tr>
+                          <ng-container matColumnDef="orden">
+                              <th class="orden-ancho"mat-header-cell *matHeaderCellDef > N°</th>
+                              <td class="orden-ancho" mat-cell *matCellDef="let row">{{row.orden}} </td>
+                            </ng-container>
+                        <ng-container matColumnDef="carnet">
+                          <th class="carnet-ancho" mat-header-cell *matHeaderCellDef > Carnet</th>
+                          <td class="carnet-ancho" mat-cell *matCellDef="let row">{{row.carnet}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="cedula">
+                          <th class="cedula-ancho" mat-header-cell *matHeaderCellDef > Cédula</th>
+                          <td class="cedula-ancho" mat-cell *matCellDef="let row">{{row.cedula}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="nombre_completo">
+                          <th mat-header-cell *matHeaderCellDef > Apellidos y nombres</th>
+                          <td mat-cell *matCellDef="let row">{{row.nombre_completo}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="calificacion">
+                            <th mat-header-cell *matHeaderCellDef class="ancho-nota text-center"> Calificación </th>
+                            <td mat-cell *matCellDef="let element; let i = index">
+                              <input [(ngModel)]="element.calificacion" name="calificacion-{{i}}" type="number" min="1" max="20" style="width: 60px;">
+                            </td>
+                          </ng-container>
+                          <ng-container matColumnDef="estatus">
+                            <th mat-header-cell *matHeaderCellDef class="text-center"> Condición </th>
+                            <td mat-cell *matCellDef="let uc" class="text-center">
+                                <!-- Aprobado -->
+                                <div *ngIf="uc.calificacion >= notaMinima && uc.calificacion <= 20" cTooltip="Aprobado" cTooltipPlacement="top">
+                                  <svg cIcon width="30" height="30" name="cilCheck" style="color: green;"></svg>
+                                </div>
+                              
+                                <!-- Reprobado -->
+                                <div *ngIf="uc.calificacion < notaMinima && uc.calificacion >= 1" cTooltip="Reprobado" cTooltipPlacement="top">
+                                  <svg cIcon width="30" height="30" name="cilXCircle" style="color: red;"></svg>
+                                </div>
+                              
+                                <!-- Error: Calificación fuera de rango -->
+                                <div *ngIf="uc.calificacion != null && uc.calificacion !== '' && uc.calificacion > 20" cTooltip="Error: Calificación fuera de rango" cTooltipPlacement="top">
+                                  <svg cIcon width="30" height="30" name="cilWarning" style="color: orange;"></svg>
+                                </div>
+                              
+                                <!-- Sin Calificar -->
+                                <div *ngIf="uc.calificacion == null || uc.calificacion === ''" cTooltip="Sin Calificar" cTooltipPlacement="top">
+                                  <svg cIcon width="30" height="30" name="cilHistory" style="color: gray;"></svg>
+                                </div>
+                              </td>
+                          </ng-container>
+
+                      </tr>
+                        <tr mat-header-row *matHeaderRowDef="displayedColumnsDetail"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumnsDetail;"></tr>
+                    </table>
+                    <br>
+                    <button type="submit" [disabled]="!todasCalificacionesValidas()" class="btn btn-primary float-right"> <svg cIcon class="me-2" name="cil-cloud-upload"></svg>Cargar Calificaciones</button>
+                </form>
+
+              </div>
+          </div>
+      </c-card-body>
+    </c-card>
+  </c-col>
+  <ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" size="default" type="ball-atom">
+    <p style="color: white" align="center">Por favor espere... <br>¡Validando información!</p>
+  </ngx-spinner>

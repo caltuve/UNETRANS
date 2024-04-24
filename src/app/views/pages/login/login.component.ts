@@ -64,7 +64,7 @@ export class LoginComponent {
 
 
   loginFormGroup = this._formBuilder.group({
-    usrsice: ['', [Validators.required, Validators.pattern('^[VEP]{1}[0-9]{7,8}$')]],
+    usrsice: ['', [Validators.required, Validators.pattern('^[VEP]{1}[0-9]{6,8}$')]],
     password: ['', Validators.required],
 
   });

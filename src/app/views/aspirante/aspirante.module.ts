@@ -41,6 +41,7 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 
 
 import {
+  AlertModule,
   AccordionModule,
   BadgeModule,
   BreadcrumbModule,
@@ -103,6 +104,7 @@ import { ModalModule } from 'ngx-bootstrap/modal';
     MatTableModule,
     DocsComponentsModule,
     CalloutModule, NavModule, TabsModule, UtilitiesModule,
+    AlertModule,
     AccordionModule,
   BadgeModule,
   BreadcrumbModule,

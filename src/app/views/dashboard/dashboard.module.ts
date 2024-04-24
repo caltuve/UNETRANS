@@ -4,6 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import {
   AvatarModule,
+  AlertModule,
   ButtonGroupModule,
   ButtonModule,
   CardModule,
@@ -12,7 +13,10 @@ import {
   NavModule,
   ProgressModule,
   TableModule,
-  TabsModule
+  TabsModule,
+  WidgetModule,
+  DropdownModule,
+  SharedModule,
 } from '@coreui/angular';
 import { IconModule } from '@coreui/icons-angular';
 import { ChartjsModule } from '@coreui/angular-chartjs';
@@ -23,6 +27,16 @@ import { DashboardComponent } from './dashboard.component';
 import { WidgetsModule } from '../widgets/widgets.module';
 import { NgxSpinnerModule } from "ngx-spinner";
 
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon'
+import { MatDividerModule } from '@angular/material/divider';
+import {MatButtonModule} from '@angular/material/button';
+import {MatExpansionModule} from '@angular/material/expansion';
+import { HttpClientModule } from '@angular/common/http';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {MatTabsModule} from '@angular/material/tabs';
+
+
 @NgModule({
   imports: [
     DashboardRoutingModule,
@@ -30,6 +44,7 @@ import { NgxSpinnerModule } from "ngx-spinner";
     NavModule,
     IconModule,
     TabsModule,
+    WidgetModule,
     CommonModule,
     GridModule,
     ProgressModule,
@@ -40,9 +55,24 @@ import { NgxSpinnerModule } from "ngx-spinner";
     ButtonGroupModule,
     ChartjsModule,
     AvatarModule,
+    AlertModule,
     TableModule,
     WidgetsModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
+    SharedModule,
+
+    MatCardModule,
+    MatIconModule,
+    MatDividerModule,
+    MatButtonModule,
+    GridModule,
+    FormModule,
+    MatExpansionModule,
+    HttpClientModule,
+    MatAutocompleteModule,
+    MatTabsModule,
+    TableModule,
+     NavModule, TabsModule,
   ],
   declarations: [DashboardComponent]
 })

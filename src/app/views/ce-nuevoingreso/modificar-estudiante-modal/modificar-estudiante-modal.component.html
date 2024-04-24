@@ -1,0 +1,144 @@
+<div class="modal-header">
+    <h4 class="modal-title">Actualización de datos sensibles: {{ estudianteBase.nombre_corto }} ({{ estudianteBase.nac }}-{{ estudianteBase.cedula_formateada }}) <span [ngClass]="obtenerClaseColor(estudianteBase.estatus)">
+        <svg cIcon width="20" height="20" [name]="obtenerNombreIcono(estudianteBase.estatus)"></svg>
+        {{ estudianteBase.desc_estatus }}
+    </span> </h4>
+  </div>
+  <div class="modal-body">
+    <form #f="ngForm" [formGroup]="firstFormGroup" >
+        <c-alert color="info">
+            <strong>¡IMPORTANTE!</strong> <br>
+            Verifica siempre con el documento de identidad que los datos sensibles como: <strong> NACIONALIDAD, CÉDULA, NOMBRES, APELLIDOS, FECHA DE NACIMIENTO</strong> estén cargados al sistema de forma correcta. <br>
+              En caso de tener algún inconveniente notificarlo al correo: soportesice@unetrans.edu.ve
+          </c-alert>
+          <div class="row">
+            <div class="col l6 m12 s12 col-sm-12"> 
+              <label class="label-custom">Documento de identidad:</label>
+              <div class="row"> 
+                <div class="col s12">
+                  <mat-form-field >
+                    <mat-label>Tipo de documento</mat-label>
+                    <mat-select formControlName="nac"  name="nac" formControlName="nac" >
+                      <mat-option [value]="item.codelemento" *ngFor="let item of nacs">{{item.descripcion}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="col s12">
+                  <mat-form-field appearance="fill">
+                    <mat-label>Nro de documento</mat-label>
+                    <input oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" type="number" min="1" max="100000000" matInput formControlName="ced_pas" name="ced_pas" required>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+            <div class="col s12">
+              <label class="label-custom">Fecha de nacimiento:</label>
+              <div class="row">
+                <div *ngIf="estudianteBase.estatus !== 'NOKSICE'" class="col s12">
+                  <mat-form-field>
+                    <mat-label>Seleccione una fecha</mat-label>
+                    <input matInput [min]="minDate1" [max]="maxDate1" [matDatepicker]="fec_nac" formControlName="fec_nac" required>
+                    <mat-datepicker-toggle matIconSuffix [for]="fec_nac"></mat-datepicker-toggle>
+                    <mat-datepicker #fec_nac [startView]="'multi-year'"></mat-datepicker>
+                  </mat-form-field>
+                </div>
+                <div *ngIf="estudianteBase.estatus == 'NOKSICE'" class="col s12">
+                    <p style="padding: 20px; background-color: #f0f0f0; border-radius: 4px; font-size: 16px;">
+                      Campo no requerido para personas NO MIGRADAS.
+                    </p>
+                  </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col l12 m12 s12"><label>Nombres:</label>
+              <div class="row mar-b-0">
+                <div class="col s12"> 
+                  <mat-form-field>
+                    <mat-label>Primer:</mat-label>
+                    <input  style='text-transform:uppercase'  matInput formControlName="primer_nombre" name="primer_nombre" >
+                  </mat-form-field>
+                </div>
+                <div class="col s12">
+                  <mat-form-field>
+                    <mat-label>Segundo:</mat-label>
+                    <input  style='text-transform:uppercase'  matInput formControlName="segundo_nombre" name="segundo_nombre" >
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+            <div class="col l12 m12 s12"><label>Apellidos:</label>
+              <div class="row mar-b-0">
+                <div class="col s12"><mat-form-field>
+                    <mat-label>Primer</mat-label>
+                    <input  style='text-transform:uppercase'   matInput formControlName="primer_apellido" name="primer_apellido" >
+                  </mat-form-field></div>
+                <div class="col s12"><mat-form-field>
+                    <mat-label>Segundo</mat-label>
+                    <input  style='text-transform:uppercase'  matInput  formControlName="segundo_apellido" name="segundo_apellido" >
+                  </mat-form-field></div>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="estudianteBase?.estatus === 'OKSICE'">
+            <div class="row">
+                <div class="col l12 m12 s12">
+                  <label class="label-custom">Género:</label>
+                  <div class="row">
+                    <div class="col s12">
+                      <mat-form-field>
+                        <mat-label>Sexo</mat-label>
+                        <mat-select formControlName="genero" required>
+                          <mat-option [value]="item.codelemento"
+                            *ngFor="let item of genero">{{item.descripcion}}</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="firstFormGroup.get('genero')?.invalid && firstFormGroup.get('genero')?.touched">
+                            Género es requerido
+                          </mat-error>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+                <div class="col l12 m12 s12">
+                  <label class="label-custom">Estado civil:</label>
+                  <div class="row">
+                    <div class="col s12">
+                      <mat-form-field>
+                        <mat-label>Estado civil</mat-label>
+                        <mat-select formControlName="edo_civil" required>
+                          <mat-option [value]="item.codelemento"
+                            *ngFor="let item of edocivil">{{item.descripcion}}</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="firstFormGroup.get('edo_civil')?.invalid && firstFormGroup.get('edo_civil')?.touched">
+                            Estado civil es requerido
+                          </mat-error>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+                <div class="col l12 m12 s12">
+                  <label class="label-custom">Grupo Sanguíneo:</label>
+                  <div class="row">
+                    <div class="col s12">
+                      <mat-form-field>
+                        <mat-label>Tipo de sangre</mat-label>
+                        <mat-select formControlName="gruposan" required>
+                          <mat-option [value]="item.codelemento"
+                            *ngFor="let item of gruposan">{{item.descripcion}}</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="firstFormGroup.get('gruposan')?.invalid && firstFormGroup.get('gruposan')?.touched">
+                            Grupo Sanguíneo es requerido
+                          </mat-error>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          </div>
+    </form>
+    
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="closeModal()">Salir</button>
+    <button type="button" class="btn btn-primary" (click)="enviarDatos()" >Guardar cambios</button>
+  </div>

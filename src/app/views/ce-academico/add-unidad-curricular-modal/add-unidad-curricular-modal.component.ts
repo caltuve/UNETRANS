@@ -108,7 +108,7 @@ crearPrelacionForm(): FormGroup {
     // Recolectar los datos del formulario
     const datosFormulario = this.unidadCurricularForm.value;
     // Enviar datos al backend
-    //console.log(datosFormulario);
+    console.log(datosFormulario);
   this.controlestudiosService.agregarUnidadCurricular(datosFormulario).subscribe(
     response => {
       

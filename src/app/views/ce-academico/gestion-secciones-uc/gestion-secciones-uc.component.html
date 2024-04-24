@@ -1,0 +1,102 @@
+<c-col xs="12">
+    <c-card class="mb-4">
+        <c-card-header>
+            <strong>Gestión de secciones</strong> &nbsp;
+            <small>Módulo para gestionar las secciones de una unidad curricular</small>
+            &nbsp;
+            <button cButton color="primary" size="sm" (click)="regresar()">
+                <svg cIcon name="cil-arrow-left"></svg> Regresar
+            </button>
+            &nbsp;
+            <button cButton color="primary" size="sm" data-toggle="modal">
+                <svg cIcon class="me-2" name="cil-book"></svg>Nueva sección
+            </button>
+        </c-card-header>
+        <c-card-body>
+            <div *ngIf="hayResultadosSecciones">
+                <table mat-table [dataSource]="secciones" [hover]="true" [responsive]="true" [striped]="true"
+                    align="middle" cTable class="mb-0 border" cTable>
+                    <!-- Columnas adicionales aquí -->
+                    <ng-container matColumnDef="acta">
+                        <th mat-header-cell *matHeaderCellDef> Acta </th>
+                        <td mat-cell *matCellDef="let seccion">{{ seccion.acta }}</td>
+                    </ng-container>
+
+                    <!-- Columna existente -->
+                    <ng-container matColumnDef="seccion">
+                        <th mat-header-cell *matHeaderCellDef> Sección </th>
+                        <td mat-cell *matCellDef="let seccion">{{ seccion.seccion }}
+                        </td>
+                    </ng-container>
+
+                    <!-- Columna existente -->
+                    <ng-container matColumnDef="tipo">
+                        <th mat-header-cell *matHeaderCellDef> Tipo </th>
+                        <td mat-cell *matCellDef="let seccion">{{ seccion.tipo_secc }}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="docente">
+                        <th mat-header-cell *matHeaderCellDef> Docente </th>
+                        <td mat-cell *matCellDef="let seccion">{{ seccion.prof_asignado }}
+                        </td>
+                    </ng-container>
+
+                    <!-- Columna existente -->
+                    <ng-container matColumnDef="cupos">
+                        <th mat-header-cell *matHeaderCellDef class="center-inscritos"> Cupos </th>
+                        <td mat-cell *matCellDef="let seccion" class="center-inscritos">{{ seccion.cupos_ini }}
+                        </td>
+                    </ng-container>
+
+                    <!-- Columna existente -->
+                    <ng-container matColumnDef="inscritos">
+                        <th mat-header-cell *matHeaderCellDef class="center-inscritos"> Inscritos </th>
+                        <td mat-cell *matCellDef="let seccion" class="center-inscritos">{{ seccion.inscritos }}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="disponible">
+                        <th mat-header-cell *matHeaderCellDef class="center-inscritos"> Disp </th>
+                        <td mat-cell *matCellDef="let seccion" class="center-inscritos">{{ seccion.cupos_disp }}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="acciones">
+                        <th mat-header-cell *matHeaderCellDef class="center-inscritos"> Acciones </th>
+                        <td mat-cell *matCellDef="let seccion" class="center-inscritos">
+                            <div>
+                                <button cButton class="btn-primary" data-toggle="modal"
+                                    (click)="openActaDetail(seccion.acta)" cTooltip="Ver acta" cTooltipPlacement="top"
+                                    [disabled]="seccion.cupos_ini === seccion.cupos_disp">
+                                    <svg cIcon name="cilMagnifyingGlass"></svg></button>
+                                &nbsp;
+                                <button cButton class="btn-primary" data-toggle="modal"
+                                    (click)="editActaDetail(seccion.acta)" cTooltip="Modificar" cTooltipPlacement="top"
+                                    [disabled]="seccion.cupos_ini === seccion.cupos_disp">
+                                    <svg cIcon name="cil-pencil"></svg></button>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row
+                        *matHeaderRowDef="['acta', 'seccion', 'tipo', 'docente','cupos','inscritos','disponible','acciones']">
+                    </tr>
+                    <tr mat-row
+                        *matRowDef="let row; columns: ['acta', 'seccion', 'tipo', 'docente','cupos','inscritos','disponible','acciones'];">
+                    </tr>
+                </table>
+                <br>
+            </div>
+            <div *ngIf="sinResultadosSecciones">
+                <c-alert color="info" class="d-flex align-items-center">
+                    <svg cIcon class="me-2" width="24" height="24" name="cilXCircle"></svg>
+                    <div>No existen secciones creadas de esta unidad curricular para el periodo seleccionado</div>
+                </c-alert>
+            </div>
+        </c-card-body>
+    </c-card>
+</c-col>
+<ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" size="default" type="ball-atom">
+    <p style="color: white" align="center">Por favor espere... <br>¡Validando información!</p>
+</ngx-spinner>

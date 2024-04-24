@@ -1,0 +1,72 @@
+<div class="modal-header">
+    <h4 class="modal-title pull-left">Modificar unidad curricular: <strong>{{ ucBase.nombre_uc }}</strong></h4>
+  </div>
+  
+  <div class="modal-body">
+    <form #f="ngForm" [formGroup]="firstFormGroup" >
+        <div class="row">
+            <!-- Código UC -->
+            <div class="col">
+              <mat-form-field class="w-100">
+                <mat-label>Código UC</mat-label>
+                <input matInput formControlName="codigo_uc">
+              </mat-form-field>
+            </div>
+        
+            <!-- Nombre UC -->
+            <div class="col">
+              <mat-form-field class="w-100">
+                <mat-label>Nombre UC</mat-label>
+                <input matInput formControlName="nombre_uc">
+              </mat-form-field>
+            </div>
+        
+            <!-- Créditos -->
+            <div class="col">
+              <mat-form-field class="w-100">
+                <mat-label>Créditos</mat-label>
+                <input matInput type="number" formControlName="creditos">
+              </mat-form-field>
+            </div>
+          </div>
+        
+          <!-- Segunda línea con tres campos -->
+          <div class="row">
+            <!-- HTA -->
+            <div class="col">
+              <mat-form-field class="w-100">
+                <mat-label>Horas de trabajo acompañado</mat-label>
+                <input matInput type="number" formControlName="hta">
+              </mat-form-field>
+            </div>
+        
+            <!-- HTI -->
+            <div class="col">
+              <mat-form-field class="w-100">
+                <mat-label>Horas de trabajo independiente</mat-label>
+                <input matInput type="number" formControlName="hti">
+              </mat-form-field>
+            </div>
+        
+            <!-- HTL -->
+            <div class="col">
+              <mat-form-field class="w-100">
+                <mat-label>Horas de trabajo laboratorio</mat-label>
+                <input matInput type="number" formControlName="htl">
+              </mat-form-field>
+            </div>
+          </div>
+
+        <!-- Checkbox para prelaciones -->
+         <!-- Checkbox para consultar si es proyecto -->
+        <!-- <mat-checkbox formControlName="esProyecto">¿La unidad curricular es Proyecto?</mat-checkbox>
+        <mat-checkbox formControlName="tienePrelaciones">¿Tiene prelaciones?</mat-checkbox> -->
+
+        <!-- Lista dinámica para agregar prelaciones -->
+        
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="closeModal()">Salir</button>
+    <button type="button" class="btn btn-primary" (click)="enviarDatos()" >Guardar cambios</button>
+  </div>

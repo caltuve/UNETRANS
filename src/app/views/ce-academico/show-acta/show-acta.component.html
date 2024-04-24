@@ -24,7 +24,8 @@
         </div>
         <div class="modal-body">
           <div class="scrollable-content">
-            <table mat-table [dataSource]="inscritos" [hover]="true" cTable>
+            <table mat-table [dataSource]="inscritos" [hover]="true" [responsive]="true" [striped]="true"
+            align="middle" cTable class="mb-0 border" cTable>
               <tr>
                   <ng-container matColumnDef="orden">
                       <th class="orden-ancho"mat-header-cell *matHeaderCellDef > N°</th>

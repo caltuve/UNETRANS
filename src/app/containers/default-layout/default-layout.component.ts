@@ -2,6 +2,7 @@ import { Component, ViewChild,AfterViewInit} from '@angular/core';
 import { LoginService } from './../../views/pages/login/login.service';
 import { INavData } from '@coreui/angular';
 import { navItems } from './_nav';
+import { NgxSpinnerService } from "ngx-spinner";
 
 @Component({
   selector: 'app-dashboard',
@@ -28,20 +29,24 @@ export class DefaultLayoutComponent implements AfterViewInit{
   };
 
   
-  constructor(public loginService: LoginService
+  constructor(public loginService: LoginService,
+    private SpinnerService: NgxSpinnerService,
     ) {}
 
     ngAfterViewInit() {
+      
       this.searchMenuSice();
     }
 
 
     searchMenuSice() {
+      this.SpinnerService.show();
       this.usr = JSON.parse(sessionStorage.getItem('currentUser')!);
       this.loginService.getMenuSice(this.usr.usrsice).subscribe(
         (result: any) => {
           this.navItems = result;
         }
       );
+      this.SpinnerService.hide(); 
     }
 }

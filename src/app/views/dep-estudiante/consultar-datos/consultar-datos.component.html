@@ -57,9 +57,11 @@
 
         <!-- Columna de carnet -->
         <ng-container matColumnDef="carnet">
-            <th class="carnet-ancho" mat-header-cell *matHeaderCellDef  > Carnet </th>
-            <td class="carnet-ancho" mat-cell *matCellDef="let row"> {{row.carnet}}</td>
-          </ng-container>
+          <th class="carnet-ancho" mat-header-cell *matHeaderCellDef> Carnet </th>
+          <td class="carnet-ancho" mat-cell *matCellDef="let row" (click)="abrirDetalleEstudiante(row.carnet)">
+            <span class="carnet-hipervinculo">{{row.carnet}}</span>
+          </td>
+      </ng-container>
 
         <!-- Columna de  Ult. Periodo -->
         <ng-container matColumnDef="ult_per_ins">
@@ -100,7 +102,16 @@
             <td mat-cell *matCellDef="let row"> {{row.pnf}}</td>
           </ng-container>
 
-  
+          <ng-container matColumnDef="gestion">
+            <th mat-header-cell *matHeaderCellDef> Gestionar </th>
+            <td mat-cell *matCellDef="let row">
+                <div>
+                    <button cButton class="btn-primary" [disabled]="1 === 1">
+                        <svg cIcon name="cil-pencil"></svg></button>
+                </div>
+            </td>
+        </ng-container>
+
           <!-- Columna de detalle -->
           <!-- <ng-container matColumnDef="detalles">
             <th class="det-ancho" mat-header-cell *matHeaderCellDef > Detalles </th>

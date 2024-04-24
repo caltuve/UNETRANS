@@ -7,6 +7,9 @@ import { AspiranteOpsuComponent } from './aspirante-opsu/aspirante-opsu.componen
 import { AutopostuladosComponent } from './autopostulados/autopostulados.component';
 import { ConvenioComponent } from './convenio/convenio.component';
 import { ReincorporacionComponent } from './reincorporacion/reincorporacion.component';
+import { ExpedienteComponent } from './expediente/expediente.component';
+import { DocumentosComponent } from './documentos/documentos.component';
+import { InscripcionComponent } from './inscripcion/inscripcion.component';
 
 import { MatStepperModule } from '@angular/material/stepper'; 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -69,6 +72,13 @@ import {MatSortModule} from '@angular/material/sort';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatRadioModule} from '@angular/material/radio';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle'; 
+import { EstatusExpedientePipe } from './expediente/expediente.component';
+import { ModalInscripcionComponent } from './modal-inscripcion/modal-inscripcion.component';
+import { DetalleEstudianteModalComponent } from './detalle-estudiante-modal/detalle-estudiante-modal.component';
+import { ModificarEstudianteModalComponent } from './modificar-estudiante-modal/modificar-estudiante-modal.component';
+import { MigracionComponent } from './migracion/migracion.component';
+import { ModalRevMigracionComponent } from './modal-rev-migracion/modal-rev-migracion.component';
 
 
 @NgModule({
@@ -77,7 +87,16 @@ import {MatRadioModule} from '@angular/material/radio';
     AspiranteOpsuComponent,
     AutopostuladosComponent,
     ConvenioComponent,
-    ReincorporacionComponent
+    ReincorporacionComponent,
+    ExpedienteComponent,
+    EstatusExpedientePipe,
+    DocumentosComponent,
+    InscripcionComponent,
+    ModalInscripcionComponent,
+    DetalleEstudianteModalComponent,
+    ModificarEstudianteModalComponent,
+    MigracionComponent,
+    ModalRevMigracionComponent
   ],
   imports: [
     CommonModule,
@@ -128,7 +147,9 @@ import {MatRadioModule} from '@angular/material/radio';
   NgxSpinnerModule,
   MatSortModule,
   MatCheckboxModule,
-  MatRadioModule
-  ]
+  MatRadioModule,
+  MatSlideToggleModule,
+  ],
+  exports: [EstatusExpedientePipe], 
 })
 export class CeNuevoingresoModule { }

@@ -6,6 +6,12 @@ import { throwError } from 'rxjs';
 import { Observable } from "rxjs";
 import { tap, map} from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
+import { Subject } from 'rxjs';
+
+export interface Docente {
+  cedula: string;
+  nombre: string;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +20,10 @@ export class ControlEstudiosService {
 
   url:string  = environment.url; 
   url2 = 'https://petroapp-price.petro.gob.ve/price/';
+
+  private inscripcionCompletadaSource = new Subject<string>();
+  inscripcionCompletada$ = this.inscripcionCompletadaSource.asObservable();
+  
   constructor(private http: HttpClient) { }
 
   estados: EstadoI []= [];
@@ -59,6 +69,15 @@ export class ControlEstudiosService {
   getCarrerasForDep(usrsice: any): Observable<any>{
     return this.http.get(`${this.url}carrerasfordep.php?usrsice=${usrsice}`);
   }
+
+  getProgramasActivosDep(usrsice: any): Observable<any>{
+    return this.http.get(`${this.url}programas_vigentes_dep.php?usrsice=${usrsice}`);
+  }
+
+  getProgramasActivosRegimen(regimen: any): Observable<any>{
+    return this.http.get(`${this.url}programas_vigentes_regimen.php?regimen=${regimen}`);
+  }
+
   getOperMovil() {
     return this.http.get(`${this.url}opermov.php`);
   }
@@ -103,6 +122,14 @@ getModIngreso() {
   return this.http.get(`${this.url}modalidad_ingreso.php`);
 }
 
+getVariablesTipo() {
+  return this.http.get(`${this.url}variabletipos.php`);
+}
+
+getDetalleVariablesTipo(tipoSeleccionado: string): Observable<any>{
+  return this.http.get(`${this.url}detallevariabletipos.php?tipo=${tipoSeleccionado}`)
+}
+
 getTurnos() {
   return this.http.get(`${this.url}turnos.php`);
 }
@@ -119,6 +146,10 @@ getAutopostulado() {
   return this.http.get(`${this.url}resumen_autopostulados_dace.php`);
 }
 
+getSolicitudesRevisionMigra() {
+  return this.http.get(`${this.url}solic_revision_migra.php`);
+}
+
 getReincorporacion() {
   return this.http.get(`${this.url}resumen_reincorporacion_dace.php`);
 }
@@ -130,12 +161,41 @@ getReincorporacion() {
     return this.http.get(`${this.url}calendar_procesos.php`);
   }
 
+  getDocentesDep(usrsice: any): Observable<any>{
+    return this.http.get(`${this.url}docentesfordep.php?usrsice=${usrsice}`);
+  }
+
+  getCursosDocente(usrsice: any): Observable<any>{
+    return this.http.get(`${this.url}cursosfordocente.php?usrsice=${usrsice}`);
+  }
+
+  getCursosDocenteCargaNotas(usrsice: any): Observable<any>{
+    return this.http.get(`${this.url}cursosfordocentecalificaciones.php?usrsice=${usrsice}`);
+  }
+
+
+  getInscripcionEstudiante(usrsice: any): Observable<any>{
+    return this.http.get(`${this.url}inscripcion_est.php?usrsice=${usrsice}`);
+  }
+
+  getInscripcionUCEstudiante(carnet: any): Observable<any>{
+    return this.http.get(`${this.url}inscripcion_est_UC.php?carnet=${carnet}`);
+  }
+
+  getDatosConstancia(usrsice: any): Observable<any>{
+    return this.http.get(`${this.url}detalle_constancia.php?usrsice=${usrsice}`);
+  }
+
   getProgramasActivos() {
     return this.http.get(`${this.url}programas_vigentes.php`);
   }
 
   getPeriodos() {
     return this.http.get(`${this.url}periodos.php`);
+  }
+
+  getProcesosCargaCalificaciones() {
+    return this.http.get(`${this.url}procesos_carga_calificaciones.php`);
   }
 
   getPeriodosCalificaciones() {
@@ -182,8 +242,28 @@ getReincorporacion() {
     return this.http.get(`${this.url}resumen_cupos_dace.php?pnf=${carreraSeleccionada}&periodo=${periodoSeleccionado}`);
   }
 
+  getOfertaAcademicaDCE(carreraSeleccionada: string, periodoSeleccionado:string): Observable<any>{
+    return this.http.get(`${this.url}resumen_cupos_dce.php?pnf=${carreraSeleccionada}&periodo=${periodoSeleccionado}`);
+  }
+
   getDetailActa(actaId: any): Observable<any>{
     return this.http.get(`${this.url}detalle_acta.php?acta=${actaId}`);
+  }
+
+  getDetailActaCarga(actaId: any): Observable<any>{
+    return this.http.get(`${this.url}detalle_acta_carga.php?acta=${actaId}`);
+  }
+
+  getDetailActaCargada(actaId: any): Observable<any>{
+    return this.http.get(`${this.url}detalle_acta_cargada.php?acta=${actaId}`);
+  }
+
+  getUCInscripcion(carnet: string, pnf: string, trayecto: string): Observable<any>{
+    return this.http.get(`${this.url}obtenerTrayectosPorPlanYTrayectoinscripcion.php?carnet=${carnet}&pnf=${pnf}&trayecto=${trayecto}`);
+  }
+
+  getDetailActaEdit(actaId: any): Observable<any>{
+    return this.http.get(`${this.url}detalle_acta_edit.php?acta=${actaId}`);
   }
 
   getPeriodoOfPnfSeleccionado(carreraSeleccionada: string): Observable<any>{
@@ -194,12 +274,49 @@ getReincorporacion() {
     return this.http.get(`${this.url}tipo_seccion.php`);
   }
 
+  getAllDocentes(): Observable<Docente[]> {
+    return this.http.get<Docente[]>(`${this.url}allDocentes.php`);
+  }
+
   createSeccion(datospersona : any): Observable<any>{
     return this.http.post(`${this.url}crearseccion.php`, JSON.stringify(datospersona))
   }
 
+  modSeccion(datospersona : any): Observable<any>{
+    return this.http.post(`${this.url}modseccion.php`, JSON.stringify(datospersona))
+  }
+
   findPersona(dato: any){
     return this.http.post(`${this.url}findpersona.php`, JSON.stringify(dato));
+  }
+
+  findPersonaModify(dato: any){
+    return this.http.post(`${this.url}findpersonamodify.php`, JSON.stringify(dato));
+  }
+
+  findUcModify(dato: any){
+    return this.http.post(`${this.url}finducmodify.php`, JSON.stringify(dato));
+  }
+
+  findPersonaRdi(dato: any){
+    return this.http.post(`${this.url}findpersonrdi.php`, JSON.stringify(dato));
+  }
+
+  findPersonaExpediente(dato: any){
+    return this.http.post(`${this.url}findpersonaexp.php`, JSON.stringify(dato));
+  }
+
+  findPersonaInscripcion(dato: any){
+    return this.http.post(`${this.url}findpersonainscripcion.php`, JSON.stringify(dato));
+  }
+
+
+  revisarExpediente(dato: any){
+    return this.http.post(`${this.url}revisar_expediente.php`, JSON.stringify(dato));
+  }
+
+  actualizarEstatusExpediente(dato: any){
+    return this.http.post(`${this.url}actualizar_expediente.php`, JSON.stringify(dato));
   }
 
   findPersonaReincorporacion(dato: any): Observable<any>{
@@ -208,6 +325,18 @@ getReincorporacion() {
 
   pushNotify(identificacion: any): Observable<any>{
     return this.http.post(`${this.url}enviacorreo.php`, JSON.stringify(identificacion))
+  }
+
+  generaOtp(datos: any): Observable<any>{
+    return this.http.post(`${this.url}generaotp.php`, JSON.stringify(datos))
+  }
+
+  validarOTP(datos: any): Observable<any>{
+    return this.http.post(`${this.url}validaotp.php`, JSON.stringify(datos))
+  }
+
+  validarOTP2(datos: any): Observable<any>{
+    return this.http.post(`${this.url}validaotp2.php`, JSON.stringify(datos))
   }
 
   crearPlantel(datosplantel : any): Observable<any>{
@@ -255,6 +384,10 @@ getReincorporacion() {
     return this.http.get(`${this.url}obtenerPlan.php?id=${id}`)
   }
 
+  obtenerSeccionesPeriodo(codigoUC: string, periodo: string): Observable<any> {
+    return this.http.get(`${this.url}obtenerSeccionesPeriodo.php?uc=${codigoUC}&periodo=${periodo}`)
+  }
+
   obtenerTrayectosPorCodigoPlan(codigoPlan: string): Observable<any> {
     return this.http.get(`${this.url}obtenerTrayectosPorPlan.php?id=${codigoPlan}`)
   }
@@ -263,16 +396,37 @@ getReincorporacion() {
     return this.http.post<any>(`${this.url}crearUnidadCurricular.php`, JSON.stringify(datosUnidadCurricular));
   }
 
-  obtenerUnidadesCurriculares(planSeleccionado: string, trayectoNombre: string, semestreNumero?: number | null): Observable<any> {
+  obtenerUnidadesCurriculares(planSeleccionado: string, trayectoNombre: string): Observable<any> {
     let url = `${this.url}obtenerUC.php?plan=${planSeleccionado}&trayecto=${trayectoNombre}`;
-    if (semestreNumero !== null && semestreNumero !== undefined) {
-        url += `&semestre=${semestreNumero}`;
-    }
     return this.http.get(url);
+}
+
+obtenerUnidadesCurricularesGestionCupos(planSeleccionado: string, trayectoNombre: string, periodo: string): Observable<any> {
+  let url = `${this.url}obtenerUCGestionCupos.php?plan=${planSeleccionado}&trayecto=${trayectoNombre}&periodo=${periodo}`;
+  return this.http.get(url);
+}
+
+obtenerUnidadesCurricularesInscripcion(planSeleccionado: string, carnet: string, trayectoNombre: string): Observable<any> {
+  let url = `${this.url}obtenerUCInscripcion.php?plan=${planSeleccionado}&carnet=${carnet}&trayecto=${trayectoNombre}`;
+  return this.http.get(url);
+}
+
+inscribirEstudiante(datos: { inscripciones: any[] }) {
+  return this.http.post(`${this.url}inscribirEstudiante.php`, JSON.stringify(datos) ); // Ajusta la ruta según tu backend
+}
+
+obtenerUnidadesCurricularesSemestre(planSeleccionado: string, trayectoNombre: string, semestreNumero: number): Observable<any> {
+  let url = `${this.url}obtenerUC.php?plan=${planSeleccionado}&trayecto=${trayectoNombre}&semestre=${semestreNumero}`;
+  return this.http.get(url);
 }
 
 obtenerUnidadesCurricularesMencion(planSeleccionado: string, trayectoNombre: string, mencion: string): Observable<any> {
   let url = `${this.url}obtenerUCMencion.php?plan=${planSeleccionado}&trayecto=${trayectoNombre}&mencion=${mencion}`;
+  return this.http.get(url);
+}
+
+obtenerUnidadesCurricularesMencionGestionCupos(planSeleccionado: string, trayectoNombre: string, mencion: string, periodo: string): Observable<any> {
+  let url = `${this.url}obtenerUCMencionGestionCupos.php?plan=${planSeleccionado}&trayecto=${trayectoNombre}&mencion=${mencion}&periodo=${periodo}`;
   return this.http.get(url);
 }
 
@@ -292,7 +446,7 @@ findPersonaCalificaciones(dato: any){
   return this.http.post(`${this.url}findpersonaCalificaciones.php`, JSON.stringify(dato));
 }
 
-enviarCalificaciones(calificacionesParaEnviar: any){
+enviarCalificaciones(calificacionesParaEnviar: any): Observable<any>{
   return this.http.post(`${this.url}cargaCalificacionesContingenciaGrado.php`, JSON.stringify(calificacionesParaEnviar));
 }
 
@@ -302,12 +456,50 @@ buscarRecordAcademico(carnet: string) {
   return this.http.post(`${this.url}buscarRecord.php`, JSON.stringify(postData));
 }
 
-buscarResumenAcademico(carnet: string, plan: string) {
+buscarResumenAcademico(carnet: string, plan: string): Observable<any> {
   // Asegúrate de que el objeto enviado tenga la estructura correcta
   // Ahora incluye tanto el carnet como el plan
   const postData = { carnet: carnet, plan: plan };
 
   return this.http.post(`${this.url}buscarResumen.php`, JSON.stringify(postData));
 }
+
+  notificarInscripcionCompletada(carnet: string) {
+    this.inscripcionCompletadaSource.next(carnet);
+  }
+
+  actualizarDatos(dato: any){
+    return this.http.post(`${this.url}actualizardatos.php`, JSON.stringify(dato));
+  }
+
+  
+  actualizarDatosUc(dato: any){
+    return this.http.post(`${this.url}actualizardatosuc.php`, JSON.stringify(dato));
+  }
+
+  verificarEmailExist(email: string): Observable<any> {
+    return this.http.post(`${this.url}veremailexist.php`, { email });
+  }
+
+  actualizarDatosEstudianteRDI(dato: any): Observable<any> {
+    return this.http.post(`${this.url}actrevrdi.php`, JSON.stringify(dato));
+  }
+
+  uploadCalificacionesDocente(dato: any): Observable<any> {
+    return this.http.post(`${this.url}uploadcalificacionesdocente.php`, JSON.stringify(dato));
+}
+
+findDatosAcademicosDash(dato: any): Observable<any> {
+  return this.http.post(`${this.url}finddatosacademicosdash.php`, JSON.stringify(dato));
+}
+
+findDatosDocenteDash(dato: any): Observable<any> {
+  return this.http.post(`${this.url}finddatosdocentedash.php`, JSON.stringify(dato));
+}
+
+cargaProcesoCalificaciones(dato: any): Observable<any> {
+  return this.http.post(`${this.url}crear_proceso_calificaciones.php`, JSON.stringify(dato));
+}
+
 
 }

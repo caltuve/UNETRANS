@@ -5,3 +5,33 @@
     }
   }
 }
+
+
+.card-container c-card {
+  flex: 1 1 300px; /* Ajusta '300px' según el tamaño mínimo que desees para tus tarjetas */
+  margin: 10px; /* Espaciado entre tarjetas */
+}
+
+.flex-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between; /* Ajusta según necesidades */
+}
+
+.custom-card-header {
+  background-color: #003E85;
+  color: #fff; /* Asegúrate de que el texto sea legible sobre el fondo oscuro */
+}
+
+.icon-estatus {
+  fill: #fff; /* Cambia el color de los iconos si es necesario */
+}
+
+
+.curso-detalle {
+  margin-bottom: 10px; /* Espacio antes de los botones de acción */
+}
+
+.curso-acciones {
+  text-align: right; /* Alinea los botones a la derecha para una mejor visualización */
+}

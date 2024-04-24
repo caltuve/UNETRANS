@@ -1,0 +1,162 @@
+<c-col xs="12">
+  <c-card class="mb-4">
+      <c-card-header>
+          <strong>Gestión Docente</strong> &nbsp; <small>Módulo para gestión del personal docente adscrito al departamento</small>
+      </c-card-header>
+      <c-card-body>
+        <c-alert color="info">
+          <strong>Atención Jefe de Departamento:</strong><br>
+          Este módulo actualmente aún está en desarrollo, cualquier solicitud de cambio en datos o adición de algún docente favor escribir al correo: soportesice@unetrans.edu.ve.<br>
+          Estamos trabajando arduamente para completarlo y ponerlo a su disposición lo antes posible.
+        </c-alert>
+          <div *ngIf="hayResultadosDocente">
+              <table mat-table [dataSource]="dataSource" [hover]="true" [responsive]="true" [striped]="true"
+                  align="middle" cTable class="mb-0 border" cTable>
+                  <ng-container matColumnDef="estatus">
+                    <th class="estatus-ancho" mat-header-cell *matHeaderCellDef> Estatus </th>
+                    <td class="estatus-ancho" mat-cell *matCellDef="let row">
+                        <div class="container" cTooltip="{{row.desc_estatus}}" cTooltipPlacement="right">
+                            <svg *ngIf="row.estatus == 'OKSICE'" cIcon width="30" height="30" name="cilToggleOn" style="color: #2EB85C;" ></svg>
+                            <svg *ngIf="row.estatus == 'NOKSICE'" cIcon width="30" height="30" name="cilToggleOff" style="color: #e55353;" ></svg>
+                            <svg *ngIf="row.estatus == 'OPSUAWAIT'" cIcon width="30" height="30" name="cilClock" style="color: #f9b115;"></svg>
+                            <svg *ngIf="row.estatus == 'CONVENIOAWAIT'" cIcon width="30" height="30" name="cilClock" style="color: #f9b115;"></svg>
+                          </div>
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="cedula">
+                    <th class="cedula-ancho" mat-header-cell *matHeaderCellDef > C.I.</th>
+                    <td class="cedula-ancho" mat-cell *matCellDef="let row"> 
+                      <div *ngIf="row.nac== 'V' || row.nac== 'E' || row.nac== 'P'" class="flex-goew-1">{{row.nac}}-{{row.ced_pas}}</div>
+                      
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="nombre_persona">
+                    <th mat-header-cell *matHeaderCellDef  > Nombre completo </th>
+                    <td mat-cell *matCellDef="let row"> {{row.nombre_completo}}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="gestion">
+                      <th mat-header-cell *matHeaderCellDef> Gestionar </th>
+                      <td mat-cell *matCellDef="let calendar">
+                          <div>
+                              <button cButton class="btn-primary" [disabled]="1 === 1">
+                                  <svg cIcon name="cil-pencil"></svg></button>
+                          </div>
+                      </td>
+                  </ng-container>
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+              </table>
+
+          </div>
+          <div *ngIf="sinResultadosDocente">
+              <c-alert color="danger" class="d-flex align-items-center">
+                  <svg cIcon class="me-2" width="24" height="24" name="cilXCircle"></svg>
+                  <div>No existen docentes asignados al departamento </div>
+              </c-alert>
+          </div>
+          <mat-paginator [hidePageSize]="true" [pageSize]="10" #paginatorProcesos></mat-paginator>
+      </c-card-body>
+  </c-card>
+</c-col>
+
+<!-- Modal -->
+<div bsModal #gestionNewAspConvenio="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title" >Cargar nuevo docente: </h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <c-alert color="info">
+                    <strong>INFORMACIÓN: </strong> Estimado/a Jefe, por favor complete todos los campos referidos a Nombres y Apellidos (si aplica) para evitar errores futuros en el sistema.
+              </c-alert>
+            <form #f="ngForm" [formGroup]="firstFormGroup" >
+                <div class="row">
+                    <div class="col l6 m12 s12"> 
+                      <label class="label-custom">Documento de identidad:</label>
+                      <div class="row">
+                        <div class="col s12">
+                          <mat-form-field>
+                            <mat-label>Tipo de documento</mat-label>
+                            <mat-select formControlName="nac" [(ngModel)]="nac" name="nac" formControlName="nac">
+                              <mat-option [value]="item.codelemento" *ngFor="let item of nacs">{{item.descripcion}}</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="firstFormGroup.get('nac')?.invalid && firstFormGroup.get('nac')?.touched">
+                                Tipo de documento es requerido
+                              </mat-error>
+                          </mat-form-field>
+                        </div>
+                        <div class="col s12">
+                          <mat-form-field appearance="fill">
+                            <mat-label>Nro de documento</mat-label>
+                            <input [(ngModel)]="cedula" [disabled]="!nac" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" type="number" min="1" max="100000000" matInput formControlName="cedula"
+                              name="cedula" required>
+                              <mat-error *ngIf="firstFormGroup.errors?.['documentoInvalido']">
+                                El número de documento no es válido para la nacionalidad seleccionada.
+                              </mat-error>
+                              <mat-error *ngIf="firstFormGroup.get('cedula')?.invalid && firstFormGroup.get('cedula')?.touched">
+                                Nro de documento es requerido
+                              </mat-error> 
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      
+                    </div>
+                  </div>
+    
+                  <div class="row">
+                    <div class="col l12 m12 s12">
+                      <label>Nombres:</label>
+                      <div class="row mar-b-0">
+                        <div class="col s12">
+                          <mat-form-field>
+                            <mat-label>Primer:</mat-label>
+                            <input style='text-transform:uppercase' [(ngModel)]="primer_nombre" matInput formControlName="primer_nombre" name="primer_nombre">
+                            <mat-error *ngIf="firstFormGroup.get('primer_nombre')?.invalid && firstFormGroup.get('primer_nombre')?.touched">
+                                Primer nombre es requerido
+                              </mat-error> 
+                        </mat-form-field>
+                        </div>
+                        <div class="col s12">
+                          <mat-form-field>
+                            <mat-label>Segundo:</mat-label>
+                            <input style='text-transform:uppercase' [(ngModel)]="segundo_nombre" matInput formControlName="segundo_nombre" name="segundo_nombre">
+                          </mat-form-field>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col l12 m12 s12">
+                      <label>Apellidos:</label>
+                      <div class="row mar-b-0">
+                        <div class="col s12">
+                          <mat-form-field>
+                            <mat-label>Primer</mat-label>
+                            <input style='text-transform:uppercase' [(ngModel)]="primer_apellido" matInput formControlName="primer_apellido" name="primer_apellido">
+                            <mat-error *ngIf="firstFormGroup.get('primer_apellido')?.invalid && firstFormGroup.get('primer_apellido')?.touched">
+                                Primer apellido es requerido
+                              </mat-error>
+                        </mat-form-field>
+                        </div>
+                        <div class="col s12">
+                          <mat-form-field>
+                            <mat-label>Segundo</mat-label>
+                            <input style='text-transform:uppercase' [(ngModel)]="segundo_apellido" matInput formControlName="segundo_apellido" name="segundo_apellido">
+                          </mat-form-field>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+            </form>
+            
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="gestionNewAspConvenio.hide()">Cerrar</button>
+          <button type="button" class="btn btn-primary" [disabled]="!firstFormGroup.valid" (click)="guardar()"><svg cIcon class="me-2" name="cil-cloud-upload"></svg>Cargar docente</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" size="default" type="ball-atom">
+		<p style="color: white" align="center">Por favor espere... <br>¡Validando información!</p>
+	  </ngx-spinner>

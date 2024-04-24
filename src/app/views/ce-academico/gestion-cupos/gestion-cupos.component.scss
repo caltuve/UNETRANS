@@ -9,3 +9,12 @@
   .orden-ancho {
     width: 2%;
   }
+/* Estilo para centrar el contenido de las celdas y encabezados */
+/* Estilos para centrar el contenido de la columna "Inscritos" */
+.center-inscritos {
+  text-align: center;
+  //display: flex;
+  justify-content: center;
+  align-items: center;
+}
+

@@ -1,0 +1,110 @@
+<!-- <c-alert color="info">
+  <strong>Proceso no habilitado</strong><br>
+  Actualmente el proceso de carga de calificaciones no está habilitado, por favor confirme con el Calendario Académico o el Jefe de Departamento para poder conocer las fechas de este proceso.
+</c-alert> -->
+<c-col xs="12">
+  <c-card class="mb-4">
+    <c-card-header>
+      <strong>Cargar calificaciones</strong> &nbsp; <small>Módulo para la carga de calificaciones de estudiantes</small>
+    </c-card-header>
+    <c-card-body>
+      <div *ngIf="sinResultadosDocente && !cargandoDatos">
+        <c-alert color="info">
+          <strong>{{ errorMessage?.titulo }}</strong><br>{{ errorMessage?.mensaje }}
+        </c-alert>
+      </div>
+      <div *ngIf="hayResultadosDocente && !cargandoDatos">
+        <c-alert color="info">
+          <strong>Instrucciones para cargar y gestionar calificaciones:</strong>
+          <ul>
+            <li><strong>Gestionar Calificaciones:</strong> Haga clic en el ícono de lápiz (<svg cIcon width="16" height="16" name="cilPencil" style="color: black;"></svg>) al lado de cada unidad curricular para comenzar a cargar las calificaciones.</li>
+            <li><strong>Revisar Estatus del Acta:</strong>
+              <ul>
+                <li><svg cIcon width="16" height="16" name="cilCheck" style="color: green;"></svg> Un ícono verde indica que las calificaciones están completamente cargadas y el acta está lista para descargar.</li>
+                <li><svg cIcon width="16" height="16" name="cilCloudUpload" style="color: orange;"></svg> Un ícono amarillo señala que las calificaciones aún están pendientes de cargar.</li>
+              </ul>
+            </li>
+            <li>
+              <strong>Descargar e Imprimir el Acta:</strong> Debe descargar el acta presionando el botón con el ícono de nube 
+              (<svg cIcon width="16" height="16" name="cilCloudDownload" style="color: blue;"></svg>). Es obligatorio imprimir el acta por triplicado:
+              <ul>
+                <li>Original: Para Control de Estudios.</li>
+                <li>Copia 1: Para el Departamento o Escuela.</li>
+                <li>Copia 2: Para el Docente.</li>
+              </ul>
+              Asegúrese de seguir este procedimiento para cumplir con los requisitos administrativos y documentales de la institución.
+            </li>
+          </ul>
+          <p>En caso de presentar inconvenientes, por favor notifíquelo al correo: <a href="mailto:soportesice@unetrans.edu.ve">soportesice@unetrans.edu.ve</a> indicando el problema, su nombre completo y el número de acta involucrado.</p>
+          <strong>¡Éxitos en el proceso!</strong>
+        </c-alert>
+        
+        
+        <table mat-table [dataSource]="dataSource" [hover]="true" [responsive]="true" [striped]="true" align="middle"
+          cTable class="mb-0 border" cTable>
+          <ng-container matColumnDef="pnf">
+            <th mat-header-cell *matHeaderCellDef> PNF </th>
+            <td mat-cell *matCellDef="let row"> {{row.pnf}}</td>
+          </ng-container>
+          <ng-container matColumnDef="periodo">
+            <th mat-header-cell *matHeaderCellDef> Periodo </th>
+            <td mat-cell *matCellDef="let row"> {{row.periodo}}</td>
+          </ng-container>
+          <ng-container matColumnDef="acta">
+            <th mat-header-cell *matHeaderCellDef class="center-inscritos"> Acta </th>
+            <td mat-cell *matCellDef="let row" class="center-inscritos"> {{row.acta}}</td>
+          </ng-container>
+          <ng-container matColumnDef="seccion">
+            <th mat-header-cell *matHeaderCellDef class="center-inscritos"> Secc. </th>
+            <td mat-cell *matCellDef="let row" class="center-inscritos"> {{row.seccion}}</td>
+          </ng-container>
+          <ng-container matColumnDef="nombre_uc">
+            <th mat-header-cell *matHeaderCellDef> Unidad Curricular </th>
+            <td mat-cell *matCellDef="let row"> {{row.codigo_uc}} - {{row.nombre_uc}}</td>
+          </ng-container>
+          <ng-container matColumnDef="tipo_sec">
+            <th mat-header-cell *matHeaderCellDef> Tipo Sección </th>
+            <td mat-cell *matCellDef="let row"> {{row.desc_tipo_sec}}</td>
+          </ng-container>
+          <ng-container matColumnDef="inscritos">
+            <th mat-header-cell *matHeaderCellDef class="center-inscritos"> Inscritos </th>
+            <td mat-cell *matCellDef="let row" class="center-inscritos"> {{row.inscritos}}</td>
+          </ng-container>
+          <ng-container matColumnDef="estatus">
+            <th mat-header-cell *matHeaderCellDef class="center-inscritos">Estatus</th>
+            <td mat-cell *matCellDef="let row" class="center-inscritos">
+              <div cTooltip="{{row.desc_estatus}}" cTooltipPlacement="top">
+                <svg *ngIf="row.desc_estatus === 'Por cargar'" cIcon width="30" height="30" name="cilCloudUpload" style="color: orange;" ></svg>
+                <svg *ngIf="row.desc_estatus === 'Cargada'" cIcon width="30" height="30" name="cilCheck" style="color: green;" ></svg>
+              </div>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="gestion">
+            <th mat-header-cell *matHeaderCellDef class="center-inscritos"> Acciones </th>
+            <td mat-cell *matCellDef="let row" class="center-inscritos">
+              <div>
+                <button *ngIf="row.estatus === 0" cButton class="btn-primary" data-toggle="modal"
+                (click)="irAGestionActaCalificaciones(row.acta)" cTooltip="Cargar calificaciones" cTooltipPlacement="top"
+                  [disabled]="row.inscritos === 0">
+                  <svg cIcon name="cilPencil"></svg>
+                </button>
+
+                <button *ngIf="row.estatus === 1" cButton class="btn-primary" data-toggle="modal"
+                  (click)="descargarActa(row.acta)" cTooltip="Descargar acta" cTooltipPlacement="top"
+                  [disabled]="row.inscritos === 0">
+                  <svg cIcon name="cilCloudDownload"></svg>
+                </button>
+              </div>
+            </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+        <mat-paginator #paginatorProcesos [pageSize]="10" [hidePageSize]="true"></mat-paginator>
+      </div>
+    </c-card-body>
+  </c-card>
+</c-col> 
+<ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" size="default" type="ball-atom">
+  <p style="color: white" align="center">Por favor espere... <br>¡Validando información!</p>
+</ngx-spinner>

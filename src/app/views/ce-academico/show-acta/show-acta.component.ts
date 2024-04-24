@@ -20,6 +20,7 @@ export class ShowActaComponent {
     if (this.detalle_acta && this.detalle_acta.length > 0) {
       const primerDetalle = this.detalle_acta[0];
       const numeroActa = primerDetalle[0].acta || 'Acta';
+      const numeroSeccion = primerDetalle[0].seccion || 'Seccion';
   
       const encabezado = [
         { A: 'Acta', B: primerDetalle[0].acta || '' },
@@ -42,7 +43,7 @@ export class ShowActaComponent {
       const wb: XLSX.WorkBook = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, wsEncabezado, 'Estudiantes');
   
-      const nombreArchivo = `Detalle_${numeroActa}.xlsx`;
+      const nombreArchivo = `Acta_${numeroActa}_Seccion_${numeroSeccion}.xlsx`;
       XLSX.writeFile(wb, nombreArchivo);
     }
   }

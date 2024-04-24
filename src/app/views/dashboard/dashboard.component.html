@@ -1,23 +1,288 @@
 <c-row>
   <c-col lg="12">
     <c-card class="mb-3">
-      <c-card-header> Bienvenido al Sistema Integral de Control de Estudios</c-card-header>
+      <c-card-header>Bienvenido al Sistema Integral de Control de Estudios de la UNETRANS</c-card-header>
       <c-card-body>
-        <h4 cCardTitle>Hola! {{usr.nombre_corto}}</h4>
-        <p cCardText>
-          Del lado izquierdo encontrarás el menú de opciones dependiendo de tu perfil de usuario, en caso que creas exista algún error con tus datos de identificación 
-          por favor notifícalo al correo: soportesice@unetrans.edu.ve
-        </p>
-        <h4 cCardTitle>Datos de identificación:</h4>
-        <p cCardText>
-          <strong>Cédula: </strong> {{usr.nac}}-{{usr.cedula}} <strong>Nombre completo:</strong> {{usr.nombre_completo}} 
-          <br>
-          <strong>Fecha de nacimiento:</strong> {{usr.fecnac}} <strong>Correo:</strong> {{usr.email}}
-        </p>
+        <c-row>
+          <c-col lg="12"> 
+           
+
+            <div *ngIf="tieneRol('006')" >
+              <h2>Información de mis cursos</h2>
+              <div *ngIf="cursosDocente.length > 0; else noDataTemplate">
+                <div class="d-flex flex-row flex-wrap">
+                  <c-col lg="6" md="6" sm="12" *ngFor="let curso of cursosDocente">
+                    <c-card class="mb-3">
+                      <c-card-header class="custom-card-header">
+                        Programa: <strong>{{ curso.pnf }}</strong>
+                      </c-card-header>
+                      <c-card-body>
+                        <div class="curso-detalle">
+                          <p cCardText><strong>Periodo:</strong> {{ curso.periodo }}</p>
+                          <p cCardText><strong>Cantidad de actas:</strong> {{ curso.cantidad }}</p>
+                          <p cCardText><strong>Estudiantes inscritos:</strong> {{ curso.inscritos }}</p>
+                        </div>
+                        <div class="curso-acciones">
+                          <button class="btn btn-primary btn-sm" routerLink="/doc-academico/mis-cursos">Ver detalles</button>
+                        </div>
+                      </c-card-body>
+                    </c-card>
+                  </c-col>
+                </div>
+              </div>
+              <ng-template #noDataTemplate>
+                <div class="alert alert-info" role="alert">
+                  Actualmente no tienes cursos asignados.
+                </div>
+              </ng-template>
+            </div>
+            
+
+            <div *ngIf="tieneRol('007')" class="mis-programas">
+              <h2>Mis Programas</h2>
+              <c-alert *ngIf="tieneRevisionesPendientes(estudiante.matriculas)"  color="info" fade>
+                Estimad{{ estudiante.genero_mensaje }} <strong>{{ estudiante.nombre }}</strong>, tras el reciente proceso de migración de datos, es posible que algunos de los datos mostrados no reflejen con exactitud su situación académica actual. <br> 
+                Sin embargo, al registrarte en el SICE se ha iniciado de forma automática un procedimiento de revisión 📑 para validar y corregir cualquier discrepancia detectada. <br>
+                Te solicitamos paciencia mientras procesamos un volumen considerable de solicitudes.
+              </c-alert>
+
+              <div class="d-flex flex-row flex-wrap">
+                <c-col lg="6" md="6" sm="12" *ngFor="let matricula of estudiante.matriculas">
+                  <c-card class="mb-3">
+                    <c-card-header class="custom-card-header">
+                      <strong>{{ matricula.programa }}</strong> 
+                    </c-card-header>
+                    <c-card-body>
+                      <h4 cCardTitle>
+                        Estatus:
+                        <span [ngClass]="{
+                          'text-success': matricula.estatus === 'Activo',
+                          'text-warning': matricula.estatus === 'Inactivo',
+                          'text-primary': matricula.estatus === 'Egresado',
+                          'text-danger': matricula.estatus === 'Retirado'
+                        }">{{ matricula.estatus }} <svg cIcon width="20" height="20" name="{{ getIconName(matricula.estatus) }}" class="icon-estatus"></svg></span>
+                      </h4>
+                      <div [ngSwitch]="matricula.estatus">
+                        <!-- Ajustado para mostrar grados uno debajo del otro con icono -->
+                        <ng-container *ngFor="let grado of matricula.grados">
+                          <p cCardText> 
+                            <strong>{{ grado.nombre }}  </strong>
+                            <svg cIcon width="20" height="20"  name="{{ getIconNameGrade(+grado.estatus) }}" class="icon-estatus"></svg>
+                             - {{ grado.desc_estatus}}
+                          </p>
+                        </ng-container>
+                      </div>
+                      <br>
+                      <!-- Mensaje de alerta si algún grado es 'Sin definir' -->
+                      <div *ngIf="tieneEstadoSinDefinir(estudiante.matriculas)" class="alert alert-info" role="alert">
+                        Se ha detectado una omisión en la especificación de la mención durante el proceso de migración de datos. Se ha iniciado automáticamente una solicitud de revisión para corregir esta información a la brevedad.
+                      </div>
+                    </c-card-body>
+                  </c-card>
+                </c-col>
+              </div>
+            </div>
+            
+
+            <!-- <div >
+              <h2>Panel de Jefe de Departamento</h2>
+              <div class="d-flex flex-row flex-wrap">
+                <c-col lg="4" md="6" sm="12" >
+                  <c-card class="mb-3">
+                    <c-card-header class="custom-card-header">
+                      Gestión de Docentes
+                    </c-card-header>
+                    <c-card-body>
+                      <p cCardText>Nuevo personal: 3 | Bajas: 1 este mes</p>
+                      <button class="btn btn-primary">Ver detalles</button>
+                    </c-card-body>
+                  </c-card>
+                </c-col>
+              </div>
+
+            </div>
+
+
+            <div >
+              <h2>Panel de Docente</h2>
+              <div class="d-flex flex-row flex-wrap">
+                <c-col lg="4" md="6" sm="12" >
+                  <c-card class="mb-3">
+                    <c-card-header class="custom-card-header">
+                      Mis Cursos
+                    </c-card-header>
+                    <c-card-body>
+                      <p cCardText>Cursos activos: 4 | Próximo examen: Matemáticas II - 15/10/2024</p>
+                      <button class="btn btn-primary">Ver horario completo</button>
+                    </c-card-body>
+                  </c-card>
+                </c-col>
+              </div>
+            </div> -->
+            
+          </c-col>        
+        </c-row>
+        <!-- <div *ngIf="tieneRol('005')" class="card-container">
+          <c-card class="mb-12">
+            <c-card-header>Resumen Docentes</c-card-header>
+            <c-card-body>
+              <ng-container>
+                <c-row >
+                  <c-col lg="3" sm="6" xs="12">
+                    <a [routerLink]="['/dep-academico/gestion-docente']">
+                    <c-widget-stat-c
+                      [title]="'Registrados en SICE'"
+                      class="mb-4"
+                      value="0/19"
+                    >
+                      <ng-template cTemplateId="widgetIconTemplate">
+                        <svg cIcon height="36" name="cilChartPie"></svg>
+                      </ng-template>
+                      <ng-template cTemplateId="widgetProgressTemplate">
+                        <c-progress class="mt-3 mb-0" thin>
+                          <c-progress-bar [value]="100" color="primary"></c-progress-bar>
+                        </c-progress>
+                      </ng-template>
+                    </c-widget-stat-c>
+                  </a>
+                  </c-col>
+                  <c-col lg="3" sm="6" xs="12">
+                    <c-widget-stat-c
+                      [title]="'otra opción'"
+                      class="mb-4"
+                      value="0"
+                    >
+                      <ng-template cTemplateId="widgetIconTemplate">
+                        <svg cIcon height="36" name="cilSpeedometer"></svg>
+                      </ng-template>
+                      <ng-template cTemplateId="widgetProgressTemplate">
+                        <c-progress class="mt-3 mb-0" thin>
+                          <c-progress-bar [value]="100" color="danger"></c-progress-bar>
+                        </c-progress>
+                      </ng-template>
+                    </c-widget-stat-c>
+                  </c-col>
+                  <c-col lg="3" sm="6" xs="12">
+                    <a [routerLink]="['/dep-academico/gestion-cupos']">
+                      <c-widget-stat-c
+                        [title]="'Actas generadas'"
+                        class="mb-4"
+                        value="972"
+                      >
+                        <ng-template cTemplateId="widgetIconTemplate">
+                          <svg cIcon height="36" name="cilSpeech"></svg>
+                        </ng-template>
+                        <ng-template cTemplateId="widgetProgressTemplate">
+                          <c-progress class="mt-3 mb-0" thin>
+                            <c-progress-bar [value]="100" color="dark"></c-progress-bar>
+                          </c-progress>
+                        </ng-template>
+                      </c-widget-stat-c>
+                    </a>
+                  </c-col>
+                  <c-col lg="3" sm="6" xs="12">
+                    <c-widget-stat-c
+                      [title]="'Actas cargadas'"
+                      class="mb-4"
+                      value="0"
+                    >
+                      <ng-template cTemplateId="widgetIconTemplate">
+                        <svg cIcon height="36" name="cilSpeech"></svg>
+                      </ng-template>
+                      <ng-template cTemplateId="widgetProgressTemplate">
+                        <c-progress class="mt-3 mb-0" thin>
+                          <c-progress-bar [value]="100" color="dark"></c-progress-bar>
+                        </c-progress>
+                      </ng-template>
+                    </c-widget-stat-c>
+                  </c-col>
+                </c-row>
+              </ng-container>
+            </c-card-body>
+          </c-card> 
+           <c-card class="mb-12">
+            <c-card-header>Resumen Estudiantes</c-card-header>
+            <c-card-body>
+              <ng-container>
+                <c-row >
+                  <c-col lg="3" sm="6" xs="12">
+                    <c-widget-stat-c
+                      [title]="'Inscritos'"
+                      class="mb-4"
+                      value="15%"
+                    >
+                      <ng-template cTemplateId="widgetIconTemplate">
+                        <svg cIcon height="36" name="cilChartPie"></svg>
+                      </ng-template>
+                      <ng-template cTemplateId="widgetProgressTemplate">
+                        <c-progress class="mt-3 mb-0" thin>
+                          <c-progress-bar [value]="100" color="primary"></c-progress-bar>
+                        </c-progress>
+                      </ng-template>
+                    </c-widget-stat-c>
+                  </c-col>
+                  <c-col lg="3" sm="6" xs="12">
+                    <c-widget-stat-c
+                      [title]="'Retirados'"
+                      class="mb-4"
+                      value="5:34:11"
+                    >
+                      <ng-template cTemplateId="widgetIconTemplate">
+                        <svg cIcon height="36" name="cilSpeedometer"></svg>
+                      </ng-template>
+                      <ng-template cTemplateId="widgetProgressTemplate">
+                        <c-progress class="mt-3 mb-0" thin>
+                          <c-progress-bar [value]="100" color="danger"></c-progress-bar>
+                        </c-progress>
+                      </ng-template>
+                    </c-widget-stat-c>
+                  </c-col>
+                  <c-col lg="3" sm="6" xs="12">
+                    <c-widget-stat-c
+                      [title]="'Comments'"
+                      class="mb-4"
+                      value="972"
+                    >
+                      <ng-template cTemplateId="widgetIconTemplate">
+                        <svg cIcon height="36" name="cilSpeech"></svg>
+                      </ng-template>
+                      <ng-template cTemplateId="widgetProgressTemplate">
+                        <c-progress class="mt-3 mb-0" thin>
+                          <c-progress-bar [value]="100" color="dark"></c-progress-bar>
+                        </c-progress>
+                      </ng-template>
+                    </c-widget-stat-c>
+                  </c-col>
+                  <c-col lg="3" sm="6" xs="12">
+                    <c-widget-stat-c
+                      [title]="'Reincorporaciones'"
+                      class="mb-4"
+                      value="3"
+                    >
+                      <ng-template cTemplateId="widgetIconTemplate">
+                        <svg cIcon height="36" name="cilSpeech"></svg>
+                      </ng-template>
+                      <ng-template cTemplateId="widgetProgressTemplate">
+                        <c-progress class="mt-3 mb-0" thin>
+                          <c-progress-bar [value]="100" color="dark"></c-progress-bar>
+                        </c-progress>
+                      </ng-template>
+                    </c-widget-stat-c>
+                  </c-col>
+                </c-row>
+              </ng-container>
+            </c-card-body>
+          </c-card> 
+        </div> -->
       </c-card-body>
     </c-card>
   </c-col>
 </c-row>
+<!-- Contenedor para el rol 001 -->
+<!-- <div *ngIf="tieneRol('001')">
+   Elementos del dashboard para el rol 001 
+</div> -->
+
 <!-- <app-widgets-dropdown></app-widgets-dropdown>
 <c-card class="mb-4">
   <c-card-body>
@@ -464,8 +729,8 @@
       </c-card-body>
     </c-card>
   </c-col>
-</c-row>
+</c-row>-->
 <ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" size="default" type="ball-atom">
   <p style="color: white" align="center">Por favor espere... <br>¡Validando información!</p>
   </ngx-spinner>
- -->
+ 

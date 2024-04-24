@@ -1,0 +1,219 @@
+<c-col xs="12">
+    <c-card class="mb-4">
+        <c-card-header>
+            <strong>Gestión del plan de estudios</strong> &nbsp; <small>Módulo para gestión de planes de estudio</small>
+        </c-card-header>
+        <c-card-body>
+            <div *ngIf="hayResultadosPlanes" >
+                <div class="instrucciones-tabla">
+                    <p>
+                      <svg cIcon name="cil-info" class="me-2"></svg>
+                      Por favor pulse sobre el plan para poder visualizar los trayectos/semestres asociados al programa.
+                    </p>
+                  </div>
+                <table mat-table [dataSource]="planesEstudio" [hover]="true" [responsive]="true" [striped]="true"
+                align="middle" cTable class="mb-0 border" cTable>
+            <!-- Columnas adicionales aquí -->
+            <ng-container matColumnDef="codigoPlan">
+                <th mat-header-cell *matHeaderCellDef> Código del Plan </th>
+                <td mat-cell *matCellDef="let plan">{{ plan.codigo_plan }}</td>
+            </ng-container>
+
+            <!-- Columna existente -->
+            <ng-container matColumnDef="nombrePlan">
+                <th mat-header-cell *matHeaderCellDef> Nombre del Plan </th>
+                <td mat-cell *matCellDef="let plan">{{ plan.nombre_plan }}
+                </td>
+            </ng-container>
+
+            <!-- Columna existente -->
+            <ng-container matColumnDef="estatus">
+                <th mat-header-cell *matHeaderCellDef> Estatus </th>
+                <td mat-cell *matCellDef="let plan">{{ plan.estatus }}
+                </td>
+            </ng-container>
+
+            <!-- Columna existente -->
+            <ng-container matColumnDef="vig_desde">
+                <th mat-header-cell *matHeaderCellDef> Vigente desde </th>
+                <td mat-cell *matCellDef="let plan">{{ plan.vig_desde }}
+                </td>
+            </ng-container>
+
+              <!-- Columna existente -->
+              <ng-container matColumnDef="vig_hasta">
+                <th mat-header-cell *matHeaderCellDef> Vigente hasta </th>
+                <td mat-cell *matCellDef="let plan">{{ plan.vig_hasta }}
+                </td>
+            </ng-container>
+
+            <!-- Otras columnas... -->
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let plan; columns: displayedColumns;" (click)="onFilaClic(plan.codigo_plan)"></tr>
+        </table>
+        <br>
+            </div>
+            <div *ngIf="sinResultadosPlanes">
+                <c-alert color="danger" class="d-flex align-items-center">
+                    <svg cIcon class="me-2" width="24" height="24" name="cilXCircle"></svg>
+                    <div>No existen planes cargados para el programa {{ datosPrograma[0]?.nom_pro }} de régimen {{ datosPrograma[0]?.regimen }} </div>
+                </c-alert>
+            </div>
+
+            <!-- Detalles del plan de estudios seleccionado, si se seleccionó alguno -->
+            <div *ngIf="planSeleccionado">
+                <div class="instrucciones-trayectos">
+                    <p>
+                      <svg cIcon name="cil-info" class="me-2"></svg>
+                      Por favor pulse sobre cada trayecto para ir configurando las Unidades Curriculares que corresponden a cada uno.
+                    </p>
+                  </div>
+                <mat-accordion>
+                  <!-- Iterar sobre los trayectos del plan seleccionado -->
+                  <mat-expansion-panel *ngFor="let trayecto of trayectos" (opened)="cargarUnidadesCurriculares(trayecto.nombre_trayecto)">
+                    <mat-expansion-panel-header class="expancion-header mat-expansion-panel-header ng-tns-c48-104 ng-trigger ng-trigger-expansionHeight ng-star-inserted">
+                      <mat-panel-title>
+                        {{ trayecto.nombre_trayecto }}
+                      </mat-panel-title>
+                    </mat-expansion-panel-header>
+              
+                    <!-- Mostrar los semestres para planes semestrales -->
+                    <div *ngIf="datosPrograma[0]?.regimen  === 'SEMESTRAL'">
+                      <mat-accordion>
+                        <mat-expansion-panel *ngFor="let semestre of trayecto.semestres" (opened)="cargarUnidadesCurricularesSemestral(trayecto.nombre_trayecto, semestre.numero )">
+                          <mat-expansion-panel-header class="expancion-header mat-expansion-panel-header ng-tns-c48-104 ng-trigger ng-trigger-expansionHeight ng-star-inserted">
+                            <mat-panel-title>
+                              Semestre {{ semestre.numero }}
+                            </mat-panel-title>
+                          </mat-expansion-panel-header>
+                          <!-- Contenido del semestre, como un botón para añadir unidades curriculares -->
+                          <c-alert color="info" class="d-flex align-items-center">
+                            <svg cIcon class="me-2" width="24" height="24" name="cilBellExclamation"></svg>
+                            <div>No existen unidades curriculares creadas</div>
+                        </c-alert>
+                            <div *ngIf="unidadesCurriculares.length" [hover]="true" [responsive]="true" [striped]="true"
+                            align="middle" cTable class="mb-0 border" cTable>
+                                <table mat-table [dataSource]="unidadesCurriculares">
+                                  <!-- Columnas del mat-table -->
+                                  <ng-container matColumnDef="codigo_uc">
+                                    <th mat-header-cell *matHeaderCellDef> Código UC </th>
+                                    <td mat-cell *matCellDef="let uc"> {{ uc.codigo_uc }} </td>
+                                  </ng-container>
+
+                                  <ng-container matColumnDef="nombre_uc">
+                                    <th mat-header-cell *matHeaderCellDef> Nombre UC </th>
+                                    <td mat-cell *matCellDef="let uc"> {{ uc.nombre_uc }} </td>
+                                  </ng-container>
+
+                                  <ng-container matColumnDef="creditos">
+                                    <th mat-header-cell *matHeaderCellDef> Créditos </th>
+                                    <td mat-cell *matCellDef="let uc"> {{ uc.creditos }} </td>
+                                  </ng-container>
+
+                                  <ng-container matColumnDef="es_electiva">
+                                    <th mat-header-cell *matHeaderCellDef> Electiva </th>
+                                    <td mat-cell *matCellDef="let uc"> {{ uc.es_electiva }} </td>
+                                  </ng-container>
+                                  <!-- Más columnas para nombre_uc, creditos, es_electiva... -->
+                                  <tr mat-header-row *matHeaderRowDef="['codigo_uc', 'nombre_uc', 'creditos', 'es_electiva']"></tr>
+                                  <tr mat-row *matRowDef="let row; columns: ['codigo_uc', 'nombre_uc', 'creditos', 'es_electiva'];"></tr>
+                                </table>
+                              </div>
+                        </mat-expansion-panel>
+                      </mat-accordion>
+                    </div>
+                    <!-- Botón para añadir unidades curriculares a trayectos no semestrales -->
+                    <div *ngIf="datosPrograma[0]?.regimen !== 'SEMESTRAL'">
+                      <!-- Muestra menciones si existen -->
+                      <br>
+                          <ng-container *ngIf="trayecto.menciones && trayecto.menciones.length > 0">
+                            <mat-accordion>
+                              <mat-expansion-panel *ngFor="let mencion of trayecto.menciones" (opened)="cargarUnidadesCurricularesMencion(trayecto.nombre_trayecto, mencion.nombre_mencion )">
+                                <mat-expansion-panel-header class="expancion-header mat-expansion-panel-header ng-tns-c48-104 ng-trigger ng-trigger-expansionHeight ng-star-inserted">
+                                  <mat-panel-title>
+                                    Mención: {{ mencion.nombre_mencion }}
+                                  </mat-panel-title>
+                                </mat-expansion-panel-header>
+                                  <br>
+                                
+                                <div *ngIf="unidadesCurriculares.length">
+                                  <table mat-table [dataSource]="unidadesCurriculares" [hover]="true" [responsive]="true" [striped]="true"
+                                  align="middle" cTable class="mb-0 border" cTable>
+                                      <!-- Columnas del mat-table -->
+                                      <ng-container matColumnDef="codigo_uc">
+                                        <th mat-header-cell *matHeaderCellDef> Código UC </th>
+                                        <td mat-cell *matCellDef="let uc"> {{ uc.codigo_uc }} </td>
+                                      </ng-container>
+      
+                                      <ng-container matColumnDef="nombre_uc">
+                                        <th mat-header-cell *matHeaderCellDef> Nombre UC </th>
+                                        <td mat-cell *matCellDef="let uc"> {{ uc.nombre_uc }} </td>
+                                      </ng-container>
+      
+                                      <ng-container matColumnDef="creditos">
+                                        <th mat-header-cell *matHeaderCellDef> Créditos </th>
+                                        <td mat-cell *matCellDef="let uc"> {{ uc.creditos }} </td>
+                                      </ng-container>
+      
+                                      <ng-container matColumnDef="es_electiva">
+                                        <th mat-header-cell *matHeaderCellDef> Electiva </th>
+                                        <td mat-cell *matCellDef="let uc"> {{ uc.es_electiva }} </td>
+                                      </ng-container>
+                                      <!-- Más columnas para nombre_uc, creditos, es_electiva... -->
+                                      <tr mat-header-row *matHeaderRowDef="['codigo_uc', 'nombre_uc', 'creditos', 'es_electiva']"></tr>
+                                      <tr mat-row *matRowDef="let row; columns: ['codigo_uc', 'nombre_uc', 'creditos', 'es_electiva'];"></tr>
+                                    </table>
+                                </div>
+                              </mat-expansion-panel>
+                            </mat-accordion>
+                          </ng-container>
+
+                      <!-- Si no hay menciones, muestra el botón para añadir unidades curriculares al trayecto -->
+                    <ng-container *ngIf="!trayecto.menciones || trayecto.menciones.length === 0">
+                      <div *ngIf="!unidadesCurriculares.length">
+                        <c-alert color="info" class="d-flex align-items-center">
+                          <svg cIcon class="me-2" width="24" height="24" name="cilBellExclamation"></svg>
+                          <div>No existen unidades curriculares creadas</div>
+                      </c-alert>
+                      </div>
+
+                      <div *ngIf="unidadesCurriculares.length">
+                        <table mat-table [dataSource]="unidadesCurriculares" [hover]="true" [responsive]="true" [striped]="true"
+                        align="middle" cTable class="mb-0 border" cTable>
+                            <!-- Columnas del mat-table -->
+                            <ng-container matColumnDef="codigo_uc">
+                              <th mat-header-cell *matHeaderCellDef> Código UC </th>
+                              <td mat-cell *matCellDef="let uc"> {{ uc.codigo_uc }} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="nombre_uc">
+                              <th mat-header-cell *matHeaderCellDef> Nombre UC </th>
+                              <td mat-cell *matCellDef="let uc"> {{ uc.nombre_uc }} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="creditos">
+                              <th class="ancho-credito" mat-header-cell *matHeaderCellDef  class="text-center"> CR </th>
+                              <td class="ancho-credito" mat-cell *matCellDef="let uc"  class="text-right"> {{ uc.creditos }} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="es_electiva">
+                              <th mat-header-cell *matHeaderCellDef  class="text-center"> Electiva </th>
+                              <td mat-cell *matCellDef="let uc"  class="text-center"> {{ uc.es_electiva }} </td>
+                            </ng-container>
+                            <!-- Más columnas para nombre_uc, creditos, es_electiva... -->
+                            <tr mat-header-row *matHeaderRowDef="['codigo_uc', 'nombre_uc', 'creditos', 'es_electiva']"></tr>
+                            <tr mat-row *matRowDef="let row; columns: ['codigo_uc', 'nombre_uc', 'creditos', 'es_electiva'];"></tr>
+                          </table>
+                      </div>
+                    </ng-container>
+                    </div>
+                  </mat-expansion-panel>
+                </mat-accordion>
+              </div>
+        </c-card-body>
+    </c-card>
+</c-col>
+<ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" size="default" type="ball-atom">
+    <p style="color: white" align="center">Por favor espere... <br>¡Validando información!</p>
+</ngx-spinner>

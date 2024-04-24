@@ -17,7 +17,7 @@
                 Listas de valores
               </a>
             </c-nav-item>
-            <c-nav-item>
+            <!-- <c-nav-item>
                 <a [cTabContent]="tabContent1" [routerLink] [tabPaneIdx]="2" cNavLink>
                   <svg cIcon class="me-2" name="cilTask"></svg>
                   Autoridades
@@ -28,7 +28,7 @@
                   <svg cIcon class="me-2" name="cilTask"></svg>
                   Jefes de departamento
                 </a>
-              </c-nav-item>
+              </c-nav-item> -->
             <!-- <c-nav-item>
               <a [cTabContent]="tabContent1" [routerLink] [tabPaneIdx]="2" cNavLink [disabled]="tabContent1.activeTabPaneIdx < 1">
                 <svg cIcon class="me-2" name="cilCode"></svg>
@@ -129,7 +129,22 @@
   </div>
 </div>
                 </div>
-            </c-tab-pane>            
+            </c-tab-pane>
+            <c-tab-pane class="p-3 preview" role="tabpanel">
+              <div class="categorias-container">
+                <div class="categorias-list">
+                  <div *ngFor="let categoria of tipos" (click)="findDetalleTipos(categoria.codtipo)" class="categoria-item">
+                    {{ categoria.descripcion }}
+                  </div>
+                </div>
+                <div class="categoria-detalle">
+                  <div *ngFor="let detalle of elementosTipos"  class="categoria-item">
+                    {{ detalle.codelemento }} - 
+                    {{ detalle.descripcion }}
+                  </div>
+                </div>
+              </div>
+            </c-tab-pane>              
           </c-tab-content>
       </c-card-body>
     </c-card>

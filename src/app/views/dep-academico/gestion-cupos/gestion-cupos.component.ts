@@ -6,6 +6,10 @@ import {MatPaginator} from '@angular/material/paginator';
 import { NgxSpinnerService } from "ngx-spinner";
 import { NotificacionService } from './../../../notificacion.service'
 import {ModalDirective} from 'ngx-bootstrap/modal';
+import * as XLSX from 'xlsx';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+import { ShowActaComponent } from '../../ce-academico/show-acta/show-acta.component';
+import { EditActaCeComponent } from '../../ce-academico/edit-acta-ce/edit-acta-ce.component';
 
 @Component({
   selector: 'app-gestion-cupos',
@@ -55,10 +59,13 @@ export class GestionCuposComponent {
   @ViewChild('gestionNewSeccion') public gestionNewSeccion: ModalDirective;
   @ViewChild('openActa') public openActa: ModalDirective;
 
+  modalRef: BsModalRef; 
+  
   constructor(private _formBuilder: FormBuilder,
     public controlestudiosService: ControlEstudiosService,
     private notifyService : NotificacionService,
-    private SpinnerService: NgxSpinnerService,) {
+    private SpinnerService: NgxSpinnerService,
+    private modalService: BsModalService) {
       this.usr = JSON.parse(sessionStorage.getItem('currentUser')!); 
     }
 
@@ -137,10 +144,35 @@ export class GestionCuposComponent {
   openActaDetail(actaId: any) {
     this.controlestudiosService.getDetailActa(actaId).subscribe(
       (result: any) => {
-        this.detalle_acta= result;
-        this.inscritos = result[0].inscritos;
-        this.openActa.show();
-    }
+        //console.log('Detalle del acta:', result); 
+        const initialState = {
+          detalle_acta: result,
+          inscritos: result[0].inscritos
+        };
+        this.modalRef = this.modalService.show(ShowActaComponent, { 
+          initialState: initialState,
+          class: 'modal-xl custom-modal-scrollable', // Tamaño extra grande y desplazable
+          ignoreBackdropClick: true, // Evita cerrar el modal al hacer clic fuera
+          keyboard: false             // Evita cerrar el modal con la tecla ESC
+        });
+      }
+    );
+  }
+
+  editActaDetail(actaId: any) {
+    this.controlestudiosService.getDetailActaEdit(actaId).subscribe(
+      (result: any) => {
+        const initialState = {
+          detalle_acta: result,
+          inscritos: result[0].inscritos
+        };
+        this.modalRef = this.modalService.show(EditActaCeComponent, { 
+          initialState: initialState,
+          class: 'modal-xl custom-modal-scrollable', // Tamaño extra grande y desplazable
+          ignoreBackdropClick: true, // Evita cerrar el modal al hacer clic fuera
+          keyboard: false             // Evita cerrar el modal con la tecla ESC
+        });
+      }
     );
   }
 
@@ -201,5 +233,36 @@ guardar(): void {
     selectedCodUcurr:['', Validators.required],
   
   });
+
+  exportarAExcel(): void {
+    if (this.detalle_acta && this.detalle_acta.length > 0) {
+      const primerDetalle = this.detalle_acta[0];
+      const numeroActa = primerDetalle[0].acta || 'Acta';
+  
+      const encabezado = [
+        { A: 'Acta', B: primerDetalle[0].acta || '' },
+        { A: 'Periodo Académico', B: primerDetalle[0].periodo || '' },
+        { A: 'PNF', B: primerDetalle[0].nombre_programa || '' },
+        { A: 'Unidad Curricular', B: (primerDetalle[0].cod_ucurr || '') + ' - ' + (primerDetalle[0].uni_curr || '') },
+        { A: 'Sección', B: (primerDetalle[0].seccion || '') + ' - ' + (primerDetalle[0].tipo_sec || '') },
+        { A: 'Docente', B: primerDetalle[0].prof_asignado || '' },
+        // Una fila vacía como separador
+        {},
+      ];
+  
+      // Crear hoja de cálculo para el encabezado
+      const wsEncabezado: XLSX.WorkSheet = XLSX.utils.json_to_sheet(encabezado, { skipHeader: true });
+  
+      // Agregar los datos de los inscritos a la hoja de cálculo
+      XLSX.utils.sheet_add_json(wsEncabezado, this.inscritos, { skipHeader: true, origin: -1 });
+  
+      // Crear el libro y añadir la hoja
+      const wb: XLSX.WorkBook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, wsEncabezado, 'Estudiantes');
+  
+      const nombreArchivo = `Detalle_${numeroActa}.xlsx`;
+      XLSX.writeFile(wb, nombreArchivo);
+    }
+  }
 
 }

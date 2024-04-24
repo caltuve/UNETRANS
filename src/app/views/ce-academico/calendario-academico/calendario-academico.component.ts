@@ -12,6 +12,8 @@ import { DatePipe } from '@angular/common';
 import { EditCalendarComponent } from './../edit-calendar/edit-calendar.component'
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 
+import { AddCargaCalifComponent } from '../add-carga-calif/add-carga-calif.component';
+
 @Component({
   selector: 'app-calendario-academico',
   templateUrl: './calendario-academico.component.html',
@@ -22,6 +24,11 @@ export class CalendarioAcademicoComponent implements AfterViewInit {
   modalRef: BsModalRef; 
   Procesos = new MatTableDataSource();
   displayedColumnsProcesos: string[] = ['estatus','periodo', 'periodicidad', 'proceso',  'fec_ini', 'fec_fin', 'gestion'];
+
+  ProcesoCargaCalificaciones = new MatTableDataSource();
+  displayedColumnsProcesoCargaCalificaciones: string[] = ['periodo', 'fec_ini', 'fec_fin', 'exclusiones', 'gestion'];
+
+
   hayResultadosProcesos: boolean = false;
   sinResultadosProcesos: boolean = false;
   minDate1!: Date;
@@ -67,6 +74,7 @@ export class CalendarioAcademicoComponent implements AfterViewInit {
   
     this.Procesos.paginator = this.paginatorProcesos;
     this.findProcesosCalendar();
+    this.findProcesoCargasCalificaciones();
 }
 
 findProcesosCalendar() {
@@ -121,6 +129,37 @@ openEditModal(calendar: any) {
       this.findProcesosCalendar();
     });
   }
+}
+
+
+abrirModalNuevoProceso() {
+
+  const modalConfig = {
+    //initialState: initialState,
+    class: 'modal-lg',
+    ignoreBackdropClick: true,
+    keyboard: false
+  };
+
+  // Abrir el modal pasando 'modalConfig'
+  const modalRef = this.modalService.show(AddCargaCalifComponent, modalConfig);
+
+  if (modalRef.content) {
+    modalRef.content.actualizacionCompleta.subscribe(() => {
+      this.findProcesosCalendar();
+    });
+  }
+}
+
+findProcesoCargasCalificaciones() {
+  this.SpinnerService.show();
+  this.controlestudiosService.getProcesosCargaCalificaciones().subscribe(
+    (data: any) => {
+      this.ProcesoCargaCalificaciones.data = data;
+      this.SpinnerService.hide();
+    
+    }
+  );
 }
 
 

@@ -74,7 +74,7 @@
                   </div>
                 <mat-accordion>
                   <!-- Iterar sobre los trayectos del plan seleccionado -->
-                  <mat-expansion-panel *ngFor="let trayecto of trayectos" (opened)="cargarUnidadesCurriculares(trayecto.nombre_trayecto)">
+                  <mat-expansion-panel *ngFor="let trayecto of trayectos" (opened)="cargarUnidadesCurriculares(trayecto.nombre_trayecto)" (click)="cambiarTrayecto(trayecto.nombre_trayecto)">
                     <mat-expansion-panel-header class="expancion-header mat-expansion-panel-header ng-tns-c48-104 ng-trigger ng-trigger-expansionHeight ng-star-inserted">
                       <mat-panel-title>
                         {{ trayecto.nombre_trayecto }}
@@ -83,8 +83,9 @@
               
                     <!-- Mostrar los semestres para planes semestrales -->
                     <div *ngIf="datosPrograma[0]?.regimen  === 'SEMESTRAL'">
+                      <br>
                       <mat-accordion>
-                        <mat-expansion-panel *ngFor="let semestre of trayecto.semestres" (opened)="cargarUnidadesCurriculares(trayecto.nombre_trayecto)">
+                        <mat-expansion-panel *ngFor="let semestre of trayecto.semestres" (opened)="cargarUnidadesCurricularesSemestral(trayecto.nombre_trayecto, semestre.numero)">
                           <mat-expansion-panel-header class="expancion-header mat-expansion-panel-header ng-tns-c48-104 ng-trigger ng-trigger-expansionHeight ng-star-inserted">
                             <mat-panel-title>
                               Semestre {{ semestre.numero }}
@@ -115,9 +116,18 @@
                                     <th mat-header-cell *matHeaderCellDef> Electiva </th>
                                     <td mat-cell *matCellDef="let uc"> {{ uc.es_electiva }} </td>
                                   </ng-container>
+                                  <ng-container matColumnDef="gestion">
+                                    <th mat-header-cell *matHeaderCellDef> Gestionar </th>
+                                    <td mat-cell *matCellDef="let uc">
+                                        
+                                            <button cButton class="btn-primary" size="sm" (click)="abrirModificacionUc(uc.id_uc)">
+                                                <svg cIcon name="cil-pencil"></svg></button>
+                                        
+                                    </td>
+                                </ng-container>
                                   <!-- Más columnas para nombre_uc, creditos, es_electiva... -->
-                                  <tr mat-header-row *matHeaderRowDef="['codigo_uc', 'nombre_uc', 'creditos', 'es_electiva']"></tr>
-                                  <tr mat-row *matRowDef="let row; columns: ['codigo_uc', 'nombre_uc', 'creditos', 'es_electiva'];"></tr>
+                                  <tr mat-header-row *matHeaderRowDef="['codigo_uc', 'nombre_uc', 'creditos', 'es_electiva','gestion']"></tr>
+                                  <tr mat-row *matRowDef="let row; columns: ['codigo_uc', 'nombre_uc', 'creditos', 'es_electiva','gestion'];"></tr>
                                 </table>
                               </div>
                         </mat-expansion-panel>
@@ -162,9 +172,19 @@
                                         <th mat-header-cell *matHeaderCellDef> Electiva </th>
                                         <td mat-cell *matCellDef="let uc"> {{ uc.es_electiva }} </td>
                                       </ng-container>
+
+                                      <ng-container matColumnDef="gestion">
+                                        <th mat-header-cell *matHeaderCellDef> Gestionar </th>
+                                        <td mat-cell *matCellDef="let uc">
+                                            
+                                                <button cButton class="btn-primary" size="sm" (click)="abrirModificacionUc(uc.id_uc)">
+                                                    <svg cIcon name="cil-pencil"></svg></button>
+                                            
+                                        </td>
+                                    </ng-container>
                                       <!-- Más columnas para nombre_uc, creditos, es_electiva... -->
-                                      <tr mat-header-row *matHeaderRowDef="['codigo_uc', 'nombre_uc', 'creditos', 'es_electiva']"></tr>
-                                      <tr mat-row *matRowDef="let row; columns: ['codigo_uc', 'nombre_uc', 'creditos', 'es_electiva'];"></tr>
+                                      <tr mat-header-row *matHeaderRowDef="['codigo_uc', 'nombre_uc', 'creditos', 'es_electiva','gestion']"></tr>
+                                      <tr mat-row *matRowDef="let row; columns: ['codigo_uc', 'nombre_uc', 'creditos', 'es_electiva','gestion'];"></tr>
                                     </table>
                                 </div>
                               </mat-expansion-panel>
@@ -198,9 +218,18 @@
                               <th mat-header-cell *matHeaderCellDef> Electiva </th>
                               <td mat-cell *matCellDef="let uc"> {{ uc.es_electiva }} </td>
                             </ng-container>
+                            <ng-container matColumnDef="gestion">
+                              <th mat-header-cell *matHeaderCellDef> Gestionar </th>
+                              <td mat-cell *matCellDef="let uc">
+                                  
+                                      <button cButton class="btn-primary" size="sm" (click)="abrirModificacionUc(uc.id_uc)">
+                                          <svg cIcon name="cil-pencil"></svg></button>
+                                  
+                              </td>
+                          </ng-container>
                             <!-- Más columnas para nombre_uc, creditos, es_electiva... -->
-                            <tr mat-header-row *matHeaderRowDef="['codigo_uc', 'nombre_uc', 'creditos', 'es_electiva']"></tr>
-                            <tr mat-row *matRowDef="let row; columns: ['codigo_uc', 'nombre_uc', 'creditos', 'es_electiva'];"></tr>
+                            <tr mat-header-row *matHeaderRowDef="['codigo_uc', 'nombre_uc', 'creditos', 'es_electiva','gestion']"></tr>
+                            <tr mat-row *matRowDef="let row; columns: ['codigo_uc', 'nombre_uc', 'creditos', 'es_electiva','gestion'];"></tr>
                           </table>
                       </div>
                     </ng-container>

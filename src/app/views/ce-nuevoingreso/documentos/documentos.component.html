@@ -1,0 +1,121 @@
+<!-- <form (submit)="buscar()">
+    <label> Campo 1: <input type="text" name="campo1"> </label>
+    <label> Campo 2: <input type="text" name="campo2"> </label>
+    <button type="submit"> Buscar </button>
+  </form>
+  
+  <div *ngIf="resultados && resultados.length > 0">
+    <table mat-table>
+     Aquí van las columnas de la tabla 
+    </table>
+  </div>
+  
+  <div *ngIf="!resultados || resultados.length === 0">
+    Aquí va el modal 
+  </div> -->
+
+  <c-row>
+    <c-col xs="12">
+        <c-card class="mb-4">
+            <c-card-header ngPreserveWhitespaces>
+                <strong>Consulta de datos para generación de documentos académicos</strong>
+                <!-- <small>Ingresa la cédula sin puntos o el nombre del cliente</small> -->
+            </c-card-header>
+            <c-card-body>
+                <p class="text-medium-emphasis small">
+                    Ingresa el Carnet o la cédula sin puntos para buscar los datos del estudiante
+                </p>
+                <form #formSearchPersona="ngForm" (ngSubmit)="searchPersona(formSearchPersona)">
+                    <c-input-group class="mb-3">
+                        <input cFormControl placeholder="Carnet" sizing="sm" type="text" [(ngModel)]="carnet"
+                            maxlength="10" name="carnet" /> &nbsp;
+                        <input cFormControl placeholder="Cédula" sizing="sm" type="number" min="0" [(ngModel)]="cedula"
+                            name="cedula" />&nbsp;
+                        <button cButton color="primary" size="sm" type="submit"> <svg cIcon class="me-2"
+                                name="cilMagnifyingGlass"></svg>&nbsp;Buscar</button>
+                    </c-input-group>
+                </form>
+            </c-card-body>
+        </c-card>
+        <div *ngIf="hayResultados">
+            <c-card class="mb-4" *ngFor="let estudiante of dataSource.data">
+                <c-card-header ngPreserveWhitespaces>
+                    <strong>Detalles del estudiante</strong>
+                    <!-- <small>Ingresa la cédula sin puntos o el nombre del cliente</small> -->
+                </c-card-header>
+                <c-card-body>
+                    <div class="estudiante-container">
+                        <!-- Contenedor de la Foto -->
+                        <div class="foto-estudiante">
+                            <img [src]="'data:image/jpeg;base64,' + estudiante.foto" alt="Foto de Estudiante" />
+                        </div>
+                        <!-- Contenedor de Datos Personales -->
+                        <div class="datos-estudiante">
+                            <p><strong>Carnet:</strong> {{ estudiante.carnet_formateado }}</p>
+                            <p><strong>Documento de Identidad:</strong> {{ estudiante.nac }}-{{
+                                estudiante.cedula_formateada }}</p>
+                            <p><strong>Nombre completo:</strong> {{ estudiante.nombre_completo }}</p>
+                            <p><strong>PNF:</strong> {{ estudiante.pnf }}</p>
+                            <p><strong>Trayecto actual:</strong> {{ estudiante.trayecto }}</p>
+                            <p><strong>Último Periodo Inscrito:</strong> {{ estudiante.ult_per_inscrito }}</p>
+                            <!-- <p>
+                                <strong>Estatus del Expediente: </strong> 
+                                <span [ngClass]="obtenerClaseColor(estudiante.estatus_exp)">
+                                    <svg cIcon class="me-2" [name]="obtenerNombreIcono(estudiante.estatus_exp)"></svg>
+                                    {{ estudiante.estatus_exp | estatusExpedientePipe }}
+                                </span>
+                            </p> -->
+                        </div>
+                    </div>
+                    <!-- Espaciado para Separación -->
+                    <div class="separador"></div>
+                    <!-- Sección de Documentos -->
+                    <div class="documentos-container">
+                        <h3>Documentos disponibles para generar</h3>
+                        <div *ngIf="sinResultadosDocumentos && !cargandoDatos">
+                          <c-alert color="danger" class="d-flex align-items-center">
+                            <svg cIcon class="me-2" width="24" height="24" name="cilWarning"></svg>
+                            <div><strong>No inscrito en periodo actual</strong><br>
+                              Estudiante no inscrito, solo se emiten constancias de estudio/inscripción a estudiantes activos e inscritos en el periodo académico actual.</div>
+                        </c-alert>
+                        </div>
+                        <div *ngIf="hayResultadosDocumentos && !cargandoDatos">
+                          <table mat-table [dataSource]="documentos" [hover]="true" [responsive]="true" [striped]="true"
+                          align="middle" cTable class="mb-0 border" cTable>
+                
+                            <!-- Columna de Nombre del Documento -->
+                            <ng-container matColumnDef="nombre">
+                              <th mat-header-cell *matHeaderCellDef> Documento disponible</th>
+                              <td mat-cell *matCellDef="let documento"> {{documento.nombre}} </td>
+                            </ng-container>
+                      
+                            <!-- Columna de Botón de Descarga -->
+                            <ng-container matColumnDef="descargar">
+                              <th class="down-ancho" mat-header-cell *matHeaderCellDef> Descargar </th>
+                              <td class="down-ancho" mat-cell *matCellDef="let documento">
+                                <button type="button" class="btn btn-primary" (click)="descargarDocumento(documento.nombre)"><svg cIcon class="me-2" name="cil-cloud-download"></svg>Descargar</button>
+                              </td>
+                            </ng-container>
+                      
+                            <tr mat-header-row *matHeaderRowDef="['nombre', 'descargar']"></tr>
+                            <tr mat-row *matRowDef="let row; columns: ['nombre', 'descargar'];"></tr>
+                          </table>
+                        </div>
+                    </div>
+                </c-card-body>
+            </c-card>
+        </div>
+        <div *ngIf="sinResultados">
+            <c-alert color="info" class="d-flex align-items-center">
+                <svg cIcon class="me-2" width="24" height="24" name="cilWarning"></svg>
+                <div><strong>Estudiante no registrado en el SICE</strong><br>
+                    Para poder analizar y cargar los datos del expediente el estudiante debe estar estar registrado
+                    previamente.</div>
+            </c-alert>
+        </div>
+
+    </c-col>
+</c-row>
+<ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" size="default" type="ball-atom">
+    <p style="color: white" align="center">Por favor espere... <br>¡Consultando información!</p>
+</ngx-spinner>

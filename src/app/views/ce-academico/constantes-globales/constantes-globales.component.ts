@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild, ChangeDetectorRef} from '@angular/core';
 import {FormBuilder, Validators,FormControl} from '@angular/forms';
 import { ControlEstudiosService } from '../../control-estudios/control-estudios.service';
 import {MatTableDataSource} from '@angular/material/table';
@@ -9,6 +9,18 @@ import { NotificacionService } from './../../../notificacion.service'
 import {ModalDirective} from 'ngx-bootstrap/modal';
 
 import { EstadoI, MunicipioI, ParroquiaI } from '../../control-estudios/crear-nuevo/model.interface'
+interface Categoria {
+  codtipo: string;
+  descripcion: string;
+}
+
+interface detalleElementos {
+  codtipo: string;
+  codelemento: string;
+  descripcion: string;
+  estatus: string;
+  orden: number;
+}
 
 @Component({
   selector: 'app-constantes-globales',
@@ -16,6 +28,8 @@ import { EstadoI, MunicipioI, ParroquiaI } from '../../control-estudios/crear-nu
   styleUrls: ['./constantes-globales.component.scss']
 })
 export class ConstantesGlobalesComponent {
+
+
 
   arrayDatos : any []= [];
 
@@ -76,6 +90,11 @@ export class ConstantesGlobalesComponent {
 
   listPlantel: any = [];
 
+  tipos: Categoria[] = [];
+  elementosTipos: detalleElementos[] = [];
+
+  categoriaSeleccionada: Categoria | null = null;
+
   @ViewChild('paginatorRecibidas') paginatorRecibidas: MatPaginator;
   @ViewChild('paginatorProcesadas') paginatorProcesadas: MatPaginator;
   //paginatorIntl: MatPaginatorIntl;
@@ -85,11 +104,13 @@ export class ConstantesGlobalesComponent {
   constructor(private _formBuilder: FormBuilder,
     public controlestudiosService: ControlEstudiosService,
     private notifyService : NotificacionService,
-    private SpinnerService: NgxSpinnerService,) {
+    private SpinnerService: NgxSpinnerService,
+    private cdRef: ChangeDetectorRef) {
     }
 
     rangeLabel = 'Mostrando ${start} – ${end} de ${length}';
 
+    
     ngAfterViewInit() {
     //this.paginatorRecibidas._intl.itemsPerPageLabel = 'Mostrando de ${start} – ${end} registros';
     // this.paginatorRecibidas._intl.getRangeLabel = (page: number, pageSize: number, length: number) => {
@@ -109,7 +130,16 @@ export class ConstantesGlobalesComponent {
     this.findTrayectos();
     this.findResolucion(); 
     this.findEstadosEducacionMedia(); 
+    this.findTipos(); 
+    //this.cdRef.detectChanges(); 
+    //console.log(this.categorias);
 }
+
+
+  seleccionarCategoria(codtipo: any): void {
+    console.log(codtipo);
+    this.categoriaSeleccionada = codtipo;
+  }
 
 findAutopostulados() {
   this.usr = JSON.parse(sessionStorage.getItem('currentUser')!); 
@@ -154,6 +184,22 @@ findModIngreso(){
     (result: any) => {
       const opcionesFiltradas = [ '011']; // Aquí colocas los valores codelemento que deseas mostrar
       this.moding = result.filter((moding: { codelemento: string; }) => opcionesFiltradas.includes(moding.codelemento));
+  }
+  );
+}
+
+findTipos(){
+  this.controlestudiosService.getVariablesTipo().subscribe(
+    (result: any) => {
+      this.tipos = result;
+  }
+  );
+}
+
+findDetalleTipos(codtipo: string){
+  this.controlestudiosService.getDetalleVariablesTipo(codtipo).subscribe(
+    (result: any) => {
+      this.elementosTipos = result;
   }
   );
 }

@@ -16,3 +16,14 @@
   .trayecto-ancho {
     width: 2%;
   }
+
+  .carnet-hipervinculo {
+    color: #007bff; /* Color azul típico de los enlaces */
+    cursor: pointer; /* Cambia el cursor a una mano para indicar clickeabilidad */
+    text-decoration: underline; /* Subraya el texto para parecerse a un enlace */
+}
+
+/* Opcional: Cambiar el color al pasar el mouse para mejorar la interactividad */
+.carnet-hipervinculo:hover {
+    color: #0056b3; /* Un azul más oscuro al pasar el mouse */
+}

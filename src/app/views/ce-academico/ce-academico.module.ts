@@ -66,6 +66,9 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatRadioModule} from '@angular/material/radio';
 
+import {MatSidenavModule} from '@angular/material/sidenav';
+import {MatListModule} from '@angular/material/list'; 
+
 import { CeAcademicoRoutingModule } from './ce-academico-routing.module';
 import { CalendarioAcademicoComponent } from './calendario-academico/calendario-academico.component';
 import { ProgramaAcademicoComponent } from './programa-academico/programa-academico.component';
@@ -85,6 +88,11 @@ import { AddUnidadCurricularModalComponent } from './add-unidad-curricular-modal
 import { CalificacionesContingenciaGradoComponent } from './calificaciones-contingencia-grado/calificaciones-contingencia-grado.component';
 import { CalificacionesContingenciaMigracionComponent } from './calificaciones-contingencia-migracion/calificaciones-contingencia-migracion.component';
 import { CalificacionesCargaComponent } from './calificaciones-carga/calificaciones-carga.component';
+import { EditActaCeComponent } from './edit-acta-ce/edit-acta-ce.component';
+import { ModificarUcModalComponent } from './modificar-uc-modal/modificar-uc-modal.component';
+import { GestionSeccionesUcComponent } from './gestion-secciones-uc/gestion-secciones-uc.component';
+import { ArancelesComponent } from './aranceles/aranceles.component';
+import { AddCargaCalifComponent } from './add-carga-calif/add-carga-calif.component';
 
 @NgModule({
   declarations: [
@@ -107,6 +115,11 @@ import { CalificacionesCargaComponent } from './calificaciones-carga/calificacio
             CalificacionesContingenciaGradoComponent,
             CalificacionesContingenciaMigracionComponent,
             CalificacionesCargaComponent,
+            EditActaCeComponent,
+            ModificarUcModalComponent,
+            GestionSeccionesUcComponent,
+            ArancelesComponent,
+            AddCargaCalifComponent,
   ],
   imports: [
     CommonModule,
@@ -147,6 +160,8 @@ import { CalificacionesCargaComponent } from './calificaciones-carga/calificacio
   ModalModule,
   //PaginationModule,
   PlaceholderModule,
+  MatListModule,
+  MatSidenavModule,
   PopoverModule,
   ProgressModule,
   SharedModule,

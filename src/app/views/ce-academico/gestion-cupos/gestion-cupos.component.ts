@@ -9,6 +9,8 @@ import {ModalDirective} from 'ngx-bootstrap/modal';
 import * as XLSX from 'xlsx';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { ShowActaComponent } from './../show-acta/show-acta.component';
+import { EditActaCeComponent } from './../edit-acta-ce/edit-acta-ce.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-gestion-cupos',
@@ -28,14 +30,23 @@ export class GestionCuposComponent implements OnInit {
   carreras: any[] = [];
   periodos: any[] = [];
 
+  unidadesCurriculares: any[] = [];
+
+  trayectoAct: string;
+
   seccion: number;
   cuposmax: number;
   docente: string;
+
+  periodoEnviar: string;
+
   tseccion: any[] = [];
 
   carreraSeleccionada: any;
   periodoSeleccionado: any;
   tiposeccion: string;
+
+  programaSeleccionado: any = null;
 
   usr={
     nac:null,
@@ -50,6 +61,11 @@ export class GestionCuposComponent implements OnInit {
     usrsice: null,
   }
 
+  expansionControl = {
+    trayecto: null as number | null, // Permite number y null
+    mencion: null as number | null  // Permite number y null
+  };
+
   public mostrarTrayectos: boolean = true;
 
   @ViewChild('gestionNewSeccion') public gestionNewSeccion: ModalDirective;
@@ -62,7 +78,9 @@ export class GestionCuposComponent implements OnInit {
     public controlestudiosService: ControlEstudiosService,
     private notifyService : NotificacionService,
     private SpinnerService: NgxSpinnerService,
-    private modalService: BsModalService) {
+    private modalService: BsModalService,
+    private router: Router
+    ) {
 
     }
 
@@ -108,7 +126,7 @@ export class GestionCuposComponent implements OnInit {
       (data: any) => {
         this.periodos = data;
         this.periodoSeleccionado = null; // Reiniciar el valor del segundo mat-select
-        this.mostrarTrayectos = false; // Ocultar la información mostrada
+        this.programaSeleccionado = null; // Ocultar la información mostrada
       },
       error => {
         // Manejar el error aquí
@@ -119,13 +137,14 @@ export class GestionCuposComponent implements OnInit {
   }
 
   onPeriodoSeleccionado(carreraSeleccionada: any, periodoSeleccionado: any) {
+    this.programaSeleccionado = carreraSeleccionada;
+    this.periodoEnviar = periodoSeleccionado;
     this.SpinnerService.show();
-    this.controlestudiosService.getOfertaAcademica(carreraSeleccionada, periodoSeleccionado).subscribe(
+    this.controlestudiosService.getOfertaAcademicaDCE(carreraSeleccionada, periodoSeleccionado).subscribe(
       (result: any) => {
         this.mostrarTrayectos = true;
         this.usr = JSON.parse(sessionStorage.getItem('currentUser')!); 
-        this.arrayDatos = result;
-        this.trayectos = result[0].trayectos;
+        this.trayectos = result;
       },
       error => {
         // Manejar el error aquí
@@ -135,15 +154,70 @@ export class GestionCuposComponent implements OnInit {
     );
   }
 
+  cargarUnidadesCurriculares(trayectoNombre: string): void {
+    this.trayectoAct = trayectoNombre;
+    this.SpinnerService.show();
+    this.controlestudiosService.obtenerUnidadesCurricularesGestionCupos(this.programaSeleccionado, trayectoNombre, this.periodoEnviar)
+      .subscribe(data => {
+        this.unidadesCurriculares = data;
+        this.SpinnerService.hide();
+      });
+  }
+
+  cargarUnidadesCurricularesMencion(trayectoNombre: string, mencion: string): void {
+    this.SpinnerService.show();
+    this.controlestudiosService.obtenerUnidadesCurricularesMencionGestionCupos(this.programaSeleccionado, trayectoNombre, mencion,  this.periodoEnviar)
+      .subscribe(data => {
+        this.unidadesCurriculares = data;
+        this.SpinnerService.hide();
+      });
+  }
+
+  // Método para manejar la apertura de un trayecto
+  onTrayectoOpened(index: number): void {
+    // Actualiza el trayecto expandido y cierra cualquier mención abierta
+    this.expansionControl.trayecto = index;
+    this.expansionControl.mencion = null; // Resetear la mención para asegurarnos de que se cierra
+  }
+
+  // Opcional: Método para manejar la apertura de una mención
+  onMencionOpened(index: number, trayecto: string, mencion: string): void {
+    this.expansionControl.mencion = index;
+    this.cargarUnidadesCurricularesMencion(trayecto, mencion);
+  }
+
+  irAGestionSeccion(idUc: string): void {
+    console.log(idUc);
+    this.router.navigate(['/ce-academico/gestion-cupos/gestion-secciones-uc', idUc, this.periodoEnviar]);
+  }
+
+
   openActaDetail(actaId: any) {
     this.controlestudiosService.getDetailActa(actaId).subscribe(
       (result: any) => {
-        console.log('Detalle del acta:', result); 
+        //console.log('Detalle del acta:', result); 
         const initialState = {
           detalle_acta: result,
           inscritos: result[0].inscritos
         };
         this.modalRef = this.modalService.show(ShowActaComponent, { 
+          initialState: initialState,
+          class: 'modal-xl custom-modal-scrollable', // Tamaño extra grande y desplazable
+          ignoreBackdropClick: true, // Evita cerrar el modal al hacer clic fuera
+          keyboard: false             // Evita cerrar el modal con la tecla ESC
+        });
+      }
+    );
+  }
+
+  editActaDetail(actaId: any) {
+    this.controlestudiosService.getDetailActaEdit(actaId).subscribe(
+      (result: any) => {
+        const initialState = {
+          detalle_acta: result,
+          inscritos: result[0].inscritos
+        };
+        this.modalRef = this.modalService.show(EditActaCeComponent, { 
           initialState: initialState,
           class: 'modal-xl custom-modal-scrollable', // Tamaño extra grande y desplazable
           ignoreBackdropClick: true, // Evita cerrar el modal al hacer clic fuera

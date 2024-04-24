@@ -8,6 +8,8 @@ import {MatTableDataSource} from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
 import { NgxSpinnerService } from "ngx-spinner";
 import { Console } from 'console';
+import { NotificacionService } from './../../../notificacion.service'
+import { ModificarUcModalComponent } from '../modificar-uc-modal/modificar-uc-modal.component';
 
 @Component({
   selector: 'app-gestion-plan-estudios',
@@ -16,7 +18,8 @@ import { Console } from 'console';
 })
 export class GestionPlanEstudiosComponent implements OnInit {
 
-  
+  selectedIndex: number = -1;
+
   idPrograma: number;
   datosPrograma: any = {}; // Aquí almacenarás los datos del programa
   planesEstudio = []; 
@@ -29,7 +32,11 @@ export class GestionPlanEstudiosComponent implements OnInit {
   sinResultadosPlanes: boolean = false;
 
   trayectoActual: string;
+
+  trayectoAct: string
 semestreActual: number | null;
+
+modalRef: BsModalRef; 
 
     mencionActual: string;
 
@@ -38,6 +45,7 @@ semestreActual: number | null;
     private modalService: BsModalService,
     public controlestudiosService: ControlEstudiosService,
     private SpinnerService: NgxSpinnerService,
+    private notifyService : NotificacionService,
     public bsModalRef: BsModalRef,) { }
 
     ngOnInit(): void {
@@ -84,7 +92,7 @@ abrirModalGestionPlanEstudios(): void {
   modalComponent.actualizacionCompleta.subscribe((completo) => {
     if (completo) {
       // Realizar alguna acción, como recargar los datos
-      console.log('El plan de estudios se ha actualizado');
+      //console.log('El plan de estudios se ha actualizado');
       this.cargarPlanesEstudios(this.idPrograma);
     }
   });
@@ -170,7 +178,8 @@ abrirModalGestionPlanEstudios(): void {
       // Realizar alguna acción, como recargar los datos
 
 
-      this.cargarUnidadesCurriculares(this.trayectoActual, this.semestreActual);
+      this.cargarUnidadesCurriculares(this.trayectoActual);
+      this.cargarUnidadesCurricularesSemestral (this.trayectoActual, this.semestreActual!);
     } 
   });
 
@@ -206,9 +215,19 @@ abrirModalGestionPlanEstudios(): void {
 
   }
 
-  cargarUnidadesCurriculares(trayectoNombre: string, semestreNumero?: number | null): void {
+  cargarUnidadesCurriculares(trayectoNombre: string): void {
+    this.trayectoAct = trayectoNombre;
     this.SpinnerService.show();
-    this.controlestudiosService.obtenerUnidadesCurriculares(this.planSeleccionado, trayectoNombre, semestreNumero)
+    this.controlestudiosService.obtenerUnidadesCurriculares(this.planSeleccionado, trayectoNombre)
+      .subscribe(data => {
+        this.unidadesCurriculares = data;
+        this.SpinnerService.hide();
+      });
+  }
+
+  cargarUnidadesCurricularesSemestral(trayectoNombre: string, semestreNumero: number): void {
+    this.SpinnerService.show();
+    this.controlestudiosService.obtenerUnidadesCurricularesSemestre(this.planSeleccionado, trayectoNombre, semestreNumero)
       .subscribe(data => {
         this.unidadesCurriculares = data;
         this.SpinnerService.hide();
@@ -225,5 +244,70 @@ abrirModalGestionPlanEstudios(): void {
       });
   }
 
+  cambiarIndice(index: number) {
+    if (this.selectedIndex === index) {
+      this.selectedIndex = -1; // Cerrar el panel si ya está abierto
+    } else {
+      this.selectedIndex = index; // Abrir el panel seleccionado
+    }
+  }
+
+  selectedTrayecto: any = null; // Variable para rastrear el trayecto seleccionado
+
+cambiarTrayecto(trayecto: any) {
+  //console.log(trayecto);
+  if (this.selectedTrayecto === trayecto) {
+    this.selectedTrayecto = null; // Si se hace clic en el mismo trayecto, cierra todos los paneles internos
+  } else {
+    this.selectedTrayecto = trayecto; // Establece el trayecto seleccionado
+  }
+}
+
+abrirModificacionUc(id_uc: string) {
+  if (id_uc) {
+      this.SpinnerService.show();
+      this.controlestudiosService.findUcModify({ id_uc: id_uc }).subscribe({
+          next: (result: any) => {
+              // Verificar si se encontraron datos del estudiante
+              if (result) {
+                this.SpinnerService.hide();
+                  // Luego, verificar las inscripciones activas para este estudiante
+                      const initialState = {
+                        ucBase: result.uc,
+                      };
+
+                      this.abrirModalModificacionUc(initialState);
+              } else {
+                  this.notifyService.showError('No se encontraron datos de la UC.');
+                  this.SpinnerService.hide();
+              }
+          },
+          error: (error) => {
+              console.error('Error al buscar datos de la UC: ', error);
+              this.SpinnerService.hide();
+              this.notifyService.showError('Error al comunicarse con el servidor.');
+          }
+      });
+  } else {
+      this.notifyService.showWarning('Error: 005, notificar a: soportesice@unetrans.edu.ve.');
+  }
+}
+
+abrirModalModificacionUc(uc: any) {
+  const initialState = {
+    ucBase: uc.ucBase,
+  };
+
+      this.modalRef = this.modalService.show(ModificarUcModalComponent, { 
+        initialState: initialState,
+        class: 'modal-xl custom-modal-scrollable',
+        ignoreBackdropClick: true,
+        keyboard: false
+      });
+
+      this.modalRef.content.actualizacionCompleta.subscribe(() => {
+        this.cargarUnidadesCurriculares(this.trayectoAct);
+      });
+    };
 
 }

@@ -11,6 +11,7 @@ import { GestionPlanEstudiosComponent } from './gestion-plan-estudios/gestion-pl
 import { CalificacionesContingenciaGradoComponent } from './calificaciones-contingencia-grado/calificaciones-contingencia-grado.component';
 import { CalificacionesContingenciaMigracionComponent } from './calificaciones-contingencia-migracion/calificaciones-contingencia-migracion.component';
 import { CalificacionesCargaComponent } from './calificaciones-carga/calificaciones-carga.component';
+import { GestionSeccionesUcComponent } from './gestion-secciones-uc/gestion-secciones-uc.component';
 
 const routes: Routes = [
   {
@@ -92,6 +93,12 @@ const routes: Routes = [
         data: {
           title: 'Carga de calificaciones (MIGRACIÓN)'
         }
+      },
+      { path: 'gestion-cupos/gestion-secciones-uc/:codigoUC/:periodo', 
+        component: GestionSeccionesUcComponent,
+        data: {
+          title: 'Gestión de cupos - Secciones por UC'
+        } 
       },
 
     ]

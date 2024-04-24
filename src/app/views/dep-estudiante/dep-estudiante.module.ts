@@ -65,12 +65,16 @@ import {MatSortModule} from '@angular/material/sort';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatRadioModule} from '@angular/material/radio';
+import { InscripcionComponent } from './inscripcion/inscripcion.component';
+import { ModalInscripcionComponent } from './modal-inscripcion/modal-inscripcion.component';
 
 
 
 @NgModule({
   declarations: [
-    ConsultarDatosComponent
+    ConsultarDatosComponent,
+    InscripcionComponent,
+    ModalInscripcionComponent
   ],
   imports: [
     CommonModule,

@@ -1,0 +1,131 @@
+<!-- <form (submit)="buscar()">
+    <label> Campo 1: <input type="text" name="campo1"> </label>
+    <label> Campo 2: <input type="text" name="campo2"> </label>
+    <button type="submit"> Buscar </button>
+  </form>
+  
+  <div *ngIf="resultados && resultados.length > 0">
+    <table mat-table>
+     Aquí van las columnas de la tabla 
+    </table>
+  </div>
+  
+  <div *ngIf="!resultados || resultados.length === 0">
+    Aquí va el modal 
+  </div> -->
+
+<c-row>
+    <c-col xs="12">
+        <c-card class="mb-4">
+            <c-card-header ngPreserveWhitespaces>
+                <strong>Consulta de expedientes de estudiantes</strong>
+                <!-- <small>Ingresa la cédula sin puntos o el nombre del cliente</small> -->
+            </c-card-header>
+            <c-card-body>
+                <p class="text-medium-emphasis small">
+                    Ingresa el Carnet o la cédula sin puntos para buscar el expediente
+                </p>
+                <form #formSearchPersona="ngForm" (ngSubmit)="searchPersona(formSearchPersona)">
+                    <c-input-group class="mb-3">
+                        <input cFormControl placeholder="Carnet" sizing="sm" type="text" [(ngModel)]="carnet"
+                            maxlength="10" name="carnet" /> &nbsp;
+                        <input cFormControl placeholder="Cédula" sizing="sm" type="number" min="0" [(ngModel)]="cedula"
+                            name="cedula" />&nbsp;
+                        <button cButton color="primary" size="sm" type="submit"> <svg cIcon class="me-2"
+                                name="cilMagnifyingGlass"></svg>&nbsp;Buscar</button>
+                    </c-input-group>
+                </form>
+            </c-card-body>
+        </c-card>
+        <div *ngIf="hayResultados">
+            <c-card class="mb-4" *ngFor="let estudiante of dataSource.data">
+                <c-card-header ngPreserveWhitespaces>
+                    <strong>Detalles del expediente</strong>
+                    <!-- <small>Ingresa la cédula sin puntos o el nombre del cliente</small> -->
+                </c-card-header>
+                <c-card-body>
+                    <div class="estudiante-container">
+                        <!-- Contenedor de la Foto -->
+                        <div class="foto-estudiante">
+                            <img [src]="'data:image/jpeg;base64,' + estudiante.foto" alt="Foto de Estudiante" />
+                        </div>
+
+                        <!-- Contenedor de Datos Personales -->
+                        <div class="datos-estudiante">
+                            <p><strong>Carnet:</strong> {{ estudiante.carnet_formateado }}</p>
+                            <p><strong>Documento de Identidad:</strong> {{ estudiante.nac }}-{{
+                                estudiante.cedula_formateada }}</p>
+                            <p><strong>Nombre completo:</strong> {{ estudiante.nombre_completo }}</p>
+                            <p><strong>PNF:</strong> {{ estudiante.pnf }}</p>
+                            <p><strong>Trayecto actual:</strong> {{ estudiante.trayecto }}</p>
+                            <p><strong>Último Periodo Inscrito:</strong> {{ estudiante.ult_per_inscrito }}</p>
+                            <p>
+                                <strong>Estatus del Expediente: </strong> 
+                                <span [ngClass]="obtenerClaseColor(estudiante.estatus_exp)">
+                                    <svg cIcon class="me-2" [name]="obtenerNombreIcono(estudiante.estatus_exp)"></svg>
+                                    {{ estudiante.estatus_exp | estatusExpedientePipe }}
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+                    <!-- Espaciado para Separación -->
+                    <div class="separador"></div>
+                    <!-- Sección de Documentos -->
+                    <div class="documentos-container">
+                        <h3>Documentos del expediente</h3>
+                        <form [formGroup]="miFormulario">
+                            <table mat-table [dataSource]="dataSourceDocumentos" class="mat-elevation-z8"
+                                formArrayName="documentos">
+
+                                <!-- Nombre del Documento Columna -->
+                                <ng-container matColumnDef="idDoc">
+                                    <th mat-header-cell *matHeaderCellDef> ID</th>
+                                    <td mat-cell *matCellDef="let elemento"> {{elemento.id_doc}} </td>
+                                </ng-container>
+
+                                <!-- Nombre del Documento Columna -->
+                                <ng-container matColumnDef="nombreDocumento">
+                                    <th mat-header-cell *matHeaderCellDef> Nombre del Documento </th>
+                                    <td mat-cell *matCellDef="let elemento"> {{elemento.nombre_doc}} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="entregado">
+                                    <th mat-header-cell *matHeaderCellDef> Entregado </th>
+                                    <td mat-cell *matCellDef="let elemento; let i = index" [formGroupName]="i"
+                                        class="centered-content">
+                                        <mat-slide-toggle color="primary" formControlName="entregado"
+                                            (change)="enviarDatos(elemento.id_doc)"></mat-slide-toggle>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="estadoAprobacion">
+                                    <th mat-header-cell *matHeaderCellDef> Aprobación </th>
+                                    <td mat-cell *matCellDef="let elemento; let i = index" [formGroupName]="i"
+                                        class="centered-content">
+                                        <mat-slide-toggle color="primary" formControlName="valido"
+                                            (change)="enviarDatos(elemento.id_doc)"></mat-slide-toggle>
+                                    </td>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="displayedColumnsDocumentos"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumnsDocumentos;"></tr>
+                            </table>
+                        </form>
+                    </div>
+                </c-card-body>
+            </c-card>
+        </div>
+        <div *ngIf="sinResultados">
+            <c-alert color="info" class="d-flex align-items-center">
+                <svg cIcon class="me-2" width="24" height="24" name="cilWarning"></svg>
+                <div><strong>Estudiante no registrado en el SICE</strong><br>
+                    Para poder analizar y cargar los datos del expediente el estudiante debe estar estar registrado
+                    previamente.</div>
+            </c-alert>
+        </div>
+
+    </c-col>
+</c-row>
+<ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" size="default" type="ball-atom">
+    <p style="color: white" align="center">Por favor espere... <br>¡Consultando información!</p>
+</ngx-spinner>

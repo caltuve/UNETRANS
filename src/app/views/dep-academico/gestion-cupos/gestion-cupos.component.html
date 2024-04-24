@@ -14,10 +14,10 @@
                     <mat-form-field>
                         <mat-label>PNF:</mat-label>
                         <mat-select [(ngModel)]="carreraSeleccionada"
-                            (selectionChange)="onPnfSeleccionado(carreraSeleccionada)">
-                            <mat-option [value]="item.codelemento"
-                                *ngFor="let item of carreras">{{item.descripcion}}</mat-option>
-                        </mat-select>
+                        (selectionChange)="onPnfSeleccionado(carreraSeleccionada)">
+                        <mat-option [value]="item.codelemento"
+                            *ngFor="let item of carreras">{{item.descripcion}}</mat-option>
+                    </mat-select>
                     </mat-form-field>
                 </div>
                 <div class="col s12"><label>Seleccione un Periodo:</label>
@@ -37,7 +37,7 @@
                         <mat-expansion-panel-header
                             class="expancion-header mat-expansion-panel-header ng-tns-c48-104 ng-trigger ng-trigger-expansionHeight ng-star-inserted">
                             <mat-panel-title>
-                                {{dato2.nombre_trayecto}}
+                                {{dato2.trayecto}}
                             </mat-panel-title>
                         </mat-expansion-panel-header>
                         <br>
@@ -45,13 +45,13 @@
                             <mat-expansion-panel-header
                                 class="expancion-header mat-expansion-panel-header ng-tns-c48-104 ng-trigger ng-trigger-expansionHeight ng-star-inserted">
                                 <mat-panel-title (click)="setSelectedCodUcurr(dato3.cod_ucurr)">
-                                    {{dato3.cod_ucurr}}-{{dato3.nombre_uni_curr}}
+                                    {{dato3.cod_ucurr}}-{{dato3.nombre_uc}}
                                 </mat-panel-title>
                             </mat-expansion-panel-header>
                             <br>
                             <ng-container *ngIf="dato3.oferta.length > 0; else noData">
-                                <!-- <button cButton color="light" size="sm" (click)="gestionNewSeccion.show()" [attr.data-target]="'#modal-' + dato3.cod_ucurr"> <svg cIcon
-                                        class="me-2" name="cilPlaylistAdd"></svg>Abrir sección</button> -->
+                                <button cButton color="light" size="sm" (click)="gestionNewSeccion.show()" [attr.data-target]="'#modal-' + dato3.cod_ucurr"> <svg cIcon
+                                        class="me-2" name="cilPlaylistAdd"></svg>Abrir sección</button>
                                 <table mat-table [dataSource]="dato3.oferta" [hover]="true" [responsive]="true" cTable>
                                     <tr>
                                         <ng-container matColumnDef="acta">
@@ -85,81 +85,14 @@
                                                     <button cButton class="btn-primary" data-toggle="modal" (click)="openActaDetail(row.acta)"
                                                         cTooltip="Ver acta" cTooltipPlacement="top"  [disabled]="row.cupos_ini === row.cupos_disp">
                                                          <svg cIcon name="cilMagnifyingGlass"></svg></button>
-                                                        <!--    &nbsp;
-                                                    <button cButton class="btn-primary" data-toggle="modal"
-                                                        cTooltip="Modificar" cTooltipPlacement="top">
-                                                        <svg cIcon name="cil-pencil"></svg></button>&nbsp;
+                                                           &nbsp;
+                                                    <button cButton class="btn-primary" data-toggle="modal" (click)="editActaDetail(row.acta)"
+                                                        cTooltip="Modificar" cTooltipPlacement="top" [disabled]="row.cupos_ini === row.cupos_disp">
+                                                        <svg cIcon name="cil-pencil"></svg></button><!-- &nbsp;
                                                     <button cButton class="btn-primary" data-toggle="modal"
                                                         cTooltip="Eliminar" cTooltipPlacement="top">
                                                         <svg cIcon name="cilTrash"></svg></button> -->
                                                 </div>
-<!-- Modal -->
-<div bsModal #openActa="bs-modal" id="row.acta" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"  [config]="{backdrop: false, ignoreBackdropClick: true}">
-    <div class="modal-dialog modal-xl modal-dialog-scrollable">
-      <div class="modal-content">
-        <div class="modal-header" *ngFor="let dato of detalle_acta">
-          <div>
-            <h2 class="modal-title" >Detalle de estudiantes inscritos</h2>
-            <div class="d-flex">
-                <div class="flex-goew-1"><strong>Acta:</strong> {{dato[0].acta}}</div>
-            </div>
-            <div >
-                <div class="d-flex">
-                    <div class="flex-goew-1"><strong>Periodo académico:</strong> {{dato[0].periodo}}&nbsp;</div>
-                    <div class="flex-goew-1"><strong>PNF:</strong> {{dato[0].nombre_programa}}</div>
-                </div>
-                <div class="d-flex">
-                    <div class="flex-goew-1"><strong>Unidad Curricular:</strong> {{dato[0].cod_ucurr}} - {{dato[0].uni_curr}}  &nbsp;</div>
-                </div>
-                <div class="d-flex">
-                    <div class="flex-goew-1"><strong>Sección:</strong> {{dato[0].seccion}} - {{dato[0].tipo_sec}}  &nbsp;</div>
-                </div>
-                <div class="d-flex">
-                    <div class="flex-goew-1"><strong>Docente:</strong> {{dato[0].prof_asignado}}</div>
-                </div>
-            </div>
-          </div>
-        </div>
-        <div class="modal-body">  
-            <table mat-table [dataSource]="inscritos" [hover]="true" cTable>
-                <tr>
-                    <ng-container matColumnDef="orden">
-                        <th class="orden-ancho"mat-header-cell *matHeaderCellDef > N°</th>
-                        <td class="orden-ancho" mat-cell *matCellDef="let row">{{row.orden}} </td>
-                      </ng-container>
-                  <ng-container matColumnDef="carnet">
-                    <th class="carnet-ancho" mat-header-cell *matHeaderCellDef > Carnet</th>
-                    <td class="carnet-ancho" mat-cell *matCellDef="let row">{{row.carnet}} </td>
-                  </ng-container>
-                  <ng-container matColumnDef="cedula">
-                    <th class="cedula-ancho" mat-header-cell *matHeaderCellDef > Cédula</th>
-                    <td class="cedula-ancho" mat-cell *matCellDef="let row">{{row.cedula}} </td>
-                  </ng-container>
-                  <ng-container matColumnDef="nombre_completo">
-                    <th mat-header-cell *matHeaderCellDef > Apellidos y nombres</th>
-                    <td mat-cell *matCellDef="let row">{{row.nombre_completo}} </td>
-                  </ng-container>
-                  <ng-container matColumnDef="telefono">
-                    <th mat-header-cell *matHeaderCellDef > Teléfono</th>
-                    <td mat-cell *matCellDef="let row">{{row.telefono}} </td>
-                  </ng-container>
-                  <ng-container matColumnDef="correo">
-                    <th mat-header-cell *matHeaderCellDef > Correo electrónico</th>
-                    <td mat-cell *matCellDef="let row">{{row.correo}} </td>
-                  </ng-container>
-                </tr>
-                  <tr mat-header-row *matHeaderRowDef="displayedColumnsDetail"></tr>
-                  <tr mat-row *matRowDef="let row; columns: displayedColumnsDetail;"></tr>
-              </table>  
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="openActa.hide()">Cerrar</button>
-          <!-- <button type="button" class="btn btn-primary" (click)="openActa.hide()" (click)="guardar()"><svg cIcon class="me-2" name="cil-cloud-download"></svg>Descargar Excel</button>
-          <button type="button" class="btn btn-primary" (click)="openActa.hide()" (click)="guardar()"><svg cIcon class="me-2" name="cil-cloud-download"></svg>Descargar PDF</button> -->
-        </div>
-      </div>
-    </div>
-  </div>
                                             </td>
                                         </ng-container>
                                     </tr>
@@ -169,80 +102,11 @@
 
                             </ng-container>
                             <ng-template #noData>
-                                <!-- <button cButton color="light" size="sm" (click)="gestionNewSeccion.show()" [attr.data-target]="'#modal-' + dato3.cod_ucurr"> <svg cIcon
-                                        class="me-2" name="cilPlaylistAdd"></svg>Abrir sección</button> -->
                                 <c-alert color="info" class="d-flex align-items-center">
                                     <svg cIcon class="me-2" width="24" height="24" name="cilBellExclamation"></svg>
                                     <div>No existen secciones creadas</div>
                                 </c-alert>
                             </ng-template>
-
-<!-- Modal -->
-<div bsModal #gestionNewSeccion="bs-modal" [id]="'modal-' + dato3.cod_ucurr" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h2 class="modal-title" >Crear nueva sección: {{dato3.nombre_uni_curr}}</h2>
-        </div>
-        <div class="modal-body">
-            <form #f="ngForm" [formGroup]="firstFormGroup" >
-                 <div class="row">
-                    <div class="col s12"><label>Codigo unidad curricular:</label>
-                        <mat-form-field>
-                          <mat-label>Código:</mat-label>
-                          <input style='text-transform:uppercase' [(ngModel)]="selectedCodUcurr" matInput readonly formControlName="selectedCodUcurr" name="selectedCodUcurr">
-                        </mat-form-field>
-                  </div>
-                    <div class="col s12"><label>Indique el nro de la sección:</label>
-                          <mat-form-field>
-                            <mat-label>Sección:</mat-label>
-                            <input [(ngModel)]="seccion" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" type="number" min="1" max="99" matInput formControlName="seccion"
-                              name="seccion" required>
-                          </mat-form-field>
-                    </div>
-                    <div class="col s12"><label>Indique el tipo de sección:</label>
-                        <mat-form-field>
-                            <mat-label>Tipo de sección:</mat-label>
-                            <mat-select  [(ngModel)]="tiposeccion" formControlName="tiposeccion">
-                              <mat-option [value]="modin.codelemento"
-                              *ngFor="let modin of tseccion">{{modin.descripcion}}</mat-option>
-                            </mat-select>
-                          </mat-form-field>
-                      </div>
-                      <div class="col s12"><label>Indique los cupos máximos:</label>
-                        <mat-form-field>
-                          <mat-label>Cantidad de cupos:</mat-label>
-                          <input [(ngModel)]="cuposmax" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" type="number" min="1" max="99" matInput formControlName="cuposmax"
-                              name="cuposmax" required>
-                        </mat-form-field>
-                      </div>
-                  </div>
-                  <div class="row">
-                    <div class="col l12 m12 s12">
-                      <label>Docente asignado:</label>
-                      <div class="row mar-b-0">
-                        <div class="col s12">
-                          <mat-form-field>
-                            <mat-label>Seleccione docente:</mat-label>
-                            <input style='text-transform:uppercase' [(ngModel)]="docente" matInput formControlName="docente" name="docente">
-                          </mat-form-field>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <input type="hidden" [(ngModel)]="usr.usrsice"  formControlName="usrsice" >
-                  <input type="hidden" [(ngModel)]="carreraSeleccionada"  formControlName="carreraSeleccionada" >
-                  <input type="hidden" [(ngModel)]="periodoSeleccionado"  formControlName="periodoSeleccionado" >
-            </form>
-            
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="gestionNewSeccion.hide()">Cerrar</button>
-          <button type="button" class="btn btn-primary" [disabled]="!firstFormGroup.valid" (click)="gestionNewSeccion.hide()" (click)="guardar()"><svg cIcon class="me-2" name="cil-cloud-upload"></svg>Crear sección</button>
-        </div>
-      </div>
-    </div>
-  </div>
                         </mat-expansion-panel>
                     </mat-expansion-panel>
                 </mat-accordion>

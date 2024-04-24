@@ -14,6 +14,8 @@ import { AutoregistroComponent } from './views/administrativo/autoregistro/autor
 import { LogoutComponent } from './views/pages/logout/logout.component';
 import { LoginDocenteComponent } from './views/docentes/login-docente/login-docente.component';
 import { AutoregistroDocenteComponent } from './views/docentes/autoregistro-docente/autoregistro-docente.component';
+import { AutomigraEstudianteComponent } from './views/migraestudiantes/automigra-estudiante/automigra-estudiante.component';
+import { LoginMigraestudianteComponent } from './views/migraestudiantes/login-migraestudiante/login-migraestudiante.component';
 
 import { AuthGuard } from './guards/auth.guard';
 
@@ -74,6 +76,18 @@ const routes: Routes = [
       { path: 'docentes', 
           loadChildren: () => 
           import('./views/docentes/docentes.module').then(m => m.DocentesModule) 
+      },
+      { path: 'doc-academico', canActivate: [AuthGuard],
+          loadChildren: () => 
+          import('./views/doc-academico/doc-academico.module').then(m => m.DocAcademicoModule)
+      },
+      { path: 'est-solicitud', canActivate: [AuthGuard],
+          loadChildren: () => 
+          import('./views/est-solicitud/est-solicitud.module').then(m => m.EstSolicitudModule) 
+      },
+      { path: 'migraestudiantes', 
+          loadChildren: () => 
+          import('./views/migraestudiantes/migraestudiantes.module').then(m => m.MigraestudiantesModule) 
       },
 
       /* Fin de rutas UNETRANS */
@@ -203,13 +217,30 @@ const routes: Routes = [
       title: 'Autoregistro'
     }
   },
+
+  {
+    path: 'automigra-estudiante',
+    component: AutomigraEstudianteComponent,
+    data: {
+      title: 'Automigración'
+    }
+  },
+  {
+    path: 'login-migraestudiante',
+    component: LoginMigraestudianteComponent,
+    data: {
+      title: 'Login Estudiantil'
+    }
+  },
+
   {
     path: 'logout',
     component: LogoutComponent,
     data: {
       title: 'Salir'
     }
-  },
+  }, 
+  
   
   
   {path: '**', redirectTo: '404'}

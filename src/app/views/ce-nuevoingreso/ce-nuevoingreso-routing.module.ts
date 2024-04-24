@@ -5,6 +5,10 @@ import { AutopostuladosComponent } from './autopostulados/autopostulados.compone
 import { ConvenioComponent } from './convenio/convenio.component';
 import { ConsultarDatosComponent } from './consultar-datos/consultar-datos.component';
 import { ReincorporacionComponent } from './reincorporacion/reincorporacion.component';
+import { ExpedienteComponent } from './expediente/expediente.component';
+import { DocumentosComponent } from './documentos/documentos.component';
+import { InscripcionComponent } from './inscripcion/inscripcion.component';
+import { MigracionComponent } from './migracion/migracion.component';
 
 const routes: Routes = [
   {
@@ -51,6 +55,34 @@ const routes: Routes = [
         component: ReincorporacionComponent,
         data: {
           title: 'Reincorporaciones'
+        }
+      },
+      {
+        path: 'expediente',
+        component: ExpedienteComponent,
+        data: {
+          title: 'Expediente UNETRANS'
+        }
+      },
+      {
+        path: 'documentos',
+        component: DocumentosComponent,
+        data: {
+          title: 'Documentos Académicos'
+        }
+      },
+      {
+        path: 'inscripcion',
+        component: InscripcionComponent,
+        data: {
+          title: 'Inscribir estudiante'
+        }
+      },
+      {
+        path: 'migracion',
+        component: MigracionComponent,
+        data: {
+          title: 'Migración Estudiantil'
         }
       },
     ]

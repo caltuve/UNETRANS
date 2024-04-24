@@ -51,6 +51,14 @@
             <mat-divider class="mat-divider mat-divider-horizontal" role="separator"
               aria-orientation="horizontal"></mat-divider>
             <mat-card-content>
+              <c-alert color="info">
+                <h4 cAlertHeading><strong>¡IMPORTANTE!</strong></h4>
+                <p>
+                  Verifica que todos tus datos de identificación estén correctos, si existe alguna discrepancia por favor notifícalo inmediatamente al correo <strong>soportesice@unetrans.edu.ve</strong> <br>
+                  Deberás adjuntar copia del documento de identidad y escribir en el Asunto: Datos de Identificación Incorrectos. <br>
+                  <strong>¡NO CONTINÚE EL REGISTRO SI SUS DATOS NO ESTÁN CORRECTOS!</strong>
+                </p>
+              </c-alert>
               <div class="row">
                 <div class="col l6 m12 s12 col-sm-12"> 
                   <label class="label-custom">Documento de identidad:</label>
@@ -672,7 +680,14 @@
     <span class="mat-button-wrapper"><mat-icon aria-hidden="true">search</mat-icon></span>
   </button>
             </div>
-            
+            <c-alert color="info">
+              <h4 cAlertHeading><strong>¡IMPORTANTE!</strong></h4>
+              <p>
+                Si el nombre del Plantel o Instituto no se muestra en la lista por favor notifícalo inmediatamente al correo <strong>soportesice@unetrans.edu.ve</strong> <br>
+                Deberás indicar el ESTADO, MUNICIPIO, PARROQUIA y NOMBRE DE LA INSTITUCIÓN. <br>
+                <strong>¡EVITE SELECCIONAR OTRA INSTITUCIÓN QUE NO SEA EN LA CUAL SE GRADUÓ!</strong>
+              </p>
+            </c-alert>
             <div bsModal #myModalColegios="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
               <div class="modal-dialog" role="document">
                 <div class="modal-content">

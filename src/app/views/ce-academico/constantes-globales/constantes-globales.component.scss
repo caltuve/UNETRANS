@@ -1,0 +1,25 @@
+.categorias-container {
+    display: flex;
+  }
+  
+  .categorias-list {
+    flex: 1; /* Ajusta la proporción según prefieras */
+    overflow-y: auto; /* Para scroll en la lista si es necesario */
+    border-right: 1px solid #ccc; /* Una línea sutil entre la lista y el detalle */
+    padding: 10px;
+  }
+  
+  .categoria-item {
+    cursor: pointer;
+    padding: 10px;
+    border-bottom: 1px solid #eee; /* Línea sutil entre ítems */
+  }
+  
+  .categoria-item:hover {
+    background-color: #f5f5f5; /* Resalta el ítem al pasar el mouse */
+  }
+  
+  .categoria-detalle {
+    flex: 2; /* Ajusta la proporción según prefieras */
+    padding: 10px;
+  }

@@ -32,6 +32,14 @@ showInfo(message: string | undefined,){
     })
 }
 
+showInfoRegDoc(message: string | undefined,){
+  this.toastr.info(message, '¡Registro pendiente!', {
+    progressBar : true,
+    progressAnimation : 'decreasing',
+    timeOut: 10000
+  })
+}
+
 showError3(message: string | undefined,){
   this.toastr.error(message, '¡Proceso no autorizado!', {
     progressBar : true,

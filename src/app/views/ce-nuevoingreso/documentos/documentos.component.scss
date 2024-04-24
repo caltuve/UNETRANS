@@ -1,0 +1,64 @@
+.estatus-ancho {
+    width: 4%;
+  }
+  .carnet-ancho {
+    width: 4%;
+  }
+  .ult-per-ancho {
+    width: 9%;
+  }
+  .cedula-ancho {
+    width: 10%;
+  }
+  .cohorte-ancho {
+    width: 3%;
+  }
+  .trayecto-ancho {
+    width: 2%;
+  }
+
+  .info-card {
+    display: inline-block;
+    margin-right: 10px;
+    /* Otros estilos que desees aplicar */
+  }
+
+
+  .estudiante-container {
+    display: flex;
+    align-items: center; /* Alinea verticalmente los elementos */
+  }
+  
+  .foto-estudiante img {
+    max-width: 100px; /* Ajusta el tamaño de la foto */
+    //border-radius: 50%; /* Opcional: para hacer la foto circular */
+    margin-right: 20px; /* Espacio entre la foto y los datos */
+  }
+  
+  .datos-estudiante p {
+    margin: 0; /* Elimina los márgenes por defecto de los párrafos */
+  }
+
+  .separador {
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .documentos-container h3 {
+    margin-bottom: 10px;
+  }
+
+  .mat-elevation-z8 {
+    overflow: auto;
+    max-width: 100%;
+  }
+  
+  .mat-table {
+    width: 100%;
+  }
+
+  .centered-content {
+    //display: flex;
+    //justify-content: center;
+    align-items: center;
+  }

@@ -46,13 +46,19 @@ export class LoginDocenteComponent {
               this.notifyService.showError2('Usted no está registrado como personal DOCENTE, verifique su cédula e intente nuevamente.');
               this.router.navigateByUrl('/login-docente');
                 break;
+            case 'sin jefe':
+              this.SpinnerService.hide();
+              //this.myModalCompletado.show(); 
+              this.notifyService.showInfoRegDoc('Es necesario que el Jefe de Departamento complete su registro para usted poder registrarse.');
+              this.router.navigateByUrl('/login-docente');
+                break;
             default:
               this.SpinnerService.hide(); 
               this.aspirante = data
               this.docenteService.datosAspirante = data
               this.docenteService.materiasAspirante = data.materias
               sessionStorage.setItem('currentUser', JSON.stringify(this.aspirante)); 
-              this.notifyService.showSuccess('Bienvenido al proceso de autoregistro.');
+              this.notifyService.showSuccess('Bienvenido al proceso de autoregistro DOCENTE.');
               this.router.navigateByUrl('/autoregistro-docente');
               break;
           }

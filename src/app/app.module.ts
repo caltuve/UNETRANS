@@ -72,6 +72,9 @@ import {MatTabsModule} from '@angular/material/tabs';
 import {TableModule } from '@coreui/angular';
 import { MatTableModule } from '@angular/material/table';
 
+import {MatSidenavModule} from '@angular/material/sidenav';
+import {MatListModule} from '@angular/material/list'; 
+
 
 import { DocsComponentsModule } from '@docs-components/docs-components.module';
 
@@ -95,7 +98,7 @@ const APP_CONTAINERS = [
 ];
 
 @NgModule({
-  declarations: [AppComponent, ...APP_CONTAINERS],
+  declarations: [AppComponent, ...APP_CONTAINERS,],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -113,6 +116,7 @@ const APP_CONTAINERS = [
     ButtonModule,
     FormModule,
     UtilitiesModule,
+    MatListModule,
     ButtonGroupModule,
     ReactiveFormsModule,
     SharedModule,
@@ -124,6 +128,7 @@ const APP_CONTAINERS = [
     CardModule,
     HttpClientModule,
     MatStepperModule,
+    MatSidenavModule,
     MatInputModule,
     MatFormFieldModule,
     MatSelectModule,

@@ -4,6 +4,9 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { DepAcademicoRoutingModule } from './dep-academico-routing.module';
 import { GestionCuposComponent } from './gestion-cupos/gestion-cupos.component';
 import { MallaAcademicaComponent } from './malla-academica/malla-academica.component';
+import { GestionDocenteComponent } from './gestion-docente/gestion-docente.component';
+import { ProgramaAcademicoComponent } from './programa-academico/programa-academico.component';
+import { GestionPlanEstudiosComponent } from './gestion-plan-estudios/gestion-plan-estudios.component';
 
 import { MatStepperModule } from '@angular/material/stepper'; 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -74,7 +77,10 @@ import {MatRadioModule} from '@angular/material/radio';
 @NgModule({
   declarations: [
     GestionCuposComponent,
-    MallaAcademicaComponent
+    MallaAcademicaComponent,
+    GestionDocenteComponent,
+    ProgramaAcademicoComponent,
+    GestionPlanEstudiosComponent
   ],
   imports: [
     CommonModule,
