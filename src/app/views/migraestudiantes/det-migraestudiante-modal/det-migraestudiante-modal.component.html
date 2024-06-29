@@ -1,5 +1,5 @@
 <div class="modal-header">
-  <h4 class="modal-title">Bienvenid@ al proceso de migración de datos de la UNETRANS</h4>
+  <h4 class="modal-title">Bienvenid&#64; al proceso de migración de datos de la UNETRANS</h4>
 </div>
 <div class="modal-body">
   <div *ngIf="estudianteBase.estatus_migra === 3">
@@ -33,7 +33,7 @@
                   El correo ya está registrado.
                 </mat-error>
                 <mat-error *ngIf="form.get('email')?.errors?.['pattern']">
-                  Solo se aceptan correos de dominio @gmail.com
+                  Solo se aceptan correos de dominio &#64;gmail.com
                 </mat-error>
               </mat-form-field>
             </div>
@@ -234,12 +234,12 @@
             <c-alert *ngIf="estudianteBase.estatus_migra === 0" color="info">
               <strong>Información Importante:</strong><br>
               Registra un <strong>correo de GMAIL válido</strong> al que tengas acceso. Te enviaremos un código de verificación a esta dirección. <br>
-              Verifica tu bandeja de entrada y la carpeta de SPAM. Para asistencia, contacta a: soportesice@unetrans.edu.ve
+              Verifica tu bandeja de entrada y la carpeta de SPAM. Para asistencia, contacta a: soportesice&#64;unetrans.edu.ve
             </c-alert>
             <c-alert *ngIf="estudianteBase.estatus_migra === 5" color="info">
               <strong>Información Importante:</strong><br>
               Tu correo electrónico ya ha sido verificado anteriormente. Te enviamos un código a <strong>{{ estudianteBase.email }}</strong> para completar el proceso inicial. <br>
-              Verifica tu bandeja de entrada y la carpeta de SPAM. Para asistencia, contacta a: soportesice@unetrans.edu.ve
+              Verifica tu bandeja de entrada y la carpeta de SPAM. Para asistencia, contacta a: soportesice&#64;unetrans.edu.ve
             </c-alert>
             <label>Verificación del correo electrónico:</label>
             <div class="row">
@@ -257,7 +257,7 @@
                     El correo ya está registrado.
                   </mat-error>
                   <mat-error *ngIf="thirdFormGroup3.get('email')?.errors?.['pattern']">
-                    Solo se aceptan correos de dominio @gmail.com
+                    Solo se aceptan correos de dominio &#64;gmail.com
                   </mat-error>
                 </mat-form-field>
               </div>

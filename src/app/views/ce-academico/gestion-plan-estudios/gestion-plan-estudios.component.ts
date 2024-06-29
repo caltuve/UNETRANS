@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+//import { ActivatedRoute, Router } from '@angular/router';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { GestionPlanEstudiosModalComponent } from './../gestion-plan-estudios-modal/gestion-plan-estudios-modal.component';
 import { AddUnidadCurricularModalComponent } from './../add-unidad-curricular-modal/add-unidad-curricular-modal.component';
@@ -71,7 +71,7 @@ modalRef: BsModalRef;
     }
 
     ngOnInit(): void {
-      this.route.paramMap.subscribe(params => {
+      this.route.paramMap.subscribe((params: { get: (arg0: string) => any; }) => {
         const idParam = params.get('id');
         if (idParam) {
           this.idPrograma = +idParam;
@@ -100,7 +100,7 @@ modalRef: BsModalRef;
             this.jefe = programa.jefe;
           }
           this.controlestudiosService.obtenerMenciones(id).subscribe(
-            menciones => {
+            (            menciones: never[]) => {
               this.menciones = menciones;
               if (this.menciones.length === 0) {
                 //this.gestionPlanForm.removeControl('mencion');
@@ -272,7 +272,7 @@ obtenerUsuarioActual() {
     this.trayectoAct = trayectoNombre;
     this.SpinnerService.show();
     this.controlestudiosService.obtenerUnidadesCurriculares(this.planSeleccionado, trayectoNombre)
-      .subscribe(data => {
+      .subscribe((data: any[]) => {
         this.unidadesCurriculares = data;
         this.SpinnerService.hide();
       });
@@ -281,7 +281,7 @@ obtenerUsuarioActual() {
   cargarUnidadesCurricularesSemestral(trayectoNombre: string, semestreNumero: number): void {
     this.SpinnerService.show();
     this.controlestudiosService.obtenerUnidadesCurricularesSemestre(this.planSeleccionado, trayectoNombre, semestreNumero)
-      .subscribe(data => {
+      .subscribe((data: any[]) => {
         this.unidadesCurriculares = data;
         this.SpinnerService.hide();
       });
@@ -291,7 +291,7 @@ obtenerUsuarioActual() {
   cargarUnidadesCurricularesMencion(trayectoNombre: string, mencion: string): void {
     this.SpinnerService.show();
     this.controlestudiosService.obtenerUnidadesCurricularesMencion(this.planSeleccionado, trayectoNombre, mencion)
-      .subscribe(data => {
+      .subscribe((data: any[]) => {
         this.unidadesCurriculares = data;
         this.SpinnerService.hide();
       });
@@ -335,7 +335,7 @@ abrirModificacionUc(id_uc: string) {
                   this.SpinnerService.hide();
               }
           },
-          error: (error) => {
+          error: (error: any) => {
               console.error('Error al buscar datos de la UC: ', error);
               this.SpinnerService.hide();
               this.notifyService.showError('Error al comunicarse con el servidor.');
