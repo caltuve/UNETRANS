@@ -45,6 +45,18 @@ export class LoginService {
     );
   }
 
+  verify_user_rec_pass(userlogin: any): Observable<any>{
+    return this.http.post(`${this.url}verify_usr_rec_pass.php`, JSON.stringify(userlogin))
+}
+
+validate_token_recovery(token: string, usrsice: string): Observable<any>{
+  return this.http.post(`${this.url}validate_token.php`, {
+    token,
+    usrsice
+  });
+}
+
+
   //token
 setToken(userlogin: string) {
   sessionStorage.setItem('token', userlogin);
@@ -69,6 +81,25 @@ setToken(userlogin: string) {
   getMenuSice(usrsice: any): Observable<any>{
     return this.http.post(`${this.url}get_menu_sice.php`, JSON.stringify(usrsice))}
 
+getSecurityQuestions(usrsice: string): Observable<any> {
+      return this.http.post<any>(`${this.url}getSecurityQuestions.php`, {
+        usrsice
+      });
+  }
+
+  validateAnswers(answers: any[], usrsice: string): Observable<any>{
+    return this.http.post(`${this.url}validateAnswers.php`, {
+      answers,
+      usrsice
+    });
+  }
+
+  resetPassword(newpass: string, usrsice: string): Observable<any>{
+    return this.http.post(`${this.url}resetPassword.php`, {
+      newpass,
+      usrsice
+    });
+  }
   
     startInactivityTimer() {
       if (!this.appElement) return;
@@ -124,6 +155,22 @@ setToken(userlogin: string) {
         this.notifyService.showSuccess('Cierre de sesión por inactividad!');
         this.SpinnerService.hide();
         this.router.navigateByUrl('/login');  
+        }
+
+        generaOtp(datos: any): Observable<any>{
+          return this.http.post(`${this.url}generaotpSecurityQuestions.php`, JSON.stringify(datos))
+        }
+
+        validarOTPSecQuest(datos: any): Observable<any>{
+          return this.http.post(`${this.url}validaotpSecQuest.php`, JSON.stringify(datos))
+        }
+
+        getQuestSec() {
+          return this.http.get(`${this.url}questsec.php`);
+        }
+
+        updateSecurityQuestions(datos: any): Observable<any>{
+          return this.http.post(`${this.url}updateSecurityQuestions.php`, JSON.stringify(datos))
         }
     
 }

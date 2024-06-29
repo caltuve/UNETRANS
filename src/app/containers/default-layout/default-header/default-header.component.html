@@ -21,13 +21,18 @@
       </c-nav-item>
     </c-header-nav>
 
-    <c-header-nav class=" d-lg-flex">
-      <a cNavLink>
-        {{usr.saludo}}, {{usr.nombre_corto}}
-      </a>
+    <c-header-nav class="d-lg-flex ms-auto text-end">
+      <span class="c-nav-link" style="color: white;">
+        {{usr.saludo}}, {{usr.nombre_corto}}<br>
+        <small *ngIf="!usr.ult_conexion">¡Este es tu primer inicio de sesión en el SICE!</small>
+        <small *ngIf="usr.ult_conexion">Tu último ingreso fue el {{usr.ult_conexion}}</small>
+      </span>
     </c-header-nav>
+    
     <c-header-nav class="ms-3">
-      <ng-container *ngTemplateOutlet="userDropdown"></ng-container>
+      <a cNavLink [routerLink]="['/logout']">
+        <svg cIcon name="cil-exit-to-app" size="lg" color="white"></svg>
+      </a>
     </c-header-nav>
 
   </c-container>
@@ -37,25 +42,3 @@
   </c-container> 
 </ng-container>
 <!--</c-header>-->
-
-<ng-template #userDropdown>
-  <c-dropdown alignment="end" variant="nav-item">
-    <button
-      cButton
-      color=""
-      [caret]="false"
-      cDropdownToggle
-      class="py-0"
-    >
-      <c-avatar
-        cTextColor="primary"
-        shape="rounded-1"
-        size="md"
-        src="./assets/img/avatars/avatar-users.png"
-        status="success"
-      >
-      </c-avatar>
-    </button>
-  </c-dropdown>
-</ng-template>
-

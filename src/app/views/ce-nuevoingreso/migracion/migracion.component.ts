@@ -45,6 +45,8 @@ export class MigracionComponent implements AfterViewInit {
   mod_ingreso!: string;
   reso!: string;
 
+  usrsice: string;
+
   usr={
     nac:null,
     cedula:null,
@@ -73,6 +75,7 @@ export class MigracionComponent implements AfterViewInit {
     private SpinnerService: NgxSpinnerService,
     private modalService: BsModalService,
     ) {
+      this.obtenerUsuarioActual();
     }
 
     rangeLabel = 'Mostrando ${start} – ${end} de ${length}';
@@ -241,34 +244,110 @@ firstFormGroup = this._formBuilder.group({
   usrsice : ['', Validators.required],
 });
 
-abrirModalRevision(carnet: string) {
-  // Utiliza los parámetros en la llamada al servicio
-  this.controlestudiosService.findPersonaRdi({cedula: carnet}).subscribe(
-    (result: any) => {
-      const initialState = {
-        estudianteBase: result.estudiante
-        //carnet: this.cedulaActual
-      };
-      this.modalRef = this.modalService.show(ModalRevMigracionComponent, { 
-        initialState: initialState,
-        class: 'modal-xl custom-modal-scrollable',
-        ignoreBackdropClick: true,
-        keyboard: false
-      });
+obtenerUsuarioActual() {
+  const currentUser = JSON.parse(sessionStorage.getItem('currentUser') || '{}');
+  this.usrsice = currentUser.usrsice;
+}
 
-      this.modalRef.content.actualizacionCompleta.subscribe(() => {
-        this.findSolicitudesMigracion();
-        this.findModIngreso();
-        this.findTrayectos();
-        this.findResolucion();  // La función que quieres ejecutar
-      });
+// abrirModalRevision(carnet: string) {
+  
+//   // Utiliza los parámetros en la llamada al servicio
+//   this.controlestudiosService.findPersonaRdi({cedula: carnet}).subscribe(
+//     (result: any) => {
+//       const initialState = {
+//         estudianteBase: result.estudiante,
+//         detallesIncorrectos: result.detallesIncorrectos 
+//         //carnet: this.cedulaActual
+//       };
+//       this.modalRef = this.modalService.show(ModalRevMigracionComponent, { 
+//         initialState: initialState,
+//         class: 'modal-xl custom-modal-scrollable',
+//         ignoreBackdropClick: true,
+//         keyboard: false
+//       });
+
+//       this.modalRef.content.actualizacionCompleta.subscribe(() => {
+//         this.findSolicitudesMigracion();
+//         this.findModIngreso();
+//         this.findTrayectos();
+//         this.findResolucion();  // La función que quieres ejecutar
+//       });
+//     },
+//     error => {
+//       // Manejo de error
+//       console.error('Error al obtener datos de inscripción:', error);
+//     }
+//   );
+// }
+
+abrirModalRevision(carnet: string) {
+  // Verifica si la solicitud está en gestión
+  this.SpinnerService.show(); 
+  this.controlestudiosService.checkEnGestion({ cedula: carnet }).subscribe(
+    (result: any) => {
+      if (result.en_gestion) {
+        this.notifyService.showInfo(`Esta solicitud está siendo gestionada por: <strong>${result.gestor}</strong>`);
+        this.SpinnerService.hide(); 
+      } else {
+        // Marca la solicitud como en gestión antes de abrir el modal
+        this.marcarEnGestion(carnet, true);
+
+        // Utiliza los parámetros en la llamada al servicio
+        this.controlestudiosService.findPersonaRdi({ cedula: carnet }).subscribe(
+          (result: any) => {
+            const initialState = {
+              estudianteBase: result.estudiante,
+              detallesIncorrectos: result.detallesIncorrectos
+            };
+            this.modalRef = this.modalService.show(ModalRevMigracionComponent, {
+              initialState: initialState,
+              class: 'modal-xl custom-modal-scrollable',
+              ignoreBackdropClick: true,
+              keyboard: false
+            });
+            this.SpinnerService.hide(); 
+
+            this.modalRef.content.actualizacionCompleta.subscribe(() => {
+              this.findSolicitudesMigracion();
+              this.findModIngreso();
+              this.findTrayectos();
+              this.findResolucion();
+              // Desmarca la solicitud como en gestión cuando se completa la actualización
+              //this.marcarEnGestion(carnet, false);
+            });
+          },
+          error => {
+            console.error('Error al obtener datos de inscripción:', error);
+            // Desmarca la solicitud como en gestión en caso de error
+            this.marcarEnGestion(carnet, false);
+          }
+        );
+      }
     },
     error => {
-      // Manejo de error
-      console.error('Error al obtener datos de inscripción:', error);
+      this.notifyService.showError2(`Error al verificar estado de gestión: ${error}`);
+      console.error('Error al verificar estado de gestión:', error);
     }
   );
 }
+
+marcarEnGestion(carnet: string, enGestion: boolean) {
+  const data = {
+    cedula: carnet,
+    en_gestion: enGestion,
+    gestor: enGestion ? this.usrsice : null
+  };
+
+  this.controlestudiosService.marcarEnGestion(data).subscribe(
+    () => {
+      console.log('Solicitud marcada como en gestión:', enGestion);
+    },
+    error => {
+      console.error('Error al marcar solicitud como en gestión:', error);
+    }
+  );
+}
+
 
 
 }

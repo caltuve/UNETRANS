@@ -1,0 +1,25 @@
+<div class="modal-header">
+    <h4 class="modal-title pull-left">Confirmación para carga de calificaciones</h4>
+</div>
+<div class="modal-body">
+    <p>¿Está seguro de que desea cargar las calificaciones?</p>
+    <p class="text-justify">
+        Una vez cargadas las calificaciones, no podrán ser modificadas. Las rectificaciones solo serán posibles mediante un proceso administrativo en la <strong>Dirección de Control de Estudios</strong>, con la justificación del motivo y la previa aprobación del Jefe de Departamento o Escuela.
+      </p>
+      
+    
+    <div>
+        <mat-checkbox [(ngModel)]="isConfirmed" (change)="checkConfirmation()">Confirmo que he leído y entendido la información anterior.</mat-checkbox>
+    </div>
+
+    <div *ngIf="isConfirmed">
+        <p>Para confirmar, por favor escribe la palabra <strong>CONFORME</strong> en el siguiente campo:</p>
+        <mat-form-field>
+            <input matInput [(ngModel)]="confirmationText" (keyup)="checkConfirmation()" placeholder="Escribe 'CONFORME'">
+        </mat-form-field>
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-secondary" (click)="cancel()">No, revisar</button>
+    <button class="btn btn-primary" (click)="confirm()" [disabled]="!canConfirm">Sí, cargar</button>
+</div>

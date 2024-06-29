@@ -10,7 +10,15 @@ import { NotificacionService } from './../../../notificacion.service'
 import {FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
+import { Observable, of } from 'rxjs';
+
+export interface CanComponentDeactivate {
+  canDeactivate: () => Observable<boolean> | Promise<boolean> | boolean;
+}
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
+
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
+import { ConfirmDialogUploadGradesComponent } from '../confirm-dialog-upload-grades/confirm-dialog-upload-grades.component';
 
 interface CalificacionEstudiante {
   acta: number;
@@ -49,6 +57,8 @@ export class DetalleActaCalificacionesDocenteComponent implements OnInit {
   usrsice: string;
 
   rol: any []= [];
+
+  isLoadingGrades = false;
 
 
   cargandoDatos = true; 
@@ -122,7 +132,24 @@ export class DetalleActaCalificacionesDocenteComponent implements OnInit {
     });
   }
 
-  enviarCalificaciones(): void {
+
+  enviarCalificaciones() {
+    const modalRef: BsModalRef = this.modalService.show(ConfirmDialogUploadGradesComponent, {
+      ignoreBackdropClick: true,
+      keyboard: false,
+      class: 'modal-dialog-centered'
+    });
+
+    modalRef.content.onClose.subscribe((confirmed: boolean) => {
+      if (confirmed) {
+        this.isLoadingGrades = true;
+        // Lógica para enviar las calificaciones
+        this.procesarEnvioCalificaciones();
+      }
+    });
+  }
+
+  procesarEnvioCalificaciones(): void {
     this.SpinnerService.show();
     const datosParaEnviar: CalificacionEstudiante[] = this.detalleinscritos.data.map(estudiante => {
       // Determinar el estado de la calificación
@@ -273,6 +300,28 @@ export class DetalleActaCalificacionesDocenteComponent implements OnInit {
     };
   
     pdfMake.createPdf(docDefinition as any).download('Acta_Calificaciones.pdf');
+  }
+
+  canDeactivate(): Promise<boolean> {
+    if (this.isLoadingGrades) {
+      return Promise.resolve(true);
+    }
+    return new Promise<boolean>(resolve => {
+      const modalRef = this.modalService.show(ConfirmDialogComponent, {
+        ignoreBackdropClick: true, 
+        keyboard: false,
+        class: 'modal-dialog-centered'
+      });
+      setTimeout(() => {
+        if (modalRef.content) {
+          modalRef.content.onClose.subscribe((confirmed: boolean) => {
+            resolve(confirmed);
+          });
+        } else {
+          resolve(true);
+        }
+      });
+    });
   }
 
   

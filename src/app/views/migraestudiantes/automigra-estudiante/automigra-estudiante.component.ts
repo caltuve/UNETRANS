@@ -1,5 +1,5 @@
 import { Component, AfterViewInit, OnInit, ViewChild} from '@angular/core';
-import { NgForm, FormBuilder, FormGroup, Validators,FormControl} from '@angular/forms';
+import { NgForm, FormBuilder, FormGroup, Validators,FormControl, ValidationErrors, AbstractControl} from '@angular/forms';
 import { MigrastudentService } from '../migrastudent.service';
 import {MatTableDataSource} from '@angular/material/table';
 import { EstadoI, MunicipioI, ParroquiaI } from '../../control-estudios/crear-nuevo/model.interface'
@@ -14,8 +14,6 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import { NgxSpinnerService } from "ngx-spinner";
 import { NotificacionService } from './../../../notificacion.service'
 import {ModalDirective} from 'ngx-bootstrap/modal';
-
-import { AbstractControl } from '@angular/forms';
 
 import { Observable, of , Subject, merge   } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
@@ -126,9 +124,11 @@ export class AutomigraEstudianteComponent implements OnInit, AfterViewInit {
   procedencia: any []= [];
   parentesco: any []= [];
   sectortrab: any []= [];
-  questsec1: any []= [];
-  questsec2: any []= [];
-  questsec3: any []= [];
+
+  questsec: any[] = [];
+  questsec1: any[] = [];
+  questsec2: any[] = [];
+  questsec3: any[] = [];
   sede: string ='001';
   //turno: string='X';
   //mingresoopsu: string='001';
@@ -220,6 +220,19 @@ this.filteredPlanteles = merge(nombrePlantelChanges, this.plantelUpdated.asObser
       return typeof value === 'string' ? this._filter(value) : this.listPlantel.slice();
     }),
   );
+
+  this.fiveFormGroup.get('quest1')?.valueChanges.subscribe(value => {
+    this.filterQuestions();
+  });
+
+  this.fiveFormGroup.get('quest2')?.valueChanges.subscribe(value => {
+    this.filterQuestions();
+  });
+
+  this.fiveFormGroup.get('quest3')?.valueChanges.subscribe(value => {
+    this.filterQuestions();
+  });
+
       }
 
       ngAfterViewInit() {
@@ -286,11 +299,11 @@ this.filteredPlanteles = merge(nombrePlantelChanges, this.plantelUpdated.asObser
           tbachiller: ['', Validators.required],
           fechagradobachiller: ['', Validators.required],
           sni: [null, [Validators.min(1)]],
-          indbachiller: ['', [promedioValidator]],
+          indbachiller: ['', [Validators.required, this.numberValidator, this.rangeValidator, this.formatValidator]],
           estadoplantel: ['', Validators.required],
           municipioplantel: [{value: '', disabled: true}, Validators.required],
           parroquiaplantel: [{value: '', disabled: true}, Validators.required],
-          nombreplantel: [{value: '', disabled: true}, Validators.required], 
+          nombreplantel: [{value: '', disabled: true}, [Validators.required, this.plantelValidator.bind(this)]], 
           nombreies: [null], // Inicialmente sin validadores
           tituloies: [null], // Inicialmente sin validadores
           mencionies: [null], // Inicialmente sin validadores
@@ -729,21 +742,80 @@ findSectorTrabajo(){
   );
 }
 
-findQuestSec(){
-  this.aspiranteService.getQuestSec().subscribe(
-    (result: any) => {
-      const opcionesFiltradas1 = ['Q1', 'Q2', 'Q3']; // Aquí colocas los valores codelemento que deseas mostrar
-      this.questsec1 = result.filter((questsec1: { codelemento: string; }) => opcionesFiltradas1.includes(questsec1.codelemento));
+/* Validaciones para el campo de indice de bachillerato*/
 
-      const opcionesFiltradas2 = ['Q4', 'Q5', 'Q6']; // Aquí colocas los valores codelemento que deseas mostrar
-      this.questsec2 = result.filter((questsec2: { codelemento: string; }) => opcionesFiltradas2.includes(questsec2.codelemento));
-
-      const opcionesFiltradas3 = ['Q7', 'Q8', 'Q9']; // Aquí colocas los valores codelemento que deseas mostrar
-      this.questsec3 = result.filter((questsec3: { codelemento: string; }) => opcionesFiltradas3.includes(questsec3.codelemento));
-
-      
+numberValidator(control: AbstractControl): ValidationErrors | null {
+  const value = control.value;
+  if (isNaN(value)) {
+    return { invalidNumber: true };
   }
-  );
+  return null;
+}
+
+rangeValidator(control: AbstractControl): ValidationErrors | null {
+  const value = parseFloat(control.value);
+  if (value < 10 || value > 20) {
+    return { outOfRange: true };
+  }
+  return null;
+}
+
+formatValidator(control: AbstractControl): ValidationErrors | null {
+  const value = control.value;
+  const regex = /^\d{2}\.\d{2}$/;
+  if (!regex.test(value)) {
+    return { invalidFormat: true };
+  }
+  return null;
+}
+
+onInputChange(event: any) {
+  const input = event.target.value.replace(/[^0-9]/g, ''); // Remove non-numeric characters
+  let numericValue = parseFloat(input) / 100; // Move decimal to appropriate place
+
+  if (isNaN(numericValue)) {
+    numericValue = 0;
+  }
+
+  const formattedInput = numericValue.toFixed(2); // Ensure two decimal places
+  this.thirdFormGroup.patchValue({ indbachiller: formattedInput }, { emitEvent: false });
+
+  // Set cursor position to the end
+  setTimeout(() => {
+    event.target.selectionStart = event.target.value.length;
+    event.target.selectionEnd = event.target.value.length;
+  }, 0);
+}
+
+plantelValidator(control: AbstractControl): ValidationErrors | null {
+  const value = control.value;
+  if (!value) {
+    return { required: true };
+  }
+  const valid = this.listPlantel.some(colegio => colegio.nombre === value.nombre);
+  return valid ? null : { invalidPlantel: true };
+}
+
+onInputChangeSni(event: any) {
+  const input = event.target.value.replace(/[^0-9]/g, ''); // Remove non-numeric characters
+  this.thirdFormGroup.patchValue({ sni: input }, { emitEvent: false });
+}
+
+
+findQuestSec() {
+  this.aspiranteService.getQuestSec().subscribe((result: any) => {
+    this.questsec = result;
+    this.filterQuestions();
+  });
+}
+
+filterQuestions() {
+  const quest1 = this.fiveFormGroup.get('quest1')?.value;
+  const quest2 = this.fiveFormGroup.get('quest2')?.value;
+
+  this.questsec1 = this.questsec;
+  this.questsec2 = this.questsec.filter(q => q.descripcion !== quest1);
+  this.questsec3 = this.questsec.filter(q => q.descripcion !== quest1 && q.descripcion !== quest2);
 }
 
 crearPersona(f: any) {

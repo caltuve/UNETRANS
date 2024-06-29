@@ -1,0 +1,316 @@
+<c-col xs="12">
+  <c-card class="mb-4">
+    <c-card-header>
+      <strong>Creación de plan de estudios</strong> &nbsp; <small>Datos del plan de estudios</small>
+    </c-card-header>
+    <c-card-body>
+      <mat-horizontal-stepper linear #stepper>
+        <!-- Paso 1: Información del Plan de Estudios -->
+        <mat-step [stepControl]="programFormGroup">
+          <form [formGroup]="programFormGroup">
+            <ng-template matStepLabel>Información del Plan de Estudios</ng-template>
+            <div class="row">
+              <div class="col s12">
+                <c-alert color="info">
+                  Por favor completa los campos para poder crear un nuevo plan de estudios asociado al programa: <strong>{{ nomPro }}</strong>.
+                </c-alert>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col l3 m6 s12">
+                <mat-form-field>
+                  <mat-label>Código del Plan</mat-label>
+                  <input matInput formControlName="codigo" style='text-transform:uppercase' required>
+                </mat-form-field>
+              </div>
+              <div class="col l3 m6 s12">
+                <mat-form-field>
+                  <mat-label>Régimen</mat-label>
+                  <mat-select formControlName="regimen" required>
+                    <mat-option *ngFor="let option of regimen" [value]="option.codelemento">{{option.descripcion}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col l3 m6 s12">
+                <mat-form-field>
+                  <mat-label>Tipo de plan</mat-label>
+                  <mat-select formControlName="tipo_plan" required>
+                    <mat-option *ngFor="let option of tipoprograma" [value]="option.codelemento">{{option.descripcion}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col l3 m6 s12">
+                <mat-form-field>
+                  <mat-label>Afiliación</mat-label>
+                  <mat-select formControlName="afiliacion" required>
+                    <mat-option *ngFor="let option of filteredAfiliacionOptions" [value]="option.codelemento">{{option.descripcion}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col l9 m6 s12">
+                <mat-form-field>
+                  <mat-label>Nombre del Plan</mat-label>
+                  <input matInput formControlName="nombre_plan" style='text-transform:uppercase' required>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col l3 m6 s12">
+                <mat-form-field>
+                  <mat-label>Duración (en años)</mat-label>
+                  <input matInput type="number" formControlName="duracion" required>
+                </mat-form-field>
+              </div>
+              <div class="col l3 m6 s12">
+                <mat-form-field>
+                  <mat-label>Estatus</mat-label>
+                  <mat-select formControlName="estatus" required (selectionChange)="onEstatusChange($event)">
+                    <mat-option *ngFor="let option of estatusOptions" [value]="option">{{option}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col l3 m6 s12">
+                <mat-form-field>
+                  <mat-label>Fecha Inicio</mat-label>
+                  <input matInput [matDatepicker]="pickerInicio" formControlName="fecha_inicio" required>
+                  <mat-datepicker-toggle matSuffix [for]="pickerInicio"></mat-datepicker-toggle>
+                  <mat-datepicker #pickerInicio></mat-datepicker>
+                </mat-form-field>
+              </div>
+              <div class="col l3 m6 s12">
+                <mat-form-field>
+                  <mat-label>Fecha Fin</mat-label>
+                  <input matInput [matDatepicker]="pickerFin" formControlName="fecha_fin"
+                    [disabled]="!isFechaFinEnabled">
+                  <mat-datepicker-toggle matSuffix [for]="pickerFin"></mat-datepicker-toggle>
+                  <mat-datepicker #pickerFin></mat-datepicker>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col s12">
+                <mat-checkbox formControlName="tieneTransicion"
+                  *ngIf="programFormGroup.get('tipo_plan')?.value === '02'">¿Tiene Transición?</mat-checkbox>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col s12">
+                <mat-checkbox formControlName="tieneMencion">¿Tiene Mención?</mat-checkbox>
+              </div>
+            </div>
+            <div class="row" *ngIf="programFormGroup.get('tieneMencion')?.value">
+              <div class="col l6 m6 s12">
+                <mat-form-field>
+                  <mat-label>Nombre de la Mención</mat-label>
+                  <input matInput formControlName="nombre_mencion" required>
+                </mat-form-field>
+              </div>
+              <div class="col l6 m6 s12">
+                <mat-form-field>
+                  <mat-label>Siglas de la Mención</mat-label>
+                  <input matInput formControlName="siglas_mencion" style='text-transform:uppercase' required
+                    maxlength="3" minlength="3">
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col s12" style="text-align: right;">
+                <button cButton btn btn-primary size="sm" (click)="onNextStep(stepper)"
+                  [disabled]="!programFormGroup.valid">
+                  <svg cIcon class="me-2" name="cil-arrow-right"></svg>
+                  Siguiente
+                </button>
+              </div>
+            </div>
+          </form>
+        </mat-step>
+
+        <!-- Paso 2: Trayectos o Años a Crear -->
+        <mat-step>
+          <ng-template matStepLabel>Trayectos o Años a Crear</ng-template>
+          <div class="row">
+            <div class="col s12">
+              <c-alert color="info">
+                Dependiendo del tipo de programa y la duración en años, se crearán los trayectos o años
+                necesarios automáticamente.
+              </c-alert>
+            </div>
+          </div>
+          <div cdkDropList class="example-list" (cdkDropListDropped)="drop($event)">
+            <div *ngFor="let trayecto of trayectos; let i = index" class="example-box" cdkDrag>
+              {{ trayecto }}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col s12" style="text-align: right;">
+              <button cButton btn btn-secondary size="sm" matStepperPrevious>
+                <svg cIcon class="me-2" name="cil-arrow-left"></svg>
+                Anterior
+              </button>
+              <button cButton btn btn-primary size="sm" matStepperNext [disabled]="trayectos.length === 0"
+                style="margin-left: 8px;">
+                <svg cIcon class="me-2" name="cil-arrow-right"></svg>
+                Siguiente
+              </button>
+            </div>
+          </div>
+        </mat-step>
+
+<!-- Paso 3: Titulaciones/Certificaciones -->
+<mat-step [stepControl]="certificacionesFormGroup">
+  <form [formGroup]="certificacionesFormGroup">
+    <ng-template matStepLabel>Titulaciones/Certificaciones</ng-template>
+    <div class="row">
+      <div class="col s12">
+        <c-alert color="info">
+          Por favor ingrese el nombre de la certificación/Titulación que obtendrá en el año o trayecto mostrado. <br>
+          <strong>SIN MENCIÓN</strong>
+        </c-alert>
+      </div>
+    </div>
+    <div class="row" *ngIf="programFormGroup.get('tipo_plan')?.value === '01'">
+      <div class="col s12">
+        <div *ngIf="trayectos.length > 0" formArrayName="certificaciones">
+          <div *ngFor="let control of certificacionesFormArray.controls; let i = index" [formGroupName]="i">
+            <div class="row align-items-center">
+              <div >
+                <mat-form-field>
+                  <mat-label>Nombre de la Titulación</mat-label>
+                  <input matInput formControlName="nombre" required>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row" *ngIf="programFormGroup.get('tipo_plan')?.value === '02'">
+      <div class="col s12">
+        <div formArrayName="certificaciones">
+          <div *ngFor="let control of certificacionesFormArray.controls; let i = index" [formGroupName]="i">
+            <div class="row align-items-center">
+              <div class="col l5 m5 s12">
+                <mat-form-field class="full-width">
+                  <mat-label>{{ control.get('anio')?.value }} - Nombre Certificación/Titulación</mat-label>
+                  <input matInput formControlName="nombre" required>
+                </mat-form-field>
+              </div>
+              <div class="col l3 m3 s12">
+                <mat-form-field class="full-width">
+                  <mat-label>Tipo</mat-label>
+                  <mat-select formControlName="tipo" required>
+                    <mat-option *ngFor="let option of tipoCertificacionOptions" [value]="option">{{option}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col l2 m2 s6 d-flex align-items-center justify-content-center">
+                <mat-checkbox formControlName="mencion">Mención</mat-checkbox>
+              </div>
+              <div class="col l2 m2 s6 d-flex align-items-center justify-content-center">
+                <button cButton btn btn-danger size="sm" (click)="removeCertificacion(i)">
+                  <svg cIcon name="cil-trash"></svg>
+                </button>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col s12" style="text-align: right;">
+        <button cButton btn btn-secondary size="sm" matStepperPrevious>
+          <svg cIcon class="me-2" name="cil-arrow-left"></svg>
+          Anterior
+        </button>
+        <button cButton btn btn-primary size="sm" matStepperNext [disabled]="!isStep3Valid()" style="margin-left: 8px;">
+          <svg cIcon class="me-2" name="cil-arrow-right"></svg>
+          Siguiente
+        </button>
+      </div>
+    </div>
+  </form>
+</mat-step>
+
+
+        <!-- Paso 4: Resumen -->
+        <mat-step>
+          <ng-template matStepLabel>Resumen</ng-template>
+          <div class="row">
+            <div class="col s12">
+              <c-alert color="info">
+                Verifica la información antes de guardar el plan de estudios, ya que esta información es
+                sensible.
+              </c-alert>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col s12">
+              <p><strong>Código del Plan:</strong> {{programFormGroup.get('codigo')?.value}}</p>
+              <p><strong>Régimen:</strong> {{getRegimenDescripcion()}}</p>
+              <p><strong>Tipo de plan:</strong> {{getTipoPlanDescripcion()}}</p>
+              <p><strong>Afiliación:</strong> {{getAfiliacionDescripcion()}}</p>
+              <p><strong>Nombre del Plan:</strong> {{transformToUpperCase(programFormGroup.get('nombre_plan')?.value)}}</p>
+              <p><strong>Duración (en años):</strong> {{programFormGroup.get('duracion')?.value}}</p>
+              <p><strong>Estatus:</strong> {{getEstatusDescripcion()}}</p>
+              <!-- Mostrar trayectos si el régimen no es semestral -->
+              <div
+                *ngIf="trayectosFormArray.controls.length > 0 && programFormGroup.get('regimen')?.value !== '02'">
+                <h4>Trayectos/Años:</h4>
+                <ul>
+                  <li *ngFor="let trayecto of trayectosFormArray.controls; let i = index">
+                    {{ trayecto.get('nombre')?.value }}
+                  </li>
+                </ul>
+              </div>
+
+              <!-- Mostrar semestres si el régimen es semestral -->
+              <div *ngIf="programFormGroup.get('regimen')?.value === '02'">
+                <h4>Semestres:</h4>
+                <ul>
+                  <li *ngFor="let semestre of semestralTrayectos">
+                    {{ semestre }}
+                  </li>
+                </ul>
+              </div>
+
+              <div *ngIf="certificacionesFormArray.controls.length > 0">
+                <h4>Titulaciones/Certificaciones:</h4>
+                <ul>
+                  <li *ngFor="let certificacion of certificacionesFormArray.controls; let i=index">
+                    {{ certificacion.value.anio || 'N/A' }} - {{ certificacion.value.tipo || 'N/A' }}: {{
+                    certificacion.value.nombre || 'N/A' }}
+                    <span
+                      *ngIf="programFormGroup.get('tipo_plan')?.value === '01' && programFormGroup.get('tieneMencion')?.value">,
+                      MENCIÓN: {{ programFormGroup.get('nombre_mencion')?.value }}
+                    </span>
+                    <span *ngIf="programFormGroup.get('tipo_plan')?.value === '02' && certificacion.value.mencion">,
+                      MENCIÓN: {{ programFormGroup.get('nombre_mencion')?.value }}
+                    </span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col s12" style="text-align: right;">
+              <button cButton btn btn-secondary size="sm" matStepperPrevious>
+                <svg cIcon class="me-2" name="cil-arrow-left"></svg>
+                Anterior
+              </button>
+              <button cButton btn btn-primary size="sm" (click)="onSubmit()" style="margin-left: 8px;">
+                <svg cIcon class="me-2" name="cil-save"></svg>
+                Guardar
+              </button>
+            </div>
+          </div>
+        </mat-step>
+      </mat-horizontal-stepper>
+
+    </c-card-body>
+
+  </c-card>
+</c-col>

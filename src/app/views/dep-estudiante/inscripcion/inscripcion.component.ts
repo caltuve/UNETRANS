@@ -84,6 +84,8 @@ export class InscripcionComponent {
     usrsice: null,
   }
 
+  isFormValid: boolean = false;
+
   modalRef: BsModalRef; 
 
   hayResultadosDocumentos: boolean = false;
@@ -119,41 +121,49 @@ export class InscripcionComponent {
   
   
   searchPersona(formSearchPersona: NgForm) {
-    this.SpinnerService.show();
-    this.controlestudiosService.findPersonaInscripcion(formSearchPersona.value).subscribe(
-      (result: any) => {
-        this.hayResultados = false;
-        this.sinResultados = false;
-
-        // Asumiendo que la respuesta tiene dos propiedades: 'estudiante' y 'documentos'
-        if (result && result.estudiante) {
-          this.dataSource.data = [result.estudiante]; // Almacena los datos del estudiante
-          this.cedulaActual = result.estudiante.carnet;
-          this.findInscripcion(this.cedulaActual);
-          //this.dataSourceDocumentos.data = result.documentos; // Almacena los documentos en el dataSource de la tabla
-
-          this.notifyService.showSuccess('Consulta de datos de estudiante');
-          this.hayResultados = true; // Indica que hay resultados
-          // Actualizar el FormArray
-        //this.actualizarFormArrayConDocumentos(result.documentos);
-        } else {
-          // No se encontraron datos
+    if (this.isFormValid) {
+      this.SpinnerService.show();
+      this.controlestudiosService.findPersonaInscripcion(formSearchPersona.value).subscribe(
+        (result: any) => {
+          this.hayResultados = false;
+          this.sinResultados = false;
+  
+          // Asumiendo que la respuesta tiene dos propiedades: 'estudiante' y 'documentos'
+          if (result && result.estudiante) {
+            this.dataSource.data = [result.estudiante]; // Almacena los datos del estudiante
+            this.cedulaActual = result.estudiante.carnet;
+            this.findInscripcion(this.cedulaActual);
+            //this.dataSourceDocumentos.data = result.documentos; // Almacena los documentos en el dataSource de la tabla
+  
+            this.notifyService.showSuccess('Consulta de datos de estudiante');
+            this.hayResultados = true; // Indica que hay resultados
+            // Actualizar el FormArray
+          //this.actualizarFormArrayConDocumentos(result.documentos);
+          } else {
+            // No se encontraron datos
+            this.sinResultados = true;
+            this.hayResultados = false;
+          }
+  
+          this.SpinnerService.hide();
+          this.formSearchPersona.reset();
+          this.isFormValid = false;
+        },
+        error => {
+          // Manejo de error
+          console.error('Error al buscar datos: ', error);
+          this.SpinnerService.hide();
           this.sinResultados = true;
           this.hayResultados = false;
+          this.formSearchPersona.reset();
+          this.isFormValid = false;
         }
+      );
+    }
+  }
 
-        this.SpinnerService.hide();
-        this.formSearchPersona.reset();
-      },
-      error => {
-        // Manejo de error
-        console.error('Error al buscar datos: ', error);
-        this.SpinnerService.hide();
-        this.sinResultados = true;
-        this.hayResultados = false;
-        this.formSearchPersona.reset();
-      }
-    );
+  checkFormValidity() {
+    this.isFormValid = !!this.carnet || !!this.cedula || !!this.nombre;
   }
 
   findInscripcion(carnet: any) {

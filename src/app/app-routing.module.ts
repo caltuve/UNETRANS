@@ -5,6 +5,8 @@ import { DefaultLayoutComponent } from './containers';
 import { Page404Component } from './views/pages/page404/page404.component';
 import { Page500Component } from './views/pages/page500/page500.component';
 import { LoginComponent } from './views/pages/login/login.component';
+import { ForgotPasswordComponent } from './views/pages/forgot-password/forgot-password.component';
+import { RecoveryComponent } from './views/pages/recovery/recovery.component';
 import { RegisterComponent } from './views/pages/register/register.component';
 import { LoginAspiranteComponent } from './views/aspirante/login-aspirante/login-aspirante.component';
 import { AutomatriculacionComponent } from './views/aspirante/automatriculacion/automatriculacion.component';
@@ -157,6 +159,20 @@ const routes: Routes = [
     component: LoginComponent,
     data: {
       title: 'Login Page'
+    }
+  },
+  {
+    path: 'forgot-password',
+    component: ForgotPasswordComponent,
+    data: {
+      title: 'Olvido de contraseña'
+    }
+  },
+  {
+    path: 'recovery',
+    component: RecoveryComponent,
+    data: {
+      title: 'Recuperación de Contraseña'
     }
   },
   {

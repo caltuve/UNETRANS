@@ -25,9 +25,10 @@ export class ConsultarDatosComponent {
 
   modalRef: BsModalRef; 
 
-  carnet!: string;
-  cedula!: string;
-  nombre!: string;
+  carnet: string = '';
+  cedula: number | null = null;
+  nombre: string = '';
+  isFormValid: boolean = false;
   resultados!: string[];
 
   @ViewChild('formSearchPersona') formSearchPersona!: NgForm;
@@ -38,7 +39,8 @@ export class ConsultarDatosComponent {
 ) {}
 
 
-  searchPersona(formSearchPersona: NgForm) {
+searchPersona(formSearchPersona: NgForm) {
+  if (this.isFormValid) {
     this.SpinnerService.show(); 
     this.controlestudiosService.findPersona(formSearchPersona.value).subscribe(
       (result: any) => {
@@ -50,18 +52,24 @@ export class ConsultarDatosComponent {
             this.sinResultados = this.dataSource.data.length ==0
             this.hayResultados = false;
             this.formSearchPersona.reset();
+            this.isFormValid = false;
           }
           else{
             this.notifyService.showSuccess('Consulta de datos de estudiante');
             this.SpinnerService.hide();
             this.hayResultados = this.dataSource.data.length >0
             this.formSearchPersona.reset();
+            this.isFormValid = false;
           }   
     
     }
     );
   }
+}
 
+  checkFormValidity() {
+    this.isFormValid = !!this.carnet || !!this.cedula || !!this.nombre;
+  }
 
   abrirDetalleEstudiante(carnet: string) {
     if (carnet) {

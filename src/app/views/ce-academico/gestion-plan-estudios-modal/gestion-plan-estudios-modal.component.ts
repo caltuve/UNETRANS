@@ -23,6 +23,8 @@ export class GestionPlanEstudiosModalComponent implements OnInit, AfterViewInit 
   trayectos: any[] = [];
   situacion: any []= [];
   datosPrograma: any; // O el tipo específico de tus datos de programa
+  menciones: any; // O el tipo específico de tus datos de programa
+  escalas = []; // Cargar tus opciones de escalas de calificaciones
 
   constructor(public bsModalRef: BsModalRef,
     private fb: FormBuilder,
@@ -39,7 +41,9 @@ export class GestionPlanEstudiosModalComponent implements OnInit, AfterViewInit 
         vig_desde: '',
         vig_hasta: [{ value: '', disabled: false }],
         tieneTransicion: false,
-        trayectos: this.fb.array([])
+        trayectos: this.fb.array([]),
+        escalaCalificaciones: [''],
+        mencion: ['']
       });
   
       // Suscribirse a los cambios del checkbox de trayecto de transición
@@ -65,6 +69,7 @@ export class GestionPlanEstudiosModalComponent implements OnInit, AfterViewInit 
       // Acceder a los datos del modal después de que la vista se haya inicializado
       if (this.bsModalRef.content && 'datosPrograma' in this.bsModalRef.content) {
         this.datosPrograma = this.bsModalRef.content.datosPrograma;
+        this.menciones = this.bsModalRef.content.menciones;
       }
     }
 
@@ -187,5 +192,20 @@ this.enviarDatosPlanEstudios(datosFormularioCompleto);
                 break;
             }
           });
+      }
+
+
+      onTipoProgramaChange(tipo: string) {
+        if (tipo === 'Carrera') {
+          // Configurar trayectos para Carrera (3 años)
+          this.trayectosFormArray.clear();
+          for (let i = 1; i <= 3; i++) {
+            this.trayectosFormArray.push(this.fb.group({
+              nombre: [`Año ${i}`]
+            }));
+          }
+        } else {
+          this.trayectosFormArray.clear();
+        }
       }
 }

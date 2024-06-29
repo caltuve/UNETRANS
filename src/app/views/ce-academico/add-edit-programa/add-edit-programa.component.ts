@@ -1,11 +1,36 @@
-import { Component, OnInit, EventEmitter, Output } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
+import { Component, OnInit, EventEmitter, Output, TemplateRef, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { Inject } from '@angular/core';
 import { NgxSpinnerService } from "ngx-spinner";
 import { NotificacionService } from './../../../notificacion.service'
 
 import { ControlEstudiosService } from '../../control-estudios/control-estudios.service';
+import { MatDialog } from '@angular/material/dialog';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { Router } from '@angular/router';
+
+interface Plan {
+  id: number;
+  nombre: string;
+  duracionAnios: number;
+  years: Year[];
+}
+
+interface Year {
+  nombre: string;
+  duracion: number;
+  tieneCertificacion: boolean;
+  nombreCertificacion: string;
+  cursos: Curso[];
+}
+
+interface Curso {
+  nombre: string;
+  codigo: string;
+  esProyecto: boolean;
+  prelaciones: string[];
+}
 
 @Component({
   selector: 'app-add-edit-programa',
@@ -14,157 +39,54 @@ import { ControlEstudiosService } from '../../control-estudios/control-estudios.
 })
 export class AddEditProgramaComponent implements OnInit {
 
-  @Output() actualizacionCompleta = new EventEmitter<void>();
-  title: string; // Puedes recibir el título desde el initialState
-  departamentos: any []= [];
-  situacion: any []= [];
-  tprograma: any []= [];
-  periodicidad: any []= [];
-  tcertificacion: any []= [];
-  programaForm: FormGroup;
-  mostrarMenciones: boolean = false;
+  @ViewChild('planModal') planModal!: TemplateRef<any>;
+  @ViewChild('cursoModal') cursoModal!: TemplateRef<any>;
 
-  constructor(private fb: FormBuilder,
-    public bsModalRef: BsModalRef,
+  programFormGroup!: FormGroup;
+  planFormGroup!: FormGroup;
+  cursoFormGroup!: FormGroup;
+  planes: Plan[] = [];
+  selectedPlanYears: Year[] = [];
+  years: Year[] = [];
+
+  departamentos: any []= [];
+  type_programs: any []= [];
+
+  displayedColumns: string[] = ['nombre', 'duracionAnios', 'acciones'];
+
+  
+  usrsice: string;
+
+  rol: any []= [];
+
+  constructor(private _formBuilder: FormBuilder, private dialog: MatDialog,
     public controlestudiosService: ControlEstudiosService,
     private notifyService : NotificacionService,
-    private SpinnerService: NgxSpinnerService,) {
-
-  }
-
-  
-  get mencionesFormArray() {
-    return this.programaForm.get('menciones') as FormArray;
-  }
-
-  get certificacionesFormArray() {
-    return this.programaForm.get('certificaciones') as FormArray;
-  }
-
-  agregarMencion(): void {
-    this.mencionesFormArray.push(this.crearMencion());
-  }
-
-  crearMencion(): FormGroup {
-    return this.fb.group({
-      cod_mencion: '',
-      nombre_mencion: '',
-      estatus: 'activo',
-    });
-  }
-
-  agregarCertificacion(): void {
-    this.certificacionesFormArray.push(this.crearCertificacion());
-  }
-
-  crearCertificacion(): FormGroup {
-    return this.fb.group({
-      anio: '',
-      tipo_certificacion: '',
-      titulo_certificacion: ''
-    });
-  }
-
-  onSubmit() {
-    // Recolectar los datos del grupo 'datosPrograma'
-  const datosProgramaGroup = this.programaForm.get('datosPrograma');
-  if (!datosProgramaGroup) {
-    console.error('Error: El grupo de formulario datosPrograma no está disponible.');
-    return;
-  }
-  const datosPrograma = datosProgramaGroup.value;
-
-  // Recolectar las menciones
-  const menciones = this.programaForm.get('menciones')?.value || [];
-
-  // Recolectar las certificaciones
-  const certificaciones = this.programaForm.get('certificaciones')?.value || [];
-
-  // Estructurar todos los datos en un solo objeto
-  const datosFormularioCompleto = {
-    datosPrograma,
-    menciones,
-    certificaciones
-  };
-  // Enviar todos los datos al backend
-  this.enviarDatosPrograma(datosFormularioCompleto);
-}
-
-  onCheckboxChange(e: any): void {
-    this.mostrarMenciones = e.checked;
-    if (!this.mostrarMenciones) {
-      // Limpia las menciones existentes cuando se desactiva el checkbox
-      while (this.mencionesFormArray.length > 0) {
-        this.mencionesFormArray.removeAt(0);
-      }
+    private SpinnerService: NgxSpinnerService,
+    private router: Router
+    ) {
+      this.obtenerUsuarioActual();
     }
-  }
 
-  eliminarMencion(index: number): void {
-    this.mencionesFormArray.removeAt(index);
-  }
-
-  eliminarCertificacion(index: number): void {
-    this.certificacionesFormArray.removeAt(index);
-  }
-
-  closeModal() {
-    this.bsModalRef.hide();
-  }
-
-  ngOnInit(): void {
-    // Inicializar el formulario reactivo
-    this.programaForm = this.fb.group({
-      datosPrograma: this.fb.group({
-        nombre_programa: [''],
-        dpto_adscrito: [''],
-        tipo_programa: [''], // Agrega valor por defecto si es necesario
-        periodicidad: [''], // Agrega valor por defecto si es necesario
-        estatus: [''],   // Usa una cadena para estatus como 'A' o 'I'
-        vig_desde: [''],    // Puedes usar new FormControl(new Date()) para la fecha actual
-        codigo_opsu: [null],
-        vig_hasta: [{ value: '', disabled: false }],
-      }),
-      menciones: this.fb.array([]),
-      certificaciones: this.fb.array([])
+  ngOnInit() { 
+    this.programFormGroup = this._formBuilder.group({
+      codigo: ['', Validators.required],
+      departamento: ['', Validators.required],
+      codigo_opsu: ['', [Validators.required, Validators.min(1), Validators.max(99999), Validators.pattern('^[0-9]+$')]],
+      tipo_programa: ['', Validators.required],
+      nombre: ['', Validators.required],
+      siglas: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(3)]]
     });
-  
-    // Suscribirse a cambios en el valor de 'estatus' y aplicar la lógica
-    const estatusControl = this.programaForm.get('datosPrograma.estatus');
-    if (estatusControl) {
-      estatusControl.valueChanges.subscribe(estatus => {
-        const vigHastaControl = this.programaForm.get('datosPrograma.vig_hasta');
-        if (vigHastaControl) {
-          if (estatus === 'A') { // Suponiendo que 'A' significa 'Activo'
-            vigHastaControl.disable();
-          } else {
-            vigHastaControl.enable();
-          }
-        }
-      });
-  
-      // Aplicar la lógica inicialmente en caso de que 'estatus' tenga un valor predeterminado
-      this.actualizarEstadoVigHasta(estatusControl.value);
-    }
-  
     // Cargar datos iniciales
     this.findDepartamentos();
-    this.findSituacion();
-    this.findTipoPrograma();
-    this.findPeriodicidad();
-    this.findTipoCertificacion();
+    this.findTypePrograms();
+
   }
-  
-  // Método para actualizar el estado de 'vig_hasta' basado en 'estatus'
-  private actualizarEstadoVigHasta(estatus: string) {
-    const vigHastaControl = this.programaForm.get('datosPrograma.vig_hasta');
-    if (vigHastaControl) {
-      if (estatus === 'A') {
-        vigHastaControl.disable();
-      } else {
-        vigHastaControl.enable();
-      }
-    }
+
+  obtenerUsuarioActual() {
+    const currentUser = JSON.parse(sessionStorage.getItem('currentUser') || '{}');
+    this.usrsice = currentUser.usrsice;
+    this.rol = currentUser.rol;
   }
 
   findDepartamentos() {
@@ -175,58 +97,72 @@ export class AddEditProgramaComponent implements OnInit {
     );
     }
 
-    findSituacion() {
-      this.controlestudiosService.getSituacion().subscribe(
+    findTypePrograms() {
+      this.controlestudiosService.getTypeProgramasAcademic().subscribe(
         (result: any) => {
-          this.situacion = result;
+          this.type_programs = result;
         }
       );
       }
 
-findTipoPrograma() {
-      this.controlestudiosService.getTipoPrograma().subscribe(
-        (result: any) => {
-          this.tprograma = result;
-        }
-      );
+      getDepartamentoNombre(id_departamento: number): string {
+        const dep = this.departamentos.find(d => d.id_departamento === id_departamento);
+        return dep ? dep.nombre_departamento : 'N/A';
+      }
+    
+      getTipoProgramaNombre(codelemento: number): string {
+        const tipo = this.type_programs.find(t => t.codelemento === codelemento);
+        return tipo ? tipo.descripcion : 'N/A';
       }
 
-findPeriodicidad() {
-      this.controlestudiosService.getPeriodicidad().subscribe(
-        (result: any) => {
-          this.periodicidad = result;
-        }
-      );
+      transformToUpperCase(value: string): string {
+        return value ? value.toUpperCase() : '';
       }
+    
+      onSubmit(): void {
+        if (!this.programFormGroup.valid) {
+          console.error('El formulario no es válido.');
+          return;
+        }
+    
+        this.SpinnerService.show();
+    
+        const formData = { ...this.programFormGroup.value, usrsice: this.usrsice };
+        formData.nombre = formData.nombre.toUpperCase();
+        formData.siglas = formData.siglas.toUpperCase();
+    
+        const datosPrograma = {
+          datosPrograma: formData
+        };
 
-      findTipoCertificacion() {
-        this.controlestudiosService.getTipoCertificacion().subscribe(
-          (result: any) => {
-            this.tcertificacion = result;
+        console.log('Enviando datos:', datosPrograma);
+    
+        this.controlestudiosService.crearPrograma(datosPrograma).subscribe(
+          response => {
+            if (response.mensaje === 'Registro exitoso') {
+              this.notifyService.showSuccess('Programa académico creado');
+              this.router.navigate(['/ce-academico/programa-academico']);
+            } else {
+              this.notifyService.showError2('Ha ocurrido un error: ' + response.mensaje);
+              this.router.navigate(['/ce-academico/programa-academico']);
+            }
+            this.SpinnerService.hide();
+          },
+          error => {
+            console.error('Error al enviar datos al servidor:', error);
+            this.notifyService.showError2('Ha ocurrido un error, verifique y si persiste comuníquese con sistemas.');
+            this.SpinnerService.hide();
+            this.router.navigate(['/ce-academico/programa-academico']);
           }
         );
-        }
-
-
-      enviarDatosPrograma(datosPrograma: any) {
-        this.SpinnerService.show(); 
-        this.controlestudiosService.crearPrograma(datosPrograma).subscribe(
-          datos => {
-            switch (datos['estatus']) {
-              case 'ERROR':
-                    this.SpinnerService.hide(); 
-                    this.notifyService.showError2('Ha ocurrido un error, verifique nuevamente y si persiste comuníquese con sistemas.');
-                    this.bsModalRef.hide();
-                    this.actualizacionCompleta.emit(); // Emite el evento
-                    break;
-              default:
-                this.SpinnerService.hide(); 
-                this.notifyService.showSuccess('Programa ha sido añadido');
-                this.bsModalRef.hide();
-                this.actualizacionCompleta.emit(); // Emite el evento
-                break;
-            }
-          });
       }
+      
+      
 
+      onCodOpsuInput() {
+        const codOpsuControl = this.programFormGroup.get('codigo_opsu');
+        if (codOpsuControl && codOpsuControl.value) {
+          codOpsuControl.setValue(codOpsuControl.value.toString().slice(0, 5), { emitEvent: false });
+        }
+      }  
 }

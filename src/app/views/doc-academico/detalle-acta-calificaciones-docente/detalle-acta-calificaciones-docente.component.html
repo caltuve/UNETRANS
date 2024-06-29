@@ -69,7 +69,7 @@
                                 </div>
                               
                                 <!-- Error: Calificación fuera de rango -->
-                                <div *ngIf="uc.calificacion != null && uc.calificacion !== '' && uc.calificacion > 20" cTooltip="Error: Calificación fuera de rango" cTooltipPlacement="top">
+                                <div *ngIf="uc.calificacion != null && uc.calificacion !== '' && (uc.calificacion > 20 || uc.calificacion < 1)" cTooltip="Error: Calificación fuera de rango" cTooltipPlacement="top">
                                   <svg cIcon width="30" height="30" name="cilWarning" style="color: orange;"></svg>
                                 </div>
                               

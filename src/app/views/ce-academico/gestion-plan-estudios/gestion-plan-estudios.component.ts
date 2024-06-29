@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { GestionPlanEstudiosModalComponent } from './../gestion-plan-estudios-modal/gestion-plan-estudios-modal.component';
 import { AddUnidadCurricularModalComponent } from './../add-unidad-curricular-modal/add-unidad-curricular-modal.component';
@@ -10,6 +10,8 @@ import { NgxSpinnerService } from "ngx-spinner";
 import { Console } from 'console';
 import { NotificacionService } from './../../../notificacion.service'
 import { ModificarUcModalComponent } from '../modificar-uc-modal/modificar-uc-modal.component';
+import { AddEditPlanComponent } from '../add-edit-plan/add-edit-plan.component';
+import { SharedDataService } from '../shared-data-service.service'
 
 @Component({
   selector: 'app-gestion-plan-estudios',
@@ -22,9 +24,10 @@ export class GestionPlanEstudiosComponent implements OnInit {
 
   idPrograma: number;
   datosPrograma: any = {}; // Aquí almacenarás los datos del programa
+  menciones = [];
   planesEstudio = []; 
   trayectos: any[] = [];
-  displayedColumns: string[] = ['codigoPlan','nombrePlan','estatus','vig_desde','vig_hasta'];
+  displayedColumns: string[] = ['codigoPlan', 'regimen', 'tipo', 'afilia','nombrePlan','estatus','mencion','gestion'];
 
   unidadesCurriculares: any[] = []; // Array para almacenar las unidades curriculares
 
@@ -40,13 +43,32 @@ modalRef: BsModalRef;
 
     mencionActual: string;
 
+    usrsice: string;
+
+    rol: any []= [];
+
+
+    codPrograma: number;
+    codOpsu: number;
+    tipoProg: string;
+    departamento: string;
+    idDpto: number;
+    nomPro: string;
+    siglas: string;
+    jefe: string;
+
   @ViewChild('paginatorProcesos') paginatorProcesos: MatPaginator;
   constructor(private route: ActivatedRoute,
     private modalService: BsModalService,
     public controlestudiosService: ControlEstudiosService,
     private SpinnerService: NgxSpinnerService,
     private notifyService : NotificacionService,
-    public bsModalRef: BsModalRef,) { }
+    public bsModalRef: BsModalRef,
+    private router: Router,
+    private sharedDataService: SharedDataService
+    ) { 
+      this.obtenerUsuarioActual();
+    }
 
     ngOnInit(): void {
       this.route.paramMap.subscribe(params => {
@@ -66,7 +88,25 @@ modalRef: BsModalRef;
       this.controlestudiosService.obtenerPrograma(id).subscribe(
         data => {
           this.datosPrograma = data;
-          // Ahora los datos del programa están disponibles para ser utilizados en tu plantilla
+          if (this.datosPrograma && this.datosPrograma.length > 0) {
+            const programa = this.datosPrograma[0];
+            this.codPrograma = programa.cod_programa;
+            this.codOpsu = programa.cod_opsu;
+            this.tipoProg = programa.tipo_prog;
+            this.departamento = programa.departamento;
+            this.idDpto = programa.id_dpto;
+            this.nomPro = programa.nom_pro;
+            this.siglas = programa.siglas;
+            this.jefe = programa.jefe;
+          }
+          this.controlestudiosService.obtenerMenciones(id).subscribe(
+            menciones => {
+              this.menciones = menciones;
+              if (this.menciones.length === 0) {
+                //this.gestionPlanForm.removeControl('mencion');
+              }
+            }
+          );
         },
         error => {
           // Manejo de errores, por ejemplo, mostrar un mensaje de error
@@ -74,10 +114,18 @@ modalRef: BsModalRef;
       );
     }
 
+    irAGestionPlanEstudios(): void {
+      const id = this.route.snapshot.paramMap.get('id');
+      this.sharedDataService.setDatosPrograma(this.datosPrograma);
+      this.sharedDataService.setMenciones(this.menciones);
+      this.router.navigate([`/ce-academico/programa-academico/gestion-plan-estudios/${id}/add-edit-plan`]);
+    }
+
 // Método para abrir el modal
 abrirModalGestionPlanEstudios(): void {
   const initialState = {
-    datosPrograma: this.datosPrograma
+    datosPrograma: this.datosPrograma,
+    menciones: this.menciones
   };
 
   const modalOptions = {
@@ -98,6 +146,11 @@ abrirModalGestionPlanEstudios(): void {
   });
 }
 
+obtenerUsuarioActual() {
+  const currentUser = JSON.parse(sessionStorage.getItem('currentUser') || '{}');
+  this.usrsice = currentUser.usrsice;
+  this.rol = currentUser.rol;
+}
 
   planSeleccionado: any = null; // El plan de estudios seleccionado
 
@@ -309,5 +362,12 @@ abrirModalModificacionUc(uc: any) {
         this.cargarUnidadesCurriculares(this.trayectoAct);
       });
     };
+
+
+    irAGestionUnidadesCurriculares(idPlan: number): void {
+      const id = this.route.snapshot.paramMap.get('id');
+      console.log(idPlan);
+      this.router.navigate([`/ce-academico/programa-academico/gestion-plan-estudios/${id}/unidad-curricular`, idPlan]);
+    }
 
 }

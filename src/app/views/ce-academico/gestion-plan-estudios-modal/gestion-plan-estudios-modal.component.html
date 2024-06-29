@@ -1,13 +1,29 @@
 <div class="modal-header">
-    <h4 class="modal-title pull-left">Gestión del plan de estudios del programa: {{ datosPrograma[0]?.cod_opsu }} - {{ datosPrograma[0]?.nom_pro }}</h4>
-    <button type="button" class="close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  
-  <div class="modal-body">
-    <form [formGroup]="gestionPlanForm" (ngSubmit)="onSubmit()">
-  
+  <h4 class="modal-title pull-left">Gestión del plan de estudios del programa: {{ datosPrograma[0]?.cod_opsu }} - {{
+    datosPrograma[0]?.nom_pro }}</h4>
+  <button type="button" class="close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<div class="modal-body">
+  <form [formGroup]="gestionPlanForm" (ngSubmit)="onSubmit()">
+
+    <div *ngIf="menciones.length > 0" class="row">
+      <label class="label-custom">Mención</label>
+      <div class="col s12">
+        <mat-form-field class="w-100">
+          <mat-label>Seleccione la mención</mat-label>
+          <mat-select formControlName="mencion">
+            <mat-option [value]="mencion.cod_mencion"
+              *ngFor="let mencion of menciones">{{mencion.nombre_mencion}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div *ngIf="menciones.length === 0 || gestionPlanForm.get('mencion')?.value !== ''">
+      <!-- Campos para Código, Nombre y Descripción del Programa -->
       <!-- Campos para Código, Nombre y Descripción del Programa -->
       <label class="label-custom">Datos básicos del plan de estudios</label>
       <div class="row">
@@ -30,63 +46,97 @@
           </mat-form-field>
         </div>
       </div>
-  
+
       <label class="label-custom">Estatus y fechas de vigencia</label>
       <!-- Campos para Fecha Desde y Fecha Hasta -->
       <div class="row">
         <div class="col s12 m2 l2">
-            <mat-form-field >
-              <mat-label>Estatus</mat-label>
-              <mat-select formControlName="estatus">
-                <mat-option [value]="sit.codelemento"
-                *ngFor="let sit of situacion">{{sit.descripcion}}</mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-          <div class="col s12 m2 l2">
-            <mat-form-field >
-              <mat-label>Vigencia Desde</mat-label>
-              <input matInput [matDatepicker]="pickerDesde" formControlName="vig_desde">
-              <mat-datepicker-toggle matSuffix [for]="pickerDesde"></mat-datepicker-toggle>
-              <mat-datepicker #pickerDesde></mat-datepicker>
-            </mat-form-field>
-          </div>
-          <div class="col s12 m2 l2">
-            <mat-form-field >
-              <mat-label>Vigencia Hasta</mat-label>
-              <input matInput [matDatepicker]="pickerHasta" formControlName="vig_hasta">
-              <mat-datepicker-toggle matSuffix [for]="pickerHasta"></mat-datepicker-toggle>
-              <mat-datepicker #pickerHasta></mat-datepicker>
-            </mat-form-field>
-          </div>
+          <mat-form-field>
+            <mat-label>Estatus</mat-label>
+            <mat-select formControlName="estatus">
+              <mat-option [value]="sit.codelemento" *ngFor="let sit of situacion">{{sit.descripcion}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col s12 m2 l2">
+          <mat-form-field>
+            <mat-label>Vigencia Desde</mat-label>
+            <input matInput [matDatepicker]="pickerDesde" formControlName="vig_desde">
+            <mat-datepicker-toggle matSuffix [for]="pickerDesde"></mat-datepicker-toggle>
+            <mat-datepicker #pickerDesde></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div class="col s12 m2 l2">
+          <mat-form-field>
+            <mat-label>Vigencia Hasta</mat-label>
+            <input matInput [matDatepicker]="pickerHasta" formControlName="vig_hasta">
+            <mat-datepicker-toggle matSuffix [for]="pickerHasta"></mat-datepicker-toggle>
+            <mat-datepicker #pickerHasta></mat-datepicker>
+          </mat-form-field>
+        </div>
       </div>
-      
-      <label class="label-custom">Configuración de Trayectos</label>
-      <!-- Checkbox para Trayecto de Transición -->
+
+      <label class="label-custom">Configuración del Programa</label>
+      <!-- Campo para Tipo de Programa -->
       <div class="row">
         <div class="col s12">
-          <mat-checkbox formControlName="tieneTransicion">¿Tiene Trayecto de Transición?</mat-checkbox>
+          <mat-form-field class="w-100">
+            <mat-label>Tipo de Programa</mat-label>
+            <mat-select formControlName="tipoPrograma" (selectionChange)="onTipoProgramaChange($event.value)">
+              <mat-option value="Carrera">Carrera</mat-option>
+              <mat-option value="PNF">PNF</mat-option>
+            </mat-select>
+          </mat-form-field>
         </div>
-        <div class="col s12">
-            <button mat-raised-button type="button" (click)="agregarTrayecto()" [disabled]="trayectosFormArray.length >= (gestionPlanForm.value.tieneTransicion ? 7 : 6)">Añadir Trayecto</button>
+      </div>
+
+      <div *ngIf="gestionPlanForm.get('tipoPrograma')?.value === 'Carrera'">
+        <label class="label-custom">Carrera: 3 años de estudio</label>
+      </div>
+
+      <div *ngIf="gestionPlanForm.get('tipoPrograma')?.value === 'PNF'">
+        <label class="label-custom">Configuración de Trayectos</label>
+        <!-- Checkbox para Trayecto de Transición -->
+        <div class="row">
+          <div class="col s12">
+            <mat-checkbox formControlName="tieneTransicion">¿Tiene Trayecto de Transición?</mat-checkbox>
           </div>
-      </div>
-  
-      <!-- Lista de Trayectos -->
-      <div class="row" formArrayName="trayectos">
-        <div *ngFor="let trayecto of trayectosFormArray.controls; let i = index" [formGroupName]="i" class="col m2 s12">
+          <div class="col s12">
+            <button mat-raised-button type="button" (click)="agregarTrayecto()"
+              [disabled]="trayectosFormArray.length >= (gestionPlanForm.value.tieneTransicion ? 7 : 6)">Añadir
+              Trayecto</button>
+          </div>
+        </div>
+
+        <!-- Lista de Trayectos -->
+        <div class="row" formArrayName="trayectos">
+          <div *ngFor="let trayecto of trayectosFormArray.controls; let i = index" [formGroupName]="i"
+            class="col m2 s12">
             <mat-form-field class="w-100">
-                <mat-label> {{ trayecto.get('nombre')?.value }}</mat-label>
-                <input matInput formControlName="nombre" readonly>
-              </mat-form-field>
+              <mat-label> {{ trayecto.get('nombre')?.value }}</mat-label>
+              <input matInput formControlName="nombre" readonly>
+            </mat-form-field>
+          </div>
         </div>
       </div>
-  
-      
-  
-    </form>
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" (click)="bsModalRef.hide()">Cerrar</button>
-    <button type="submit" class="btn btn-primary" (click)="onSubmit()">Guardar Plan de Estudios</button>
-  </div>
+
+      <label class="label-custom">Escala de Calificaciones</label>
+      <!-- Campo para Escala de Calificaciones -->
+      <div class="row">
+        <div class="col s12">
+          <mat-form-field class="w-100">
+            <mat-label>Escala de Calificaciones</mat-label>
+            <mat-select formControlName="escalaCalificaciones">
+              <!-- <mat-option [value]="escala.codelemento"
+                *ngFor="let escala of escalas">{{escala.descripcion}}</mat-option> -->
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+</div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" (click)="bsModalRef.hide()">Cerrar</button>
+  <button type="submit" class="btn btn-primary" (click)="onSubmit()">Guardar Plan de Estudios</button>
+</div>

@@ -18,14 +18,32 @@
                       </c-card-header>
                       <c-card-body>
                         <div class="curso-detalle">
-                          <p cCardText><strong>Periodo:</strong> {{ curso.periodo }}</p>
-                          <p cCardText><strong>Cantidad de actas:</strong> {{ curso.cantidad }}</p>
-                          <p cCardText><strong>Estudiantes inscritos:</strong> {{ curso.inscritos }}</p>
+                          <div class="curso-info">
+                            <p cCardText><strong>Periodo:</strong> {{ curso.periodo }}</p>
+                            <p cCardText><strong>Cantidad de actas:</strong> {{ curso.cantidad }}</p>
+                            <p cCardText><strong>Estudiantes inscritos:</strong> {{ curso.inscritos }}</p>
+                          </div>
+                          <div class="curso-estado" [ngStyle]="{'color': curso.actas_cargadas < curso.cantidad ? 'red' : 'green'}">
+                            {{ curso.actas_cargadas < curso.cantidad ? 'Tienes ' : 'Todas las actas están cargadas' }}
+                            <span *ngIf="curso.actas_cargadas < curso.cantidad" style="font-weight: bold;">
+                              {{ curso.cantidad - curso.actas_cargadas }}
+                            </span>
+                            <span *ngIf="curso.actas_cargadas < curso.cantidad">
+                              {{ (curso.cantidad - curso.actas_cargadas) === 1 ? ' acta por cargar' : ' actas por cargar' }}
+                            </span>
+                          </div>
+                          
                         </div>
                         <div class="curso-acciones">
-                          <button class="btn btn-primary btn-sm" routerLink="/doc-academico/mis-cursos">Ver detalles</button>
+                          <button class="btn btn-primary btn-sm mr-2" routerLink="/doc-academico/mis-cursos">
+                            <svg cIcon class="me-2" name="cilMagnifyingGlass"></svg> Ver detalles
+                          </button>
+                          <button class="btn btn-primary btn-sm" routerLink="/doc-academico/carga-calificaciones">
+                            <svg cIcon class="me-2" name="cilChart"></svg> Cargar actas
+                          </button>
                         </div>
                       </c-card-body>
+                                          
                     </c-card>
                   </c-col>
                 </div>
@@ -40,6 +58,9 @@
 
             <div *ngIf="tieneRol('007')" class="mis-programas">
               <h2>Mis Programas</h2>
+
+              <c-chart [data]="data" type="line" (chartRef)="handleChartRef($event)" />
+
               <c-alert *ngIf="tieneRevisionesPendientes(estudiante.matriculas)"  color="info" fade>
                 Estimad{{ estudiante.genero_mensaje }} <strong>{{ estudiante.nombre }}</strong>, tras el reciente proceso de migración de datos, es posible que algunos de los datos mostrados no reflejen con exactitud su situación académica actual. <br> 
                 Sin embargo, al registrarte en el SICE se ha iniciado de forma automática un procedimiento de revisión 📑 para validar y corregir cualquier discrepancia detectada. <br>

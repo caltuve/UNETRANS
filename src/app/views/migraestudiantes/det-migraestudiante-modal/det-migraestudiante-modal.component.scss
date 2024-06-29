@@ -19,3 +19,19 @@
     //justify-content: space-around; /* Espacia los elementos uniformemente */
   }
   
+  .carnet-comment {
+    font-size: 0.85em; /* Un tamaño más pequeño para que sea claramente un comentario */
+    color: #666; /* Un color más suave para reducir la prominencia visual */
+    //margin-top: -5px; /* Ajuste de margen para una mejor agrupación visual con el carnet */
+  }
+
+  .uppercase-input {
+    text-transform: uppercase;
+  }
+
+  .explanation {
+    margin-left: 16px; /* Ajusta el margen según sea necesario */
+    font-size: 14px;
+    color: #555; /* Puedes ajustar el color según tus preferencias */
+    margin-top: 8px; /* Añade un margen superior para separar del checkbox */
+  }

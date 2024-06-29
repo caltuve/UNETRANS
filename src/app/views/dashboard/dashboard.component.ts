@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { ControlEstudiosService } from '../control-estudios/control-estudios.service';
 import { DashboardChartsData, IChartProps } from './dashboard-charts-data';
 import { NgxSpinnerService } from "ngx-spinner";
+
+import { ChartjsComponent } from '@coreui/angular-chartjs';
 
 interface Usuario {
   nac:null,
@@ -42,6 +44,7 @@ interface Curso {
   pnf: string,
   cantidad: number;
   inscritos: number;
+  actas_cargadas: number;
 }
 
 
@@ -121,7 +124,6 @@ export class DashboardComponent implements OnInit {
     this.cargarDatosSegunRol();
     //console.log(this.usr.nombre_corto);
 
-
   }
 
   cargarDatosSegunRol(): void {
@@ -143,6 +145,39 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  data = {
+    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+    datasets: [
+      {
+        label: 'My First dataset',
+        backgroundColor: 'rgba(220, 220, 220, 0.2)',
+        borderColor: 'rgba(220, 220, 220, 1)',
+        pointBackgroundColor: 'rgba(220, 220, 220, 1)',
+        pointBorderColor: '#fff',
+        data: [40, 20, 12, 39, 10, 80, 40]
+      },
+      {
+        label: 'My Second dataset',
+        backgroundColor: 'rgba(151, 187, 205, 0.2)',
+        borderColor: 'rgba(151, 187, 205, 1)',
+        pointBackgroundColor: 'rgba(151, 187, 205, 1)',
+        pointBorderColor: '#fff',
+        data: [50, 12, 28, 29, 7, 25, 60]
+      }
+    ]
+  };
+
+  handleChartRef($chartRef: any) {
+    if ($chartRef) {
+      console.log('handleChartRef', $chartRef);
+      this.data.labels.push('August');
+      this.data.datasets[0].data.push(60);
+      this.data.datasets[1].data.push(20);
+      setTimeout(() => {
+        $chartRef?.update();
+      }, 3000);
+    }
+  }
 
   buscarDatosAcademicos(): void {
     this.controlestudiosService.findDatosAcademicosDash({  cedula: this.usr.cedula }).subscribe(datos => {
@@ -174,7 +209,8 @@ export class DashboardComponent implements OnInit {
         periodo: dato.periodo,
         pnf: dato.pnf,
         cantidad: dato.cantidad,
-        inscritos: dato.inscritos
+        inscritos: dato.inscritos,
+        actas_cargadas: dato.actas_cargadas
       }))
     });
   }

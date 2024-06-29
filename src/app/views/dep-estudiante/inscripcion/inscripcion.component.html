@@ -29,11 +29,12 @@
                     <form #formSearchPersona="ngForm" (ngSubmit)="searchPersona(formSearchPersona)">
                         <c-input-group class="mb-3">
                             <input cFormControl placeholder="Carnet" sizing="sm" type="text" [(ngModel)]="carnet"
-                                maxlength="10" name="carnet" /> &nbsp;
+                                maxlength="10" name="carnet" (input)="checkFormValidity()"/> &nbsp;
                             <input cFormControl placeholder="Cédula" sizing="sm" type="number" min="0" [(ngModel)]="cedula"
-                            name="cedula" />&nbsp;
-                            <button cButton color="primary" size="sm" type="submit"> <svg cIcon class="me-2"
-                                    name="cilMagnifyingGlass"></svg>&nbsp;Buscar</button>
+                            name="cedula" (input)="checkFormValidity()"/>&nbsp;
+                            <button cButton color="primary" type="submit" size="sm" [disabled]="!isFormValid">
+                              <svg cIcon class="me-2" name="cilMagnifyingGlass"></svg>&nbsp;Buscar
+                            </button>
                         </c-input-group>
                     </form>
                   </c-col>

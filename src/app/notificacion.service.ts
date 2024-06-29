@@ -28,8 +28,17 @@ showInfo(message: string | undefined,){
     this.toastr.info(message, '¡Información!', {
       progressBar : true,
       progressAnimation : 'decreasing',
-      timeOut: 10000
+      timeOut: 10000,
+      enableHtml: true,
     })
+}
+
+showInfoMtto(message: string | undefined,){
+  this.toastr.info(message, '¡Mantenimiento!', {
+    progressBar : true,
+    progressAnimation : 'decreasing',
+    timeOut: 15000
+  })
 }
 
 showInfoRegDoc(message: string | undefined,){

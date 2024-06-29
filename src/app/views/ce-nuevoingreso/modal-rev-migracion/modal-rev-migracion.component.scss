@@ -1,0 +1,35 @@
+.modal-title {
+    display: flex;
+    align-items: center;
+  }
+  
+  .modal-title strong {
+    margin-left: 8px; /* Ajusta el espacio entre los dos puntos y los datos del estudiante */
+  }
+  
+  .copy-container {
+    display: flex;
+    align-items: center;
+    margin-left: 16px; /* Espacio entre el título y el botón */
+  }
+  
+  .copy-button {
+    display: flex;
+    align-items: center;
+  }
+  
+  .copy-text {
+    margin-left: 4px; /* Espacio entre el ícono y el texto */
+  }
+  
+  .copiado-text {
+    margin-left: 10px; /* Espacio entre el botón y el mensaje de copiado */
+    color: green; /* Puedes ajustar el color según tus preferencias */
+    font-size: 14px; /* Ajusta el tamaño de la fuente según sea necesario */
+  }
+  
+.img-preview {
+  max-width: 100%;
+  height: auto;
+  max-height: 250px; /* Ajusta este valor según necesites */
+}

@@ -24,10 +24,10 @@ export class ConsultarDatosComponent {
 
   modalRef: BsModalRef; 
 
-  carnet!: string;
-  cedula!: string;
-  nombre!: string;
-  resultados!: string[];
+  carnet: string = '';
+  cedula: number | null = null;
+  nombre: string = '';
+  isFormValid: boolean = false;
 
   @ViewChild('formSearchPersona') formSearchPersona!: NgForm;
   constructor(public controlestudiosService: ControlEstudiosService,
@@ -38,27 +38,35 @@ export class ConsultarDatosComponent {
 
 
   searchPersona(formSearchPersona: NgForm) {
-    this.SpinnerService.show(); 
-    this.controlestudiosService.findPersona(formSearchPersona.value).subscribe(
-      (result: any) => {
-          this.hayResultados = false;
-          this.sinResultados = false;
-          this.dataSource.data = result;
-          if (this.dataSource.data.length == 0) {
-            this.SpinnerService.hide();
-            this.sinResultados = this.dataSource.data.length ==0
+    if (this.isFormValid) {
+      this.SpinnerService.show(); 
+      this.controlestudiosService.findPersona(formSearchPersona.value).subscribe(
+        (result: any) => {
             this.hayResultados = false;
-            this.formSearchPersona.reset();
-          }
-          else{
-            this.notifyService.showSuccess('Consulta de datos de estudiante');
-            this.SpinnerService.hide();
-            this.hayResultados = this.dataSource.data.length >0
-            this.formSearchPersona.reset();
-          }   
-    
+            this.sinResultados = false;
+            this.dataSource.data = result;
+            if (this.dataSource.data.length == 0) {
+              this.SpinnerService.hide();
+              this.sinResultados = this.dataSource.data.length ==0
+              this.hayResultados = false;
+              this.formSearchPersona.reset();
+              this.isFormValid = false;
+            }
+            else{
+              this.notifyService.showSuccess('Consulta de datos de estudiante');
+              this.SpinnerService.hide();
+              this.hayResultados = this.dataSource.data.length >0
+              this.formSearchPersona.reset();
+              this.isFormValid = false;
+            }   
+      
+      }
+      );
     }
-    );
+  }
+
+  checkFormValidity() {
+    this.isFormValid = !!this.carnet || !!this.cedula || !!this.nombre;
   }
 
   abrirDetalleEstudiante(carnet: string) {

@@ -1,0 +1,323 @@
+
+<c-header>
+  <c-container fluid>
+    <c-sidebar-brand
+    [brandFull]="{
+      src: 'assets/img/brand/footer-unetrans.png',
+      width: 200,
+      height: 65,
+      alt: 'UNETRANS Logo'
+    }"
+    [brandNarrow]="{
+      src: 'assets/img/brand/logo_circular_unetrans.png',
+      width: 50,
+      height: 50,
+      alt: 'UNETRANS Logo'
+    }"
+    routerLink="./"
+  >
+  </c-sidebar-brand>
+    <c-header-nav class=" d-lg-flex me-auto">
+      <c-nav-item>
+        <a cNavLink>
+          Sistema Integral de Control de Estudios - SICE
+        </a>
+      </c-nav-item>
+    </c-header-nav>
+
+    <c-header-nav  class=" d-lg-flex">
+      <a cNavLink>
+        Recuperación de cuenta
+      </a>
+    </c-header-nav>
+  </c-container>
+</c-header>
+
+<div>
+  <div *ngIf="isValidToken">
+    <mat-horizontal-stepper #stepper [linear]="true" (selectionChange)="onStepChange($event, stepper)">
+      <mat-step [stepControl]="firstFormGroup">
+        <form [formGroup]="firstFormGroup">
+          <ng-template matStepLabel>Recuperar</ng-template>
+          <mat-card class="mat-card">
+            <mat-card-title-group class="mat-card-title-group">
+              <mat-card-title class="mat-card-title">Recuperación de Cuenta</mat-card-title>
+              <mat-card-subtitle class="mat-card-subtitle">Seleccione qué desea recuperar:</mat-card-subtitle>
+              <!-- <mat-card-subtitle class="mat-card-subtitle">Otro subtitulo de prueba</mat-card-subtitle> -->
+              
+            </mat-card-title-group>
+            <mat-divider class="mat-divider mat-divider-horizontal" role="separator"
+              aria-orientation="horizontal"></mat-divider>
+              <mat-card-content>
+                <c-alert color="info">
+                  <h4 cAlertHeading><strong>¡IMPORTANTE!</strong></h4>
+                  <p>Verifique cuidadosamente la opción seleccionada antes de continuar. Si tiene dudas o problemas durante el proceso, por favor contacte al soporte técnico al correo 
+                    <a href="mailto:soportesice@unetrans.edu.ve"><strong>soportesice@unetrans.edu.ve</strong></a>.
+                    <br>Es importante que continúe solo si está seguro de la opción que necesita recuperar.</p>
+                </c-alert>
+                <mat-form-field>
+                  <mat-label>¿Qué desea recuperar?</mat-label>
+                  <mat-select formControlName="recoveryOption">
+                    <mat-option value="password">Contraseña</mat-option>
+                    <mat-option value="securityQuestions">Preguntas de seguridad</mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <div align="right">
+                  <button matStepperNext color="accent" mat-mini-fab="" type="button"
+                          class="mat-mini-fab mat-accent" [disabled]="!firstFormGroup.valid">
+                      <mat-icon>arrow_forward</mat-icon>
+                  </button>
+              </div>
+              </mat-card-content>
+          </mat-card>
+          
+        </form>
+      </mat-step>
+
+      <mat-step [stepControl]="secondFormGroup">
+        <form [formGroup]="secondFormGroup">
+          <ng-template matStepLabel>Detalles de Recuperación</ng-template>
+          <mat-card class="mat-card">
+            <mat-card-title-group class="mat-card-title-group">
+              <mat-card-title class="mat-card-title">Recuperación de Cuenta</mat-card-title>
+              <mat-card-subtitle *ngIf="firstFormGroup.get('recoveryOption')?.value === 'password'" class="mat-card-subtitle">
+                Responder las preguntas de seguridad para recuperar contraseña
+              </mat-card-subtitle>
+              <mat-card-subtitle *ngIf="firstFormGroup.get('recoveryOption')?.value === 'securityQuestions'" class="mat-card-subtitle">
+                Ingresa el <strong>Código de Verificación</strong> para resetear las preguntas y respuestas de seguridad
+              </mat-card-subtitle>
+            </mat-card-title-group>
+            <mat-divider class="mat-divider mat-divider-horizontal" role="separator" aria-orientation="horizontal"></mat-divider>
+            <mat-card-content>
+              <div *ngIf="firstFormGroup.get('recoveryOption')?.value === 'password'" formArrayName="questionsFormArray">
+                <div *ngFor="let questionForm of questionsFormArray.controls; let i = index" [formGroupName]="i">
+                  <mat-form-field appearance="fill">
+                    <mat-label>{{ questions[i].pregunta }}</mat-label>
+                    <input class="uppercase-input" matInput formControlName="answer" (input)="toUpper($event)" required>
+                    <mat-error *ngIf="questionForm.get('answer')?.errors?.['required']">
+                      Este campo es obligatorio.
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+      
+              <div *ngIf="firstFormGroup.get('recoveryOption')?.value === 'securityQuestions'">
+                <mat-form-field appearance="fill">
+                  <mat-label>Código de verificación</mat-label>
+                  <input matInput formControlName="otp" required>
+                  <mat-error *ngIf="secondFormGroup.get('otp')?.errors?.['required']">
+                    Este campo es obligatorio.
+                  </mat-error>
+                  <mat-error *ngIf="secondFormGroup.get('otp')?.errors?.['minlength']">
+                    El código debe tener 6 caracteres.
+                  </mat-error>
+                  <mat-error *ngIf="secondFormGroup.get('otp')?.errors?.['maxlength']">
+                    El código debe tener 6 caracteres.
+                  </mat-error>
+                </mat-form-field>
+                <div *ngIf="otpError" class="error">
+                  Código de Verificación incorrecto.
+                </div>
+              </div>
+              
+              <div align="right">
+                <button color="accent" mat-mini-fab="" type="button" class="mat-mini-fab mat-accent" (click)="handleNext(stepper)" [disabled]="!secondFormGroup.valid">
+                  <mat-icon>arrow_forward</mat-icon>
+                </button>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </form>
+      </mat-step>
+      
+      
+
+
+    <mat-step [stepControl]="fiveFormGroup" errorMessage="Datos incompletos">
+
+      <form [formGroup]="fiveFormGroup">
+          <ng-template matStepLabel>Establecer datos de seguridad - SICE</ng-template>
+          <mat-card class="mat-card">
+            <mat-card-title-group class="mat-card-title-group">
+              <mat-card-title class="mat-card-title">Asignación de datos de seguridad</mat-card-title>
+              <mat-card-subtitle class="mat-card-subtitle">
+                Por favor complete la información requerida
+              </mat-card-subtitle>
+            </mat-card-title-group>
+            <mat-divider class="mat-divider mat-divider-horizontal" role="separator" aria-orientation="horizontal"></mat-divider>
+            <mat-card-content>
+              <div *ngIf="firstFormGroup.get('recoveryOption')?.value === 'password'">
+                <div class="row">
+                  <div class="col-md-6 col-12">
+                    <div class="row">
+                      <div class="col l12 m12 s12"><label>Contraseña de acceso:</label>
+                        <div class="row mar-b-0">
+                          <div class="col s12">
+                            <mat-form-field>
+                              <mat-label>Contraseña:</mat-label>
+                              <input type="password" (keyup)="validarContrasena()" [(ngModel)]="pass" matInput formControlName="pass">
+                            </mat-form-field>
+                          </div>
+                          <div class="col s12">
+                            <mat-form-field>
+                              <mat-label>Confirme contraseña:</mat-label>
+                              <input type="password" (keyup)="validarConfirmacion()" [(ngModel)]="confpass" matInput formControlName="confpass">
+                            </mat-form-field>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6 col-12">
+                    <div class="card">
+                      <ul class="list-group">
+                        <li class="list-group-item d-flex align-items-center" style="border: 0;">
+                          <i id="i_caracteres" [ngClass]="{'fa fa-check text-success': validacion1, 'fa fa-times text-danger': !validacion1}"></i>
+                          <strong id="span_caracteres" [ngClass]="{'text-success': validacion1, 'text-danger': !validacion1}">Debe tener mínimo (08) caracteres.</strong>
+                        </li>
+                        <li class="list-group-item d-flex align-items-center" style="border: 0;">
+                          <i id="i_caracteres" [ngClass]="{'fa fa-check text-success': validacion4, 'fa fa-times text-danger': !validacion4}"></i>
+                          <strong id="span_caracteres" [ngClass]="{'text-success': validacion4, 'text-danger': !validacion4}">Debe tener al menos 1 dígito.</strong>
+                        </li>
+                        <li class="list-group-item d-flex align-items-center" style="border: 0;">
+                          <i id="i_caracteres" [ngClass]="{'fa fa-check text-success': validacion5, 'fa fa-times text-danger': !validacion5}"></i>
+                          <strong id="span_caracteres" [ngClass]="{'text-success': validacion5, 'text-danger': !validacion5}">Debe tener al menos 1 caracter en MAYÚSCULA.</strong>
+                        </li>
+                        <li class="list-group-item d-flex align-items-center" style="border: 0;">
+                          <i id="i_especial" [ngClass]="{'fa fa-check text-success': validacion2, 'fa fa-times text-danger': !validacion2}"></i>
+                          <strong id="span_especial" [ngClass]="{'text-success': validacion2, 'text-danger': !validacion2}">Debe tener al menos 1 caracter especial permitido (+ - . ! _ * $ #).</strong>
+                        </li>
+                        <li class="list-group-item d-flex align-items-center" style="border: 0;">
+                          <i id="i_especial" [ngClass]="{'fa fa-check text-success': validacion6, 'fa fa-times text-danger': !validacion6}"></i>
+                          <strong id="span_especial" [ngClass]="{'text-success': validacion6, 'text-danger': !validacion6}">La contraseña  no debe contener el usuario ni la cédula.</strong>
+                        </li>
+                        <li class="list-group-item d-flex align-items-center" style="border: 0;">
+                          <i id="i_contrasena" [ngClass]="{'fa fa-check text-success': validacion3, 'fa fa-times text-danger': !validacion3}"></i>
+                          <strong id="span_contrasena" [ngClass]="{'text-success': validacion3, 'text-danger': !validacion3}">La contraseña debe coincidir con la confirmación.</strong>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div *ngIf="firstFormGroup.get('recoveryOption')?.value === 'securityQuestions'">
+                <div class="row">
+                  <div class="col l12 m12 s12">
+                    <mat-form-field>
+                      <mat-label>Pregunta 1:</mat-label>
+                      <mat-select formControlName="quest1" required>
+                        <mat-option [value]="pregunta.descripcion" *ngFor="let pregunta of questsec1">{{pregunta.descripcion}}</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col l12 m12 s12">
+                    <mat-form-field>
+                      <mat-label>Respuesta 1:</mat-label>
+                      <input style='text-transform:uppercase' formControlName="answ1" matInput required>
+                    </mat-form-field>
+                  </div>
+                </div>
+      
+                <div class="row">
+                  <div class="col l12 m12 s12">
+                    <mat-form-field>
+                      <mat-label>Pregunta 2:</mat-label>
+                      <mat-select formControlName="quest2" required>
+                        <mat-option [value]="pregunta.descripcion" *ngFor="let pregunta of questsec2">{{pregunta.descripcion}}</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col l12 m12 s12">
+                    <mat-form-field>
+                      <mat-label>Respuesta 2:</mat-label>
+                      <input style='text-transform:uppercase' formControlName="answ2" matInput required>
+                    </mat-form-field>
+                  </div>
+                </div>
+      
+                <div class="row">
+                  <div class="col l12 m12 s12">
+                    <mat-form-field>
+                      <mat-label>Pregunta 3:</mat-label>
+                      <mat-select formControlName="quest3" required>
+                        <mat-option [value]="pregunta.descripcion" *ngFor="let pregunta of questsec3">{{pregunta.descripcion}}</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col l12 m12 s12">
+                    <mat-form-field>
+                      <mat-label>Respuesta 3:</mat-label>
+                      <input style='text-transform:uppercase' formControlName="answ3" matInput required>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+
+              <div align="right">
+                <button matStepperPrevious color="accent" mat-mini-fab="" matstepperprevious="" type="button" class="mat-mini-fab mat-accent">
+                  <span class="mat-button-wrapper"><mat-icon aria-hidden="true">arrow_back</mat-icon></span>
+                </button>
+                &nbsp;&nbsp;
+                <button cButton btn btn-primary size="sm" data-toggle="modal" data-target="#confirmModal" [disabled]="isButtonDisabled()">
+                  <ng-container *ngIf="firstFormGroup.get('recoveryOption')?.value === 'password'; else elseTemplate">
+                    <svg cIcon class="me-2" name="cil-cloud-upload"></svg>Cambiar contraseña
+                  </ng-container>
+                  <ng-template #elseTemplate>
+                    <svg cIcon class="me-2" name="cil-cloud-upload"></svg>Actualizar preguntas
+                  </ng-template>
+                </button>
+              </div>
+              
+            </mat-card-content>
+          </mat-card>
+        </form>
+
+</mat-step> 
+    
+    </mat-horizontal-stepper>
+  </div>
+</div>
+<!-- recovery.component.html -->
+
+<!-- Modal de Confirmación -->
+<div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="confirmModalLabel">
+          <ng-container *ngIf="firstFormGroup.get('recoveryOption')?.value === 'password'; else elseTemplate">
+            Confirmar Cambio de Contraseña
+          </ng-container>
+          <ng-template #elseTemplate>
+            Confirmar Actualización de Preguntas de Seguridad
+          </ng-template>
+        </h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <ng-container *ngIf="firstFormGroup.get('recoveryOption')?.value === 'password'; else elseBodyTemplate">
+          ¿Estás seguro de que deseas cambiar tu contraseña?
+        </ng-container>
+        <ng-template #elseBodyTemplate>
+          ¿Estás seguro de que deseas actualizar tus preguntas de seguridad?
+        </ng-template>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" 
+                (click)="firstFormGroup.get('recoveryOption')?.value === 'password' ? changePassword() : updateSecurityQuestions()">
+          Confirmar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  <ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" size="default" type="ball-atom">
+    <p style="color: white" align="center">Por favor espere... <br>¡Validando información!</p>
+    </ngx-spinner>
+  

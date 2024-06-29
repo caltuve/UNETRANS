@@ -176,6 +176,18 @@ export class AutoregistroDocenteComponent {
       this.findParentescoEmer();
       this.findSectorTrabajo();
       this.findQuestSec();
+
+      this.fiveFormGroup.get('quest1')?.valueChanges.subscribe(value => {
+        this.filterQuestions();
+      });
+    
+      this.fiveFormGroup.get('quest2')?.valueChanges.subscribe(value => {
+        this.filterQuestions();
+      });
+    
+      this.fiveFormGroup.get('quest3')?.valueChanges.subscribe(value => {
+        this.filterQuestions();
+      });
       }
 
       ngAfterViewInit() {
@@ -423,21 +435,20 @@ findSectorTrabajo(){
   );
 }
 
-findQuestSec(){
-  this.DocenteService.getQuestSec().subscribe(
-    (result: any) => {
-      const opcionesFiltradas1 = ['Q1', 'Q2', 'Q3']; // Aquí colocas los valores codelemento que deseas mostrar
-      this.questsec1 = result.filter((questsec1: { codelemento: string; }) => opcionesFiltradas1.includes(questsec1.codelemento));
+findQuestSec() {
+  this.DocenteService.getQuestSec().subscribe((result: any) => {
+    this.questsec = result;
+    this.filterQuestions();
+  });
+}
 
-      const opcionesFiltradas2 = ['Q4', 'Q5', 'Q6']; // Aquí colocas los valores codelemento que deseas mostrar
-      this.questsec2 = result.filter((questsec2: { codelemento: string; }) => opcionesFiltradas2.includes(questsec2.codelemento));
+filterQuestions() {
+  const quest1 = this.fiveFormGroup.get('quest1')?.value;
+  const quest2 = this.fiveFormGroup.get('quest2')?.value;
 
-      const opcionesFiltradas3 = ['Q7', 'Q8', 'Q9']; // Aquí colocas los valores codelemento que deseas mostrar
-      this.questsec3 = result.filter((questsec3: { codelemento: string; }) => opcionesFiltradas3.includes(questsec3.codelemento));
-
-      
-  }
-  );
+  this.questsec1 = this.questsec;
+  this.questsec2 = this.questsec.filter(q => q.descripcion !== quest1);
+  this.questsec3 = this.questsec.filter(q => q.descripcion !== quest1 && q.descripcion !== quest2);
 }
 
 

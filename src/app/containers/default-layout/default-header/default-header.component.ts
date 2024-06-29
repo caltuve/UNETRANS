@@ -21,7 +21,8 @@ export class DefaultHeaderComponent extends HeaderComponent implements OnInit  {
     carnet:null,
     pnf:null,
     email: null,
-    saludo: null
+    saludo: null,
+    ult_conexion: null,
   }
 
   public newMessages = new Array(4)

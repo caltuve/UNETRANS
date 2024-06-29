@@ -31,17 +31,17 @@
                         <input formControlName="usrsice" matInput [(ngModel)]="usrsice" placeholder="V12345678" autocomplete="cualquier-cosa" name="usrsice" required>
                       </mat-form-field>
                       </div>
+                      <div>
+                        <mat-form-field appearance="fill">
+                          <mat-label>Contraseña</mat-label>
+                          <input formControlName="password" matInput type="password" name="password" id="password" [(ngModel)]="password" autocomplete="cualquier-cosa" name="password" required>
+                          
+                        </mat-form-field>
+                        </div>
+                        <button type="submit" [disabled]="!loginFormGroup.valid" class="btn btn-block login-btn mb-4">Iniciar sesión</button>
                   </div>
-                  <div>
-                    <mat-form-field appearance="fill">
-                      <mat-label>Contraseña</mat-label>
-                      <input formControlName="password" matInput type="password" name="password" id="password" [(ngModel)]="password" autocomplete="cualquier-cosa" name="password" required>
-                      
-                    </mat-form-field>
-                    </div>
-                  <button type="submit" [disabled]="!loginFormGroup.valid" class="btn btn-block login-btn mb-4">Iniciar sesión</button>
                 </form>
-                <!-- <a href="#!" class="forgot-password-link">Forgot password?</a> -->
+                <a routerLink="/forgot-password" class="login-card-footer-text">¿Olvidaste tu contraseña? 🔑</a>
                 <p class="login-card-footer-text">Para poder ingresar al SICE primero debes crear tu cuenta.</p>
                 <input name="login" id="login" class="btn btn-block login-btn mb-4" type="button" data-toggle="modal" (click)="myModal.show()" value="Crear cuenta">
                 <div bsModal #myModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -66,7 +66,7 @@
                   </div><!-- /.modal-dialog -->
                 </div><!-- /.modal -->
                 <p class="login-card-footer-text"><svg cIcon class="me-2"
-                  name="cilFork"></svg>Versión: 1.0.24</p>
+                  name="cilFork"></svg>Versión: 1.0.28</p>
               </div>
           </div>
         </div>

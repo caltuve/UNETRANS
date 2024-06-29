@@ -3,6 +3,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { MisCursosComponent } from './mis-cursos/mis-cursos.component';
 import { CargaCalificacionesComponent } from './carga-calificaciones/carga-calificaciones.component';
 import { DetalleActaCalificacionesDocenteComponent } from './detalle-acta-calificaciones-docente/detalle-acta-calificaciones-docente.component';
+import { ConfirmExitGuard } from './confirm-exit.guard';
+
 
 const routes: Routes = [
   {
@@ -35,7 +37,8 @@ const routes: Routes = [
         component: DetalleActaCalificacionesDocenteComponent,
         data: {
           title: 'Cargar Calificaciones - Detalle del acta'
-        }
+        },
+        canDeactivate: [ConfirmExitGuard]
       },
     ]
   }

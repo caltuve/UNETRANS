@@ -12,6 +12,9 @@ import { CalificacionesContingenciaGradoComponent } from './calificaciones-conti
 import { CalificacionesContingenciaMigracionComponent } from './calificaciones-contingencia-migracion/calificaciones-contingencia-migracion.component';
 import { CalificacionesCargaComponent } from './calificaciones-carga/calificaciones-carga.component';
 import { GestionSeccionesUcComponent } from './gestion-secciones-uc/gestion-secciones-uc.component';
+import { AddEditProgramaComponent } from './add-edit-programa/add-edit-programa.component';
+import { AddEditPlanComponent } from './add-edit-plan/add-edit-plan.component';
+import { UnidadCurricularComponent } from './unidad-curricular/unidad-curricular.component';
 
 const routes: Routes = [
   {
@@ -70,8 +73,28 @@ const routes: Routes = [
       { path: 'programa-academico/gestion-plan-estudios/:id', 
         component: GestionPlanEstudiosComponent,
         data: {
-          title: 'Programas Académicos - Gestión de planes de estudio'
+          title: 'Programas Académicos - Gestión de planes'
         } 
+      },
+      { path: 'programa-academico/gestion-plan-estudios/:id/add-edit-plan', 
+        component: AddEditPlanComponent,
+        data: {
+          title: 'Programas Académicos - Gestión de planes - Añadir/Editar Plan'
+        } 
+      },
+
+      { path: 'programa-academico/gestion-plan-estudios/:id/unidad-curricular/:idPlan', 
+        component: UnidadCurricularComponent,
+        data: {
+          title: 'Programas Académicos - Gestión de Unidades Curriculares'
+        } 
+      },
+      {
+        path: 'programa-academico/add-edit-programa',
+        component: AddEditProgramaComponent,
+        data: {
+          title: 'Añadir/Editar Programas'
+        },
       },
       {
         path: 'calificaciones-carga',

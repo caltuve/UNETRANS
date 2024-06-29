@@ -35,6 +35,7 @@ import {MatPaginatorModule} from '@angular/material/paginator';
 
 import { registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es';
+import {MatDialogModule} from '@angular/material/dialog';
 
 
 import {
@@ -93,6 +94,9 @@ import { ModificarUcModalComponent } from './modificar-uc-modal/modificar-uc-mod
 import { GestionSeccionesUcComponent } from './gestion-secciones-uc/gestion-secciones-uc.component';
 import { ArancelesComponent } from './aranceles/aranceles.component';
 import { AddCargaCalifComponent } from './add-carga-calif/add-carga-calif.component';
+import { AddEditPlanComponent } from './add-edit-plan/add-edit-plan.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { UnidadCurricularComponent } from './unidad-curricular/unidad-curricular.component';
 
 @NgModule({
   declarations: [
@@ -120,6 +124,8 @@ import { AddCargaCalifComponent } from './add-carga-calif/add-carga-calif.compon
             GestionSeccionesUcComponent,
             ArancelesComponent,
             AddCargaCalifComponent,
+            AddEditPlanComponent,
+            UnidadCurricularComponent,
   ],
   imports: [
     CommonModule,
@@ -173,6 +179,8 @@ import { AddCargaCalifComponent } from './add-carga-calif/add-carga-calif.compon
   MatSortModule,
   MatCheckboxModule,
   MatRadioModule,
+  MatDialogModule,
+  DragDropModule
   ],
   providers: [DatePipe,
     {provide: MAT_DATE_LOCALE, useValue: 'es-VE'}, {provide: ControlEstudiosService},

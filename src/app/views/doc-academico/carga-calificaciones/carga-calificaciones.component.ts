@@ -521,8 +521,11 @@ descargarActa(idActa: number) {
       },
     },
   };
-
-  pdfMake.createPdf(docDefinition as any).download('Acta_Calificaciones.pdf');
+  const actaNumber = datosEstudiante.acta.toString();
+  const fileName = `Acta_Calificaciones_${actaNumber}.pdf`;
+  
+  pdfMake.createPdf(docDefinition as any).download(fileName);
+  
 }
 
 

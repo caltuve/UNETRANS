@@ -63,74 +63,219 @@
       </div>  
   </div>
 
+  
 
-  <div *ngIf="estudianteBase.estatus_migra === 0">
-    <c-alert color="info">
-      <strong>¡Atención {{ estudianteBase.nombre_corto }}! </strong>
-      <ul>
-        <li>Revisa tus datos personales.</li>
-        <li>Confirma tu programa de estudio/carrera.</li>
-        <li>Verifica tu cohorte. (Año de ingreso)</li>
-      </ul>
-      Si algo no está correcto, usa el botón "Hay datos incorrectos" abajo para solicitar una revisión. También estamos
-      disponibles en la taquilla de la Universidad de <strong>martes a jueves, 8:30 AM a 12:00 M</strong>.
-    </c-alert>
-    <div class="estudiante-container">
-      <!-- Contenedor de Datos Personales -->
-      <div class="datos-estudiante">
-        <p><strong>Carnet:</strong> {{ estudianteBase.carnet_formateado }} | <strong>Documento de Identidad:</strong> {{
-          estudianteBase.nac }}-{{
-          estudianteBase.cedula_formateada }}</p>
-        <p><strong>Nombre completo:</strong> {{ estudianteBase.nombre_completo }}</p>
-        <p><strong>Cohorte:</strong> {{ estudianteBase.cohorte }} | <strong>PNF/Carrera:</strong> {{ estudianteBase.pnf
-          }}</p>
-      </div>
-    </div>
-    <br>
-
-    <div [formGroup]="form2">
-      <!-- Botones de radio para datos correctos/incorrectos -->
-      <mat-radio-group formControlName="datosCorrectos">
-        <mat-radio-button value="si">Mis datos son correctos</mat-radio-button>
-        <mat-radio-button value="no">Hay datos incorrectos</mat-radio-button>
-      </mat-radio-group>
-      <!-- Sección de verificación del correo electrónico -->
-      <div *ngIf="form2.get('datosCorrectos')?.value" class="row">
-        <div class="col l12 m12 s12">
+  <div *ngIf="estudianteBase.estatus_migra === 0 || estudianteBase.estatus_migra === 5">
+    <div *ngIf="estudianteBase.estatus_migra === 5">
+      <c-alert *ngIf="estudianteBase.estatus_migra === 5"  color="success" fade  [visible]="visible">
+        📝 Tus datos han sido verificados tras la revisión solicitada. Por favor, revísalos nuevamente y continúa con los pasos para completar la migración.
+      </c-alert>
+  </div>
+    <mat-vertical-stepper [linear]="true" #stepper (selectionChange)="onStepChange($event)">
+      <!-- Paso 1: Verificación de Datos -->
+      <mat-step [stepControl]="firstFormGroup1">
+        <form [formGroup]="firstFormGroup1">
+          <ng-template matStepLabel>Verifica tus datos</ng-template>
           <c-alert color="info">
-            <strong>Información Importante:</strong><br>
-            Registra un <strong>correo de GMAIL válido</strong> al que tengas acceso. Te enviaremos un código de verificación a este correo. <br>
-            Verifica tu bandeja de entrada y la carpeta de SPAM. Para asistencia, contacta a: soportesice@unetrans.edu.ve
+            <strong>📢 Atención, {{ estudianteBase.nombre_corto }}:</strong>
+            <p>Revisa con atención los siguientes datos en tu perfil y verifica su precisión:</p>
+            <ul>
+              <li><strong>Datos personales</strong> (nombres, apellidos).</li>
+              <li><strong>Programa de estudio/carrera</strong> actual.</li>
+              <li><strong>Cohorte</strong> (Año de ingreso).</li>
+              <li>Si estudiaste <strong>múltiples carreras</strong> y solo se muestra la actual, selecciona "Hay datos incorrectos" para solicitar una revisión.</li>
+            </ul>
+            <p>Si todo está correcto, selecciona "Mis datos son correctos". Si hay errores, elige "Hay datos incorrectos" y especifica qué necesita corrección. Para ayuda adicional, visita la taquilla de la universidad de <strong>martes a jueves, de 8:30 AM a 12:00 M</strong>, o contacta soporte.</p>
           </c-alert>
-          <label>Verificación del correo electrónico:</label>
-          <div class="row mar-b-0">
-            <div class="col s12">
-              <mat-form-field appearance="fill">
-                <mat-label>Correo electrónico</mat-label>
-                <input type="email" matInput formControlName="email">
-                <button mat-button matSuffix (click)="verifyEmail2()" [disabled]="!form2.get('email')?.valid || emailDuplicado">Verificar</button>
-                <mat-error *ngIf="form2.get('email')?.errors?.['emailDuplicado']">
-                  El correo ya está registrado.
-                </mat-error>
-                <mat-error *ngIf="form2.get('email')?.errors?.['pattern']">
-                  Solo se aceptan correos de dominio @gmail.com
-                </mat-error>
-              </mat-form-field>
+          
+          <div class="estudiante-container">
+            <div class="datos-estudiante">
+              <div class="carnet-info">
+                <p><strong>Carnet:</strong> {{ estudianteBase.carnet_formateado }}
+                  <span class="carnet-comment">— Este número es solo informativo y representa tu nueva identificación en el sistema.</span></p>
+              </div>
+              <div class="nombres">
+                <p><strong>Primer nombre:</strong> {{ estudianteBase.primer_nombre }}</p>
+                <p><strong>Segundo nombre:</strong> {{ estudianteBase.segundo_nombre }}</p>
+              </div>
+              <div class="apellidos">
+                <p><strong>Primer apellido:</strong> {{ estudianteBase.primer_apellido }}</p>
+                <p><strong>Segundo apellido:</strong> {{ estudianteBase.segundo_apellido }}</p>
+              </div>
+              <div class="cohorte-carrera">
+                <p><strong>Cohorte:</strong> {{ estudianteBase.cohorte }}</p>
+                <p><strong>PNF/Carrera:</strong> {{ estudianteBase.pnf }}</p>
+              </div>
             </div>
-            <div class="col s12">
-              <mat-form-field appearance="fill">
-                <mat-label>Código de verificación</mat-label>
-                <input type="text" matInput formControlName="validationCode">
-                <button mat-button matSuffix (click)="validateCode2()" [disabled]="!form2.get('validationCode')?.valid">Validar</button>
-                <mat-error *ngIf="form2.get('validationCode')?.errors?.['minlength']">
-                  El código debe tener al menos 6 dígitos.
-                </mat-error>
-              </mat-form-field>
-            </div>
+          </div>
+          <div class="validation-options">
+            <mat-radio-group formControlName="datosCorrectos">
+              <mat-radio-button value="si">Mis datos son correctos</mat-radio-button>
+              <mat-radio-button value="no">Hay datos incorrectos</mat-radio-button>
+            </mat-radio-group>
+          </div>
+          <button cButton btn btn-primary size="sm" matStepperNext [disabled]="!firstFormGroup1.valid">Continuar</button>
+        </form>
+      </mat-step>
+    
+      <!-- Paso 2: Declaración Jurada o Corrección de Datos -->
+      <mat-step [stepControl]="secondFormGroup2">
+        <form [formGroup]="secondFormGroup2">
+          <ng-template matStepLabel>Declaración o Corrección</ng-template>
+           <!-- Contenido para declaración jurada -->
+           <div *ngIf="firstFormGroup1.get('datosCorrectos')?.value === 'si'">
+            <strong><p>Declaración Jurada de Confirmación de Datos</p></strong>
+            <p>Yo, <strong>{{ estudianteBase.nombre_completo }}</strong>, titular de la cédula de identidad número <strong>{{ estudianteBase.nac }}-{{ estudianteBase.cedula }}</strong>, por medio de la presente declaro que:</p>
+            <ol>
+              <li>He revisado detenidamente la siguiente información personal y académica:
+                <ul>
+                  <li><strong>Nombres:</strong> {{ estudianteBase.primer_nombre }} {{ estudianteBase.segundo_nombre }}</li>
+                  <li><strong>Apellidos:</strong> {{ estudianteBase.primer_apellido }} {{ estudianteBase.segundo_apellido }}</li>
+                  <li><strong>Programa de Estudio/Carrera:</strong> {{ estudianteBase.pnf }}</li>
+                </ul>
+              </li>
+              <li>Confirmo que toda la información listada es correcta y completa a mi leal saber y entender.</li>
+              <li>Entiendo y acepto que, posteriormente, debo validar esta declaración mediante un código OTP que recibiré en mi correo electrónico, el cual servirá como mi firma electrónica.</li>
+              <li>Soy consciente de que cualquier falsedad en esta declaración me hace sujeto a las sanciones aplicables según las normativas académicas y legales vigentes.</li>
+            </ol>    
+            <mat-form-field>
+              <mat-label>Escriba "ACEPTO" para confirmar</mat-label>
+              <input matInput formControlName="confirmacion">
+              <mat-error *ngIf="secondFormGroup2.get('confirmacion')?.hasError('required')">Este campo es obligatorio.</mat-error>
+              <mat-error *ngIf="secondFormGroup2.get('confirmacion')?.hasError('pattern')">Debe escribir "ACEPTO" (en mayúsculas) para continuar.</mat-error>
+            </mat-form-field>
+          </div>
+
+    <!-- Contenido para corrección de datos -->
+    <div *ngIf="firstFormGroup1.get('datosCorrectos')?.value === 'no'">
+      <label>Indique el o los datos incorrectos:</label>
+      <div class="row">
+        <div class="col-md-6 col-12">
+          <mat-checkbox formControlName="cohorte">Cohorte de ingreso</mat-checkbox>
+          <div *ngIf="secondFormGroup2.get('cohorte')?.value" class="explanation">
+            Si seleccionaste esta opción es porque tu cohorte de ingreso está incorrecta. Si no, desmarca esta opción.
+          </div>
+        </div>
+        <div class="col-md-6 col-12">
+          <mat-checkbox formControlName="pnfCarrera">PNF/Carrera</mat-checkbox>
+          <div *ngIf="secondFormGroup2.get('pnfCarrera')?.value" class="explanation">
+            Si seleccionaste esta opción es porque tu carrera o PNF mostrado es incorrecto. Si no, desmarca esta opción.
+          </div>
+        </div>
+        <div class="col-md-6 col-12">
+          <mat-checkbox formControlName="multipleCarrera">Múltiple carrera</mat-checkbox>
+          <div *ngIf="secondFormGroup2.get('multipleCarrera')?.value" class="explanation">
+            Selecciona esta opción si estudiaste varias carreras en la UNETRANS (antiguo IUT) y necesitas que se muestre la primera carrera que estudiaste en lugar de la última. Si solo has estudiado una carrera, desmarca esta opción y selecciona "PNF/Carrera".
+          </div>
+        </div>
+        <div class="col-md-6 col-12">
+          <mat-checkbox formControlName="nombresApellidos">Nombres y Apellidos</mat-checkbox>
+          <div *ngIf="secondFormGroup2.get('nombresApellidos')?.value" class="explanation">
+            Si seleccionaste esta opción es porque sus nombres o apellidos están incorrectos, completa los siguientes campos:
           </div>
         </div>
       </div>
+      
+      <div *ngIf="secondFormGroup2.get('nombresApellidos')?.value" class="row">
+        <div class="col-md-3 col-12">
+          <mat-form-field appearance="fill">
+            <mat-label>Primer Nombre</mat-label>
+            <input type="text" matInput formControlName="primerNombre" (input)="toUpperCase($event, 'primerNombre')">
+            <mat-error *ngIf="secondFormGroup2.get('primerNombre')?.errors?.['required']">El primer nombre es obligatorio.</mat-error>
+            <mat-error *ngIf="secondFormGroup2.get('primerNombre')?.errors?.['pattern']">Evita espacios al inicio o al final.</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-md-3 col-12">
+          <mat-form-field appearance="fill">
+            <mat-label>Segundo Nombre</mat-label>
+            <input type="text" matInput formControlName="segundoNombre" (input)="toUpperCase($event, 'segundoNombre')">
+            <mat-error *ngIf="secondFormGroup2.get('segundoNombre')?.errors?.['pattern']">Evita espacios al inicio o al final.</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-md-3 col-12">
+          <mat-form-field appearance="fill">
+            <mat-label>Primer Apellido</mat-label>
+            <input type="text" matInput formControlName="primerApellido" (input)="toUpperCase($event, 'primerApellido')">
+            <mat-error *ngIf="secondFormGroup2.get('primerApellido')?.errors?.['required']">El primer apellido es obligatorio.</mat-error>
+            <mat-error *ngIf="secondFormGroup2.get('primerApellido')?.errors?.['pattern']">Evita espacios al inicio o al final.</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-md-3 col-12">
+          <mat-form-field appearance="fill">
+            <mat-label>Segundo Apellido</mat-label>
+            <input type="text" matInput formControlName="segundoApellido" (input)="toUpperCase($event, 'segundoApellido')">
+            <mat-error *ngIf="secondFormGroup2.get('segundoApellido')?.errors?.['pattern']">Evita espacios al inicio o al final.</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-md-12 col-12">
+          <label>Adjunta tu documento de identidad en formato JPG</label>
+          <div>
+            <input type="file" (change)="onFileChange($event)" accept="image/jpeg">
+            <mat-error *ngIf="fileError">{{fileError}}</mat-error>
+          </div>
+          <br>
+        </div>
+      </div>     
     </div>
+    <div *ngIf="secondFormGroup2.errors?.['notChecked'] && firstFormGroup1.get('datosCorrectos')?.value === 'no'">
+      <p class="error-message">Debe seleccionar al menos una opción de datos incorrectos para continuar.</p>
+    </div>
+    
+    <button cButton btn btn-primary size="sm" matStepperNext [disabled]="!secondFormGroup2.valid || (firstFormGroup1.get('datosCorrectos')?.value === 'no' && secondFormGroup2.errors?.['notChecked'])">Continuar</button>
+        </form>
+      </mat-step>
+    
+      <!-- Paso 3: Verificación de Correo Electrónico -->
+      <mat-step [stepControl]="thirdFormGroup3">
+        <form [formGroup]="thirdFormGroup3">
+          <ng-template matStepLabel>Verificación de Correo Electrónico</ng-template>
+          <div>
+            <br>
+            <c-alert *ngIf="estudianteBase.estatus_migra === 0" color="info">
+              <strong>Información Importante:</strong><br>
+              Registra un <strong>correo de GMAIL válido</strong> al que tengas acceso. Te enviaremos un código de verificación a esta dirección. <br>
+              Verifica tu bandeja de entrada y la carpeta de SPAM. Para asistencia, contacta a: soportesice@unetrans.edu.ve
+            </c-alert>
+            <c-alert *ngIf="estudianteBase.estatus_migra === 5" color="info">
+              <strong>Información Importante:</strong><br>
+              Tu correo electrónico ya ha sido verificado anteriormente. Te enviamos un código a <strong>{{ estudianteBase.email }}</strong> para completar el proceso inicial. <br>
+              Verifica tu bandeja de entrada y la carpeta de SPAM. Para asistencia, contacta a: soportesice@unetrans.edu.ve
+            </c-alert>
+            <label>Verificación del correo electrónico:</label>
+            <div class="row">
+              <div class="col-md-6 col-12">
+                <mat-form-field appearance="fill">
+                  <mat-label>Correo electrónico</mat-label>
+                  <input type="email" matInput formControlName="email">
+                  <button mat-button matSuffix 
+                          (click)="verifyEmail2()" 
+                          [disabled]="!thirdFormGroup3.get('email')?.valid || emailDuplicado"
+                  >
+                    Verificar
+                  </button>
+                  <mat-error *ngIf="thirdFormGroup3.get('email')?.errors?.['emailDuplicado']">
+                    El correo ya está registrado.
+                  </mat-error>
+                  <mat-error *ngIf="thirdFormGroup3.get('email')?.errors?.['pattern']">
+                    Solo se aceptan correos de dominio @gmail.com
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-md-6 col-12">
+                <mat-form-field appearance="fill">
+                  <mat-label>Código de verificación</mat-label>
+                  <input type="text" matInput formControlName="validationCode">
+                  <button mat-button matSuffix (click)="validateCode2()" [disabled]="!thirdFormGroup3.get('validationCode')?.valid">Validar</button>
+                  <mat-error *ngIf="thirdFormGroup3.get('validationCode')?.errors?.['minlength']">
+                    El código debe tener al menos 6 dígitos.
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </form>
+      </mat-step>
+    </mat-vertical-stepper>    
   </div>
 
 </div>

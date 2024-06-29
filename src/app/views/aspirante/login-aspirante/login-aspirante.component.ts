@@ -7,6 +7,8 @@ import { NotificacionService } from './../../../notificacion.service'
 import {ModalDirective} from 'ngx-bootstrap/modal';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+import { NotifyInformationGeneralComponent } from '../notify-information-general/notify-information-general.component';
 
 @Component({
   selector: 'app-login-aspirante',
@@ -20,14 +22,19 @@ export class LoginAspiranteComponent {
   estudiante: any;
   resultados: any;
   aspirante: any []= [];
+  modalRef: BsModalRef; 
 
   constructor(private _formBuilder: FormBuilder,
     public aspiranteService: AspiranteService,
+    private modalService: BsModalService,
     public router: Router,
+    public bsModalRef: BsModalRef,
     private SpinnerService: NgxSpinnerService,
     private notifyService : NotificacionService
     ) 
-    { }
+    { 
+      this.abrirNotificacion()
+    }
 
     consultarCedula(){
       this.SpinnerService.show(); 
@@ -143,6 +150,15 @@ export class LoginAspiranteComponent {
           this.firstFormGroup.reset();
         }
       );
+    }
+
+    abrirNotificacion() {
+      const modalRef: BsModalRef = this.modalService.show(NotifyInformationGeneralComponent, {
+        ignoreBackdropClick: true,
+        keyboard: false,
+        class: 'modal-dialog-centered'
+      });
+  
     }
 
 //Generación del PDF si todo esta OK

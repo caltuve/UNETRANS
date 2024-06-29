@@ -75,12 +75,16 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatRadioModule} from '@angular/material/radio';
 import { DetalleActaCalificacionesDocenteComponent } from './detalle-acta-calificaciones-docente/detalle-acta-calificaciones-docente.component';
+import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
+import { ConfirmDialogUploadGradesComponent } from './confirm-dialog-upload-grades/confirm-dialog-upload-grades.component';
 
 @NgModule({
   declarations: [
     MisCursosComponent,
     CargaCalificacionesComponent,
-    DetalleActaCalificacionesDocenteComponent
+    DetalleActaCalificacionesDocenteComponent,
+    ConfirmDialogComponent,
+    ConfirmDialogUploadGradesComponent
   ],
   imports: [
     CommonModule,

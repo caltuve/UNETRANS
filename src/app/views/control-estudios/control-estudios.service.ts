@@ -190,6 +190,10 @@ getReincorporacion() {
     return this.http.get(`${this.url}programas_vigentes.php`);
   }
 
+  getAllProgramas() {
+    return this.http.get(`${this.url}all_programas.php`);
+  }
+
   getPeriodos() {
     return this.http.get(`${this.url}periodos.php`);
   }
@@ -302,6 +306,14 @@ getReincorporacion() {
     return this.http.post(`${this.url}findpersonrdi.php`, JSON.stringify(dato));
   }
 
+  checkEnGestion(dato: any){
+    return this.http.post(`${this.url}checkgestion.php`, JSON.stringify(dato));
+  }
+
+  marcarEnGestion(dato: any){
+    return this.http.post(`${this.url}marcargestion.php`, JSON.stringify(dato));
+  }
+
   findPersonaExpediente(dato: any){
     return this.http.post(`${this.url}findpersonaexp.php`, JSON.stringify(dato));
   }
@@ -331,6 +343,10 @@ getReincorporacion() {
     return this.http.post(`${this.url}generaotp.php`, JSON.stringify(datos))
   }
 
+  generaOtpVerificado(datos: any): Observable<any>{
+    return this.http.post(`${this.url}generaotpverif.php`, JSON.stringify(datos))
+  }
+
   validarOTP(datos: any): Observable<any>{
     return this.http.post(`${this.url}validaotp.php`, JSON.stringify(datos))
   }
@@ -351,12 +367,20 @@ getReincorporacion() {
     return this.http.get(`${this.url}departamentos.php`);
   }
 
+  getTypeProgramasAcademic() {
+    return this.http.get(`${this.url}typeacadprogam.php`);
+  }
+
   getSituacion() {
     return this.http.get(`${this.url}situacion.php`);
   }
 
   getTipoPrograma() {
     return this.http.get(`${this.url}tipoprograma.php`);
+  }
+
+  getAfiliacion() {
+    return this.http.get(`${this.url}tipoafiliacion.php`);
   }
 
   getTipoCertificacion() {
@@ -370,6 +394,10 @@ getReincorporacion() {
 
   obtenerPrograma(id: number): Observable<any> {
     return this.http.get(`${this.url}obtenerPrograma.php?id=${id}`)
+  }
+
+  obtenerMenciones(id: number): Observable<any> {
+    return this.http.get(`${this.url}obtenerMencion.php?id=${id}`)
   }
 
   crearPlanEstudios(datosPlan: any): Observable<any> {
@@ -501,5 +529,20 @@ cargaProcesoCalificaciones(dato: any): Observable<any> {
   return this.http.post(`${this.url}crear_proceso_calificaciones.php`, JSON.stringify(dato));
 }
 
+getPlanes(): Observable<any> {
+  return this.http.get(`${this.url}/planes.php`);
+}
+
+getUnidades(): Observable<any> {
+  return this.http.get(`${this.url}/obtenerUCall.php`);
+}
+
+getTrayectosUC(idPlan: number): Observable<any> {
+  return this.http.post(`${this.url}/trayectosUC.php`, JSON.stringify(idPlan));
+}
+
+getSemestresUC(idTrayecto: number): Observable<any> {
+  return this.http.post(`${this.url}/semestresUC.php`, JSON.stringify(idTrayecto));
+}
 
 }

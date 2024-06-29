@@ -21,9 +21,13 @@ export class ModalRevMigracionComponent implements OnInit {
   @Output() actualizacionCompleta = new EventEmitter<void>();
 
   form: FormGroup;
+  formNombresApellidos: FormGroup;
   estudianteBase: any; // Ajusta según el tipo de dato de tu estudiante
+  detallesIncorrectos: any[];
 
   usrsice: string;
+
+  detalles_file: string;
 
   rol: any []= [];
 
@@ -31,8 +35,10 @@ export class ModalRevMigracionComponent implements OnInit {
 
   modalidadesIngreso: any []= [];
 
+  copiado = false;
 
   anioActual = new Date().getFullYear();
+  detalles: any;
 
   constructor(public modalRef: BsModalRef,
     public aspiranteService: AspiranteService,
@@ -46,45 +52,56 @@ export class ModalRevMigracionComponent implements OnInit {
 
      ngOnInit(): void {
       this.form = this.fb.group({
-        carnet: [{value: ''}], // Asigna el valor inicial y marca como solo lectura
+        cohorte: ['', [Validators.required, Validators.pattern(/^\d{4}$/), Validators.max(this.anioActual), Validators.min(1971)]],
+        modalidadIngreso: ['', Validators.required],
+        pnf: ['', Validators.required],
+        trayectoIngreso: ['', [Validators.required, Validators.pattern(/^\d{1}$/), Validators.max(6), Validators.min(0)]],
+        trayectoActual: ['', [Validators.required, Validators.pattern(/^\d{1}$/), Validators.max(6), Validators.min(0)]],
+        nombre: ['', Validators.required],
+        nombrecorto: ['', Validators.required],
+        email: ['', Validators.required],
         cedula: ['', Validators.required],
-        usrsice: ['', Validators.required],
-        cohorte: ['', [Validators.required, Validators.pattern(/^\d{4}$/), Validators.max(this.anioActual),Validators.min(1971)]],
-      modalidadIngreso: ['', Validators.required],
-      pnf: ['', Validators.required],
-      trayectoIngreso: ['', [Validators.required, Validators.pattern(/^\d{1}$/), Validators.max(6),Validators.min(0)]],
-      trayectoActual: ['', [Validators.required, Validators.pattern(/^\d{1}$/), Validators.max(6),Validators.min(0)]],
-      nombre: ['', Validators.required],
-      nombrecorto: ['', Validators.required],
-      email: ['', Validators.required],
       });
-  
-      // Aquí puedes cargar los datos iniciales del estudiante para asignarlos al formulario
+    
       this.cargarDatosIniciales();
       this.findCarreras();
       this.findModIngreso();
-
     }
 
     cargarDatosIniciales() {
-      // Suponiendo que estudianteBase es un objeto con tus datos
+      // Aplica los valores iniciales al formulario
       this.form.patchValue({
-        cohorte: this.estudianteBase.cohorte, // Asigna el valor de cohorte
-        pnf: this.estudianteBase.pnf, // Asigna el valor de pnf
-        //modalidadIngreso: this.estudianteBase.modalidadIngreso, // Asigna modalidad de ingreso
-        carnet: this.estudianteBase.carnet, // Asigna el valor de carnet
+        cohorte: this.estudianteBase.cohorte,
+        pnf: this.estudianteBase.pnf,
         trayectoIngreso: this.estudianteBase.trayecto_ing,
         trayectoActual: this.estudianteBase.trayecto,
-        cedula: this.estudianteBase.cedula,
-        usrsice: this.usrsice,
         nombre: this.estudianteBase.nombre_completo,
         nombrecorto: this.estudianteBase.nombre_corto,
-        email:  this.estudianteBase.email,
+        email: this.estudianteBase.email,
+        cedula:  this.estudianteBase.cedula,
       });
-      // Actualiza la disponibilidad del campo PNF después de cargar los datos
-  this.actualizarDisponibilidadCampoPNF();
+    
+      // Inicializar el formulario de nombres y apellidos si es necesario
+      this.detallesIncorrectos.forEach(detalle => {
+        if (detalle.tipo === 'nombresApellidos') {
+          this.initializeNombresApellidosForm(JSON.parse(detalle.detalle));
+        }
+      });
+    
+      this.actualizarDisponibilidadCampoPNF();
     }
-
+    
+    initializeNombresApellidosForm(detalles: any) {
+      this.formNombresApellidos = this.fb.group({
+        primerNombre: [detalles.primerNombre, Validators.required],
+        segundoNombre: [detalles.segundoNombre],
+        primerApellido: [detalles.primerApellido, Validators.required],
+        segundoApellido: [detalles.segundoApellido],
+        actualizarDatos: ['', Validators.required]
+      });
+    
+      this.detalles = detalles;
+    }
 
     actualizarDisponibilidadCampoPNF() {
       const rol = this.rol; // Obtiene el rol del usuario
@@ -99,9 +116,23 @@ export class ModalRevMigracionComponent implements OnInit {
       }
     }
 
-  closeModal() {
-    this.modalRef.hide();
-  }
+    closeModal() {
+      const data = { 
+        cedula: this.estudianteBase.cedula, 
+        en_gestion: false, 
+        gestor: null 
+      };
+      this.controlestudiosService.marcarEnGestion(data).subscribe(
+        () => {
+          
+          this.modalRef.hide();
+        },
+        error => {
+          console.error('Error al desmarcar solicitud como en gestión:', error);
+          this.modalRef.hide(); // Asegurarse de cerrar el modal incluso si hay un error
+        }
+      );
+    }
 
   findCarreras(){
     this.aspiranteService.getCarreras().subscribe(
@@ -128,18 +159,22 @@ obtenerUsuarioActual() {
 
 actualizaRdi() {
   this.SpinnerService.show();
-  if (this.form.valid) {
-    console.log(this.form.value);
-    this.controlestudiosService.actualizarDatosEstudianteRDI(this.form.value).subscribe({
+  // Combina los valores de ambos formularios
+  const combinedFormData = {
+    ...this.form.value,
+    ...this.formNombresApellidos?.value, // Asegúrate de que formNombresApellidos no sea undefined
+  };
+
+  if (this.form.valid && (!this.formNombresApellidos || this.formNombresApellidos.valid)) {
+    console.log(combinedFormData);
+    this.controlestudiosService.actualizarDatosEstudianteRDI(combinedFormData).subscribe({
       next: (response) => {
         if (response.success) {
           this.closeModal();
           this.SpinnerService.hide();
           this.notifyService.showSuccess('Solicitud de revisión procesada');
           this.actualizacionCompleta.emit(); // Emite el evento
-          
         } else if (response.error) {
-          
           this.closeModal();
           this.SpinnerService.hide();
           this.notifyService.showError(`Error al procesar los datos: ${response.error}`);
@@ -151,7 +186,36 @@ actualizaRdi() {
         this.closeModal();
       }
     });
+  } else {
+    this.SpinnerService.hide();
+    this.notifyService.showError('Por favor complete todos los campos obligatorios.');
   }
+}
+
+
+obtenerDescripcionDetalle(tipo: string): string {
+  switch (tipo) {
+    case 'cohorte':
+      return '🚨 Cohorte Incorrecta - Revisar 🚨';
+    case 'pnfCarrera':
+      return '🚨 PNF/Carrera Incorrecta - Revisar 🚨';
+    case 'multipleCarrera':
+      return '🔔 Múltiples Carreras Indicadas - Recuerda matricular la carrera más antigua, incluso si está cerrada 🔔';
+    default:
+      return 'Datos incorrectos - Revisar';
+  }
+}
+
+copiarCedula() {
+  const cedula = this.estudianteBase.cedula;
+  navigator.clipboard.writeText(cedula).then(() => {
+    this.copiado = true;
+    setTimeout(() => {
+      this.copiado = false;
+    }, 4000); // Oculta el mensaje después de 2 segundos
+  }, (err) => {
+    console.error('Error al copiar cédula: ', err);
+  });
 }
 
 }

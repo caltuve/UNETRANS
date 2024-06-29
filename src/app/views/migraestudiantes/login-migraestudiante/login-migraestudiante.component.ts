@@ -39,10 +39,24 @@ export class LoginMigraestudianteComponent {
           this.aspirante = data;
           //console.log(this.aspirante)
           switch (data['estatus']) {
+            case 'mantenimiento':
+              this.SpinnerService.hide();
+              //this.myModalCompletado.show(); 
+              this.notifyService.showInfoMtto('El acceso al proceso de migración estudiantil está temporalmente suspendido debido a mantenimiento programado. No podrá realizar ninguna operación hasta que finalice este proceso. Agradecemos su paciencia y comprensión.');
+              this.firstFormGroup.reset();
+              this.router.navigateByUrl('/login-migraestudiante');
+                break;
             case 'completado':
               this.SpinnerService.hide();
               //this.myModalCompletado.show(); 
               this.notifyService.showInfo('Usted ya cumplió con el proceso de autoregistro, debe iniciar sesión en SICE.');
+              this.firstFormGroup.reset();
+              this.router.navigateByUrl('/login');
+                break;
+            case 'existente_sice':
+              this.SpinnerService.hide();
+              //this.myModalCompletado.show(); 
+              this.notifyService.showInfo('Usted ya es estudiante registrado no necesita hacer el proceso de migración, debe iniciar sesión en SICE con su usuario y clave.');
               this.firstFormGroup.reset();
               this.router.navigateByUrl('/login');
                 break;
@@ -69,11 +83,12 @@ export class LoginMigraestudianteComponent {
                 };
                 //console.log(initialState);
                 // Abrir el modal con el estado inicial
+                sessionStorage.setItem('currentUser', JSON.stringify(this.aspirante)); 
                 this.abrirModalDetalleEstudiante(initialState);
               //this.aspirante = data
               //this.migrastudentService.datosAspirante = data
               //this.migrastudentService.materiasAspirante = data.materias
-              sessionStorage.setItem('currentUser', JSON.stringify(this.aspirante)); 
+             
               //this.notifyService.showSuccess('Bienvenido al proceso de autoregistro.');
               //this.router.navigateByUrl('/automigra-estudiante');
               break;

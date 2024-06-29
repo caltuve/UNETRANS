@@ -518,9 +518,9 @@
               </mat-expansion-panel-header>
               <br>
               <div class="row">
-                <div class="col-6">
+                <div class="col-md-6 col-12">
                   <div class="row">
-                    <div class="col l12 m12 s12"><label>Usuario de acceso:</label>
+                    <div class="col-md-6 col-12"><label>Usuario de acceso:</label>
                       <div class="row mar-b-0">
                         <div class="col s12">
                           <mat-form-field>
@@ -535,7 +535,7 @@
                     </div>
                   </div>
                   <div class="row">
-                    <div class="col l12 m12 s12"><label>Contraseña de acceso:</label>
+                    <div class="col-md-6 col-12"><label>Contraseña de acceso:</label>
                       <div class="row mar-b-0">
                         <div class="col s12">
                           <mat-form-field>
@@ -559,7 +559,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-6">
+                <div class="col-md-6 col-12">
                   <div class="card">
                     <ul class="list-group">
                       <li class="list-group-item d-flex align-items-center" style="border: 0;">
@@ -607,12 +607,8 @@
                         <mat-form-field>
                           <mat-label>Pregunta 1:</mat-label>
                           <mat-select formControlName="quest1" required>
-                            <mat-option [value]="pregunta1.descripcion"
-                            *ngFor="let pregunta1 of questsec1">{{pregunta1.descripcion}}</mat-option>
+                            <mat-option [value]="pregunta.descripcion" *ngFor="let pregunta of questsec1">{{pregunta.descripcion}}</mat-option>
                           </mat-select>
-                          <mat-error *ngIf="fiveFormGroup.get('quest1')?.invalid && fiveFormGroup.get('quest1')?.touched">
-                            Pregunta 1 es requerida
-                          </mat-error>
                         </mat-form-field>
                       </div>
                     </div>
@@ -624,14 +620,12 @@
                         <mat-form-field>
                           <mat-label>Respuesta 1:</mat-label>
                           <input style='text-transform:uppercase' formControlName="answ1" matInput required>
-                          <mat-error *ngIf="fiveFormGroup.get('answ1')?.invalid && fiveFormGroup.get('answ1')?.touched">
-                            Respuesta 1 es requerida
-                          </mat-error>
                         </mat-form-field>
                       </div>
                     </div>
                   </div>
                 </div>
+                
                 <div class="row">
                   <div class="col l12 m12 s12">
                     <label class="label-custom">Pregunta 2:</label>
@@ -640,12 +634,8 @@
                         <mat-form-field>
                           <mat-label>Pregunta 2:</mat-label>
                           <mat-select formControlName="quest2" required>
-                            <mat-option [value]="pregunta2.descripcion"
-                            *ngFor="let pregunta2 of questsec2">{{pregunta2.descripcion}}</mat-option>
+                            <mat-option [value]="pregunta.descripcion" *ngFor="let pregunta of questsec2">{{pregunta.descripcion}}</mat-option>
                           </mat-select>
-                          <mat-error *ngIf="fiveFormGroup.get('quest2')?.invalid && fiveFormGroup.get('quest2')?.touched">
-                            Pregunta 2 es requerida
-                          </mat-error>
                         </mat-form-field>
                       </div>
                     </div>
@@ -657,14 +647,12 @@
                         <mat-form-field>
                           <mat-label>Respuesta 2:</mat-label>
                           <input style='text-transform:uppercase' formControlName="answ2" matInput required>
-                          <mat-error *ngIf="fiveFormGroup.get('answ2')?.invalid && fiveFormGroup.get('answ2')?.touched">
-                            Respuesta 2 es requerida
-                          </mat-error>
                         </mat-form-field>
                       </div>
                     </div>
                   </div>
                 </div>
+                
                 <div class="row">
                   <div class="col l12 m12 s12">
                     <label class="label-custom">Pregunta 3:</label>
@@ -673,12 +661,8 @@
                         <mat-form-field>
                           <mat-label>Pregunta 3:</mat-label>
                           <mat-select formControlName="quest3" required>
-                            <mat-option [value]="pregunta3.descripcion"
-                            *ngFor="let pregunta3 of questsec3">{{pregunta3.descripcion}}</mat-option>
+                            <mat-option [value]="pregunta.descripcion" *ngFor="let pregunta of questsec3">{{pregunta.descripcion}}</mat-option>
                           </mat-select>
-                          <mat-error *ngIf="fiveFormGroup.get('quest3')?.invalid && fiveFormGroup.get('quest3')?.touched">
-                            Pregunta 3 es requerida
-                          </mat-error>
                         </mat-form-field>
                       </div>
                     </div>
@@ -690,14 +674,11 @@
                         <mat-form-field>
                           <mat-label>Respuesta 3:</mat-label>
                           <input style='text-transform:uppercase' formControlName="answ3" matInput required>
-                          <mat-error *ngIf="fiveFormGroup.get('answ3')?.invalid && fiveFormGroup.get('answ3')?.touched">
-                            Respuesta 3 es requerida
-                          </mat-error>
                         </mat-form-field>
                       </div>
                     </div>
                   </div>
-                </div>
+                </div>                  
               </mat-expansion-panel>
           </mat-accordion> 
           <div align="right">
@@ -729,8 +710,7 @@
           </button>
         </div>
         <div class="modal-body" >
-          <p class="texto-justificado">En caso que se detectan irregularidades puede ser sometido a un proceso administrativo/legal, declara que todos los datos aqui suministrados son verdaderos.</p><br>
-          ¿Desea continuar?
+          <p class="texto-justificado">Por favor, confirme que todos los datos proporcionados son correctos. Tenga en cuenta que cualquier error en la información podría causar retrasos en los procesos del sistema. Si está seguro de que toda la información es correcta, haga clic en "Registrar" para finalizar el proceso.</p>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" (click)="myModal.hide()">Anular</button>

@@ -28,10 +28,40 @@
 }
 
 
+// .curso-detalle {
+//   margin-bottom: 10px; /* Espacio antes de los botones de acción */
+// }
+
+
+.c-card-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
 .curso-detalle {
-  margin-bottom: 10px; /* Espacio antes de los botones de acción */
+  display: flex;
+  justify-content: space-between; /* Alinea los elementos a ambos extremos */
+  align-items: center; /* Centra los elementos verticalmente */
+  flex-wrap: wrap; /* Permite que los elementos se envuelvan en la siguiente línea si no hay espacio suficiente */
+  //padding: 10px;
+}
+
+.curso-info, .curso-estado {
+  flex: 1; /* Permite que ambos bloques ocupen espacio equitativo */
+  word-wrap: break-word; /* Asegura que el texto no desborde */
+  //padding-right: 10px; /* Añade espacio entre los bloques de información y estado */
 }
 
 .curso-acciones {
-  text-align: right; /* Alinea los botones a la derecha para una mejor visualización */
+  display: flex;
+  justify-content: flex-end; /* Alinea los botones a la derecha */
+  flex-wrap: wrap; /* Permite que los botones se muevan a la siguiente línea si no hay suficiente espacio */
+  //gap: 10px; /* Añade un pequeño espacio entre los botones */
+  padding: 10px;
 }
+
+.btn {
+  flex-shrink: 0; /* Previene que los botones se encojan demasiado */
+}
+
