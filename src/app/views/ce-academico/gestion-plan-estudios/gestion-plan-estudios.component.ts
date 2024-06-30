@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-//import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { GestionPlanEstudiosModalComponent } from './../gestion-plan-estudios-modal/gestion-plan-estudios-modal.component';
 import { AddUnidadCurricularModalComponent } from './../add-unidad-curricular-modal/add-unidad-curricular-modal.component';
 import { ControlEstudiosService } from '../../control-estudios/control-estudios.service';
-import {MatTableDataSource} from '@angular/material/table';
+//import {MatTableDataSource} from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
 import { NgxSpinnerService } from "ngx-spinner";
 import { Console } from 'console';
