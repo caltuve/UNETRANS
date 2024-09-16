@@ -9,6 +9,8 @@ import { ExpedienteComponent } from './expediente/expediente.component';
 import { DocumentosComponent } from './documentos/documentos.component';
 import { InscripcionComponent } from './inscripcion/inscripcion.component';
 import { MigracionComponent } from './migracion/migracion.component';
+import { PostMigracionComponent } from './post-migracion/post-migracion.component';
+import { ConsultaDetalleAcademicoComponent } from './consulta-detalle-academico/consulta-detalle-academico.component';
 
 const routes: Routes = [
   {
@@ -28,6 +30,12 @@ const routes: Routes = [
         data: {
           title: 'Consultar datos'
         }
+      },
+      { path: 'consultar-datos/consulta-detalle-academico/:id', 
+        component: ConsultaDetalleAcademicoComponent,
+        data: {
+          title: 'Consultar datos - Detalles Académicos'
+        } 
       },
       {
         path: 'aspirante-opsu',
@@ -84,6 +92,12 @@ const routes: Routes = [
         data: {
           title: 'Migración Estudiantil'
         }
+      },
+      { path: 'migracion/post-migracion/:cedula', 
+        component: PostMigracionComponent,
+        data: {
+          title: 'Migración Estudiantil - PostMigración'
+        } 
       },
     ]
   }

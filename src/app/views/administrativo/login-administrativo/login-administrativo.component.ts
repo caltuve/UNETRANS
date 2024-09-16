@@ -43,7 +43,7 @@ export class LoginAdministrativoComponent {
             case 'no registrado':
               this.SpinnerService.hide();
               //this.myModalCompletado.show(); 
-              this.notifyService.showError2('Usted no está registrado como personal administrativo, verifique su cédula e intente nuevamente.');
+              this.notifyService.showError2('Usted no está registrado como personal administrativo o ente autorizado, verifique su cédula e intente nuevamente.');
               this.router.navigateByUrl('/login-administrativo');
                 break;
             default:

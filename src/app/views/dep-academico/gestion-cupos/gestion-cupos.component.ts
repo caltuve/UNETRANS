@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
-import {FormBuilder, Validators,FormControl} from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ControlEstudiosService } from '../../control-estudios/control-estudios.service';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
@@ -22,7 +22,7 @@ export class GestionCuposComponent {
   detalle_acta : any []= [];
   inscritos : any []= [];
   dataSource = new MatTableDataSource([]);
-  displayedColumns: string[] = ['acta','seccion','tipo','cupos','cupos_dis', 'doc_asignado', 'acciones'];
+  displayedColumns: string[] = ['acta','codigo_uc', 'nombre_uc', 'seccion', 'tipo', 'cupos', 'cupos_dis', 'doc_asignado', 'acciones'];
   displayedColumnsDetail: string[] = ['orden','carnet','cedula','nombre_completo','telefono','correo'];
   trayectos: any []= [];
 
@@ -34,9 +34,14 @@ export class GestionCuposComponent {
   docente: string;
   tseccion: any[] = [];
 
+  unidadesCurriculares: any[] = [];
+
+  estadisticas: any = {};
   carreraSeleccionada: any;
   periodoSeleccionado: any;
   tiposeccion: string;
+
+  selectedTrayecto: any;
 
   usr={
     nac:null,
@@ -54,6 +59,9 @@ export class GestionCuposComponent {
   hayResultados: boolean = false;
   sinResultados: boolean = false;
 
+  sinResultadosUC: boolean = false;
+  form: FormGroup;
+
   public mostrarTrayectos: boolean = true;
 
   @ViewChild('gestionNewSeccion') public gestionNewSeccion: ModalDirective;
@@ -65,11 +73,18 @@ export class GestionCuposComponent {
     public controlestudiosService: ControlEstudiosService,
     private notifyService : NotificacionService,
     private SpinnerService: NgxSpinnerService,
-    private modalService: BsModalService) {
+    private modalService: BsModalService,
+    private fb: FormBuilder,
+    ) {
       this.usr = JSON.parse(sessionStorage.getItem('currentUser')!); 
     }
 
     ngOnInit() { 
+      this.form = this.fb.group({
+        carreraSeleccionada: ['', Validators.required],
+        periodoSeleccionado: [{ value: '', disabled: true }, Validators.required],
+        trayectoSeleccionado: [{ value: '', disabled: true }, Validators.required]
+      });
       //this.findAspirantesConvenio();
       this.findCarrerasForDep(this.usr.usrsice);
       //this.findTipoSeccion();
@@ -109,35 +124,62 @@ export class GestionCuposComponent {
     );
   }
 
-  // findTrayectos(){
-  //   this.controlestudiosService.getTrayectos().subscribe(
-  //     (result: any) => {
-  //         this.periodos = result;
-  //   }
-  //   );
-  // }
 
-  onPnfSeleccionado(carreraSeleccionada: any) {
-    this.SpinnerService.show();
-    this.controlestudiosService.getPeriodoOfPnfSeleccionado(carreraSeleccionada).subscribe(
-      (data: any) => {
-        this.periodos = data;
-        this.periodoSeleccionado = null; // Reiniciar el valor del segundo mat-select
-        this.mostrarTrayectos = false; // Ocultar la información mostrada
-        this.SpinnerService.hide();
+
+  onPnfSeleccionado(pnf: any) {
+    this.form.get('periodoSeleccionado')?.reset();
+    this.form.get('trayectoSeleccionado')?.reset();
+    this.form.get('periodoSeleccionado')?.enable();
+    this.form.get('trayectoSeleccionado')?.disable();
+    this.unidadesCurriculares = []; // Limpiar los datos de la tabla
+    this.sinResultadosUC = false;
+    // Cargar los periodos desde el servicio
+    this.controlestudiosService.getPeriodoOfPnfSeleccionado(pnf).subscribe(
+      (result: any) => {
+        this.periodos = result;
+      },
+      error => {
+        console.error('Error al cargar periodos: ', error);
       }
     );
   }
-  onPeriodoSeleccionado(carreraSeleccionada: any,periodoSeleccionado: any ){
+
+
+  onPeriodoSeleccionado(pnf: any, periodo: any) {
+    this.form.get('trayectoSeleccionado')?.reset();
+    this.form.get('trayectoSeleccionado')?.enable();
     this.SpinnerService.show();
-    this.controlestudiosService.getOfertaAcademica(carreraSeleccionada,periodoSeleccionado).subscribe(
+    this.controlestudiosService.getOfertaAcademicaDCE(pnf, periodo).subscribe(
       (result: any) => {
-        this.mostrarTrayectos = true;
-        this.usr = JSON.parse(sessionStorage.getItem('currentUser')!); 
-        this.arrayDatos = result;
-        this.trayectos = result[0].trayectos;
-        this.SpinnerService.hide();
-    }
+        this.trayectos = result;
+      },
+      error => {
+        console.error('Error al obtener oferta académica: ', error);
+      },
+      () => this.SpinnerService.hide()
+    );
+  }
+
+  onTrayectoSeleccionado(trayecto: any) {
+    this.selectedTrayecto = trayecto; // Guardar el trayecto seleccionado
+    const pnf = this.form.get('carreraSeleccionada')?.value;
+    const periodo = this.form.get('periodoSeleccionado')?.value;
+    const trayectoId = trayecto.id;
+    const trayectoPeriodo = periodo;
+  
+    this.SpinnerService.show();
+    
+    // Realizar la solicitud al backend con los parámetros seleccionados
+    this.controlestudiosService.obtenerUnidadesCurricularesGestionCupos(pnf, trayectoId, trayectoPeriodo).subscribe(
+      (result: any) => {
+        this.unidadesCurriculares = result.detalle;
+        this.estadisticas = result.estadisticas;
+        this.sinResultadosUC = this.unidadesCurriculares.length === 0;
+      },
+      error => {
+        console.error('Error al obtener unidades curriculares: ', error);
+      },
+      () => this.SpinnerService.hide()
     );
   }
 
@@ -171,6 +213,9 @@ export class GestionCuposComponent {
           class: 'modal-xl custom-modal-scrollable', // Tamaño extra grande y desplazable
           ignoreBackdropClick: true, // Evita cerrar el modal al hacer clic fuera
           keyboard: false             // Evita cerrar el modal con la tecla ESC
+        });
+        this.modalRef.content.actualizacionCompleta.subscribe(() => {
+          this.onTrayectoSeleccionado(this.selectedTrayecto); // Invocar la actualización con los datos seleccionados
         });
       }
     );

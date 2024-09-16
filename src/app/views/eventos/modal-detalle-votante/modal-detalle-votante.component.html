@@ -1,0 +1,23 @@
+<!-- modal-detalle-votante.component.html -->
+<div class="modal-header">
+    <h4 class="modal-title">Registro de Ejercicio del Derecho al Voto | Elección Presidencial 2024 | 28-JUL-2024</h4>
+  </div>
+  <div class="modal-body">
+    <p>Datos personales:</p>
+    <p><strong>Cédula:</strong> {{ estudianteBase.nacionalidad }}-{{ estudianteBase.cedula }}</p>
+    <p><strong>Nombre:</strong> {{ estudianteBase.nombre_completo }}</p>
+    <p>Centro de Votación:</p>
+    <p><strong>Estado:</strong> {{ estudianteBase.estado }}</p>
+    <p><strong>Municipio:</strong> {{ estudianteBase.municipio }}</p>
+    <p><strong>Parroquia:</strong> {{ estudianteBase.parroquia }}</p>
+    <p><strong>Nombre del Centro:</strong> {{ estudianteBase.centro }}</p>
+    <p>¿Ha ejercido su derecho al voto?</p>
+    <div>
+        <button class="btn btn-primary mr-2" (click)="registrarVoto(true)">Sí, ya voté</button>
+        <button class="btn btn-danger" (click)="registrarVoto(false)">No, no voté</button>
+      </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="closeModal()">Salir</button>
+  </div>
+  

@@ -1,0 +1,83 @@
+<c-header>
+    <c-container fluid>
+      <c-sidebar-brand [brandFull]="{
+          src: 'assets/img/brand/footer-unetrans.png',
+          width: 200,
+          height: 65,
+          alt: 'UNETRANS Logo'
+        }" [brandNarrow]="{
+          src: 'assets/img/brand/logo_circular_unetrans.png',
+          width: 50,
+          height: 50,
+          alt: 'UNETRANS Logo'
+        }" routerLink="./">
+      </c-sidebar-brand>
+      <c-header-nav class="d-lg-flex me-auto">
+        <c-nav-item>
+          <a cNavLink>
+            Módulo de verificación
+          </a>
+        </c-nav-item>
+      </c-header-nav>
+  
+      <c-header-nav class="d-lg-flex">
+        <a cNavLink>
+          Validación en línea de documentos
+        </a>
+      </c-header-nav>
+    </c-container>
+</c-header>
+
+<br>
+
+<c-row class="estadisticas-container">
+    <c-col xs>
+      <c-card class="mb-4">
+        <c-card-header>Verificación de Certificados</c-card-header>
+        <c-card-body> 
+          <div>
+            <h2>📝 Certificación UNETRANS</h2>            
+
+            <!-- Si el certificado es válido -->
+            <div *ngIf="datosCertificado; else errorTemplate">
+              <h3 style="color: green;">✔️ Certificado Válido</h3>
+
+              <p><strong>📄 Número de Certificación:</strong> {{ datosCertificado.id_certificacion }}</p>
+              <p><strong>👤 Nombre del Estudiante:</strong> {{ datosCertificado.nombre_estudiante }}</p>
+              <p><strong>🎓 Título Otorgado:</strong> {{ datosCertificado.titulo }}</p>
+              <p><strong>📅 Fecha de Emisión:</strong> {{ datosCertificado.generado }}</p>
+              <p *ngIf="datosCertificado.fecha_expiracion"><strong>📅 Fecha de Expiración:</strong> {{ datosCertificado.fecha_expiracion }}</p>
+
+              <!-- Verificación del código QR -->
+              <p><strong>🔒 QR Verificado:</strong> Escaneado y validado correctamente</p>
+
+              <!-- Firma digital y seguridad -->
+              <p><strong>🖋️ Firma Digital:</strong> Firma del emisor validada y auténtica</p>
+              <p><strong>🛡️ Integridad:</strong> Documento no modificado desde su emisión</p>
+
+              <!-- Información del emisor -->
+              <p><strong>📜 Emitido por:</strong> {{ datosCertificado.emisor }} - {{ datosCertificado.cargo }}</p>
+
+              <!-- Registro de auditoría -->
+              <p><strong>📋 Auditoría:</strong> Validado en {{ currentDate | date:'short' }}. Registro de esta validación guardado.</p>
+
+              <!-- Código de verificación único -->
+              <p><strong>🔑 Código de Verificación Único:</strong> {{ datosCertificado.codigo_verificacion }}</p>
+
+            </div>
+
+            <!-- Si el certificado es inválido o no encontrado -->
+            <ng-template #errorTemplate>
+              <h3 style="color: red;">❌ Certificado No Válido</h3>
+              <p>⚠️ El documento que intentas validar no se encuentra en nuestra base de datos.</p>
+            </ng-template>
+          </div>
+        </c-card-body>
+      </c-card>
+    </c-col>
+</c-row>
+
+<!-- Spinner para indicar que se está procesando -->
+<ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" size="default" type="ball-atom">
+  <p style="color: white" align="center">Por favor espere... <br>¡Verificando información! ⏳</p>
+</ngx-spinner>

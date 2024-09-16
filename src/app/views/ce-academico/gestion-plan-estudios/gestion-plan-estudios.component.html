@@ -69,10 +69,15 @@
                       </button>
                     </div>
                     <div class="m-1">
-                      <button cButton class="btn-primary" data-toggle="modal" cTooltip="Editar" cTooltipPlacement="top">
-                        <svg cIcon name="cil-pencil"></svg>
+                      <button cButton class="btn-primary" (click)="verReportePlan(plan.id_plan)" cTooltip="Ver Plan" cTooltipPlacement="top">
+                        <svg cIcon name="cil-zoom"></svg>
                       </button>
                     </div>
+                    <div class="m-1">
+                      <button cButton class="btn-primary" (click)="generarReportePlan(plan.id_plan)" cTooltip="Descargar Plan" cTooltipPlacement="top">
+                          <svg cIcon name="cil-file"></svg>
+                      </button>
+                  </div>
                   </div>
                   
             </td>
@@ -120,7 +125,7 @@
                             </mat-panel-title>
                           </mat-expansion-panel-header>
                           <!-- Contenido del semestre, como un botón para añadir unidades curriculares -->
-                          <button cButton color="light" size="sm" (click)="addUnidadesCurriculares(trayecto.nombre_trayecto, semestre.numero)"> <svg cIcon
+                          <button cButton color="light" size="sm" > <svg cIcon
                             class="me-2" name="cilPlaylistAdd"></svg>Añadir Unidades Curriculares</button>
                             <div *ngIf="unidadesCurriculares.length">
                                 <table mat-table [dataSource]="unidadesCurriculares">
@@ -175,7 +180,7 @@
                                 </mat-expansion-panel-header>
                                   <br>
                                 <!-- Botón para añadir unidades curriculares a la mención -->
-                                <button cButton color="light" size="sm" (click)="addUnidadesCurricularesMencion(trayecto.nombre_trayecto, mencion.nombre_mencion)">
+                                <button cButton color="light" size="sm" >
                                   <svg cIcon class="me-2" name="cilPlaylistAdd"></svg>Añadir Unidades Curriculares
                                 </button>
                                 <div *ngIf="unidadesCurriculares.length">
@@ -221,7 +226,7 @@
 
                       <!-- Si no hay menciones, muestra el botón para añadir unidades curriculares al trayecto -->
                     <ng-container *ngIf="!trayecto.menciones || trayecto.menciones.length === 0">
-                      <button cButton color="light" size="sm" (click)="addUnidadesCurriculares(trayecto.nombre_trayecto)">
+                      <button cButton color="light" size="sm" >
                         <svg cIcon class="me-2" name="cilPlaylistAdd"></svg>Añadir Unidades Curriculares
                       </button>
                       <div *ngIf="unidadesCurriculares.length">

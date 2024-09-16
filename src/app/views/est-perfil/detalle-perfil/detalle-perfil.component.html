@@ -1,0 +1,510 @@
+
+<ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" size="default" type="ball-atom">
+    <p style="color: white" align="center">Por favor espere... <br>¡Validando información!</p>
+  </ngx-spinner>
+  <c-col xs="12">
+      <c-card class="mb-4">
+        <c-card-header>
+            <strong>Gestión de Perfil de Usuario</strong> &nbsp; 
+            <small>Módulo para la visualización y actualización de la información personal del usuario</small>
+          </c-card-header>          
+        <c-card-body >
+          <c-nav variant="tabs">
+            <c-nav-item class="ms-3">
+              <a 
+                [cTabContent]="tabContent1" 
+                [routerLink] 
+                [tabPaneIdx]="0" 
+                cNavLink 
+                [ngClass]="{'active-tab': tabContent1.activeTabPaneIdx === 0}"
+                class="d-flex align-items-center position-relative"
+                [style.border]="tabContent1.activeTabPaneIdx === 0 ? '2px solid white' : '2px solid #003E85'"
+        [style.backgroundColor]="tabContent1.activeTabPaneIdx === 0 ? '#003E85' : 'transparent'"
+        [style.color]="tabContent1.activeTabPaneIdx === 0 ? '#fff' : '#003E85'">
+        <svg cIcon class="me-2" name="cilUser"></svg>
+                Identidad
+              </a>
+            </c-nav-item>
+          
+            <!-- <c-nav-item class="ms-3">
+              <a 
+                [cTabContent]="tabContent1" 
+                [routerLink] 
+                [tabPaneIdx]="1" 
+                cNavLink 
+                [ngClass]="{'active-tab': tabContent1.activeTabPaneIdx === 1}"
+                class="d-flex align-items-center position-relative"
+                [style.border]="tabContent1.activeTabPaneIdx === 1 ? '2px solid white' : '2px solid #003E85'"
+        [style.backgroundColor]="tabContent1.activeTabPaneIdx === 1 ? '#003E85' : 'transparent'"
+        [style.color]="tabContent1.activeTabPaneIdx === 1 ? '#fff' : '#003E85'">
+        <svg cIcon class="me-2" name="cilHome"></svg>
+                Residencia
+              </a>
+            </c-nav-item>
+            <c-nav-item class="ms-3">
+              <a 
+                [cTabContent]="tabContent1" 
+                [routerLink] 
+                [tabPaneIdx]="2" 
+                cNavLink 
+                [ngClass]="{'active-tab': tabContent1.activeTabPaneIdx === 2}"
+                class="d-flex align-items-center position-relative"
+                [style.border]="tabContent1.activeTabPaneIdx === 2 ? '2px solid white' : '2px solid #003E85'"
+        [style.backgroundColor]="tabContent1.activeTabPaneIdx === 2 ? '#003E85' : 'transparent'"
+        [style.color]="tabContent1.activeTabPaneIdx === 2 ? '#fff' : '#003E85'">
+        <svg cIcon class="me-2" name="cilSchool"></svg>
+                Acádémicos
+              </a>
+            </c-nav-item>
+            <c-nav-item class="ms-3">
+              <a 
+                [cTabContent]="tabContent1" 
+                [routerLink] 
+                [tabPaneIdx]="3" 
+                cNavLink 
+                [ngClass]="{'active-tab': tabContent1.activeTabPaneIdx === 3}"
+                class="d-flex align-items-center position-relative"
+                [style.border]="tabContent1.activeTabPaneIdx === 3 ? '2px solid white' : '2px solid #003E85'"
+        [style.backgroundColor]="tabContent1.activeTabPaneIdx === 3 ? '#003E85' : 'transparent'"
+        [style.color]="tabContent1.activeTabPaneIdx === 3 ? '#fff' : '#003E85'">
+        <svg cIcon class="me-2" name="cilInstitution"></svg>
+                UNETRANS              
+              </a>
+            </c-nav-item> -->
+            <!-- <c-nav-item class="ms-3">
+                <a 
+                  [cTabContent]="tabContent1" 
+                  [routerLink] 
+                  [tabPaneIdx]="4" 
+                  cNavLink 
+                  [ngClass]="{'active-tab': tabContent1.activeTabPaneIdx === 4}"
+                  class="d-flex align-items-center position-relative"
+                  [style.border]="tabContent1.activeTabPaneIdx === 4 ? '2px solid white' : '2px solid #003E85'"
+          [style.backgroundColor]="tabContent1.activeTabPaneIdx === 4 ? '#003E85' : 'transparent'"
+          [style.color]="tabContent1.activeTabPaneIdx === 4 ? '#fff' : '#003E85'">
+          <svg cIcon class="me-2" name="cilShieldAlt"></svg>
+                  Seguridad              
+                </a>
+              </c-nav-item> -->
+                     <c-nav-item class="ms-3">
+                <a 
+                  [cTabContent]="tabContent1" 
+                  [routerLink] 
+                  [tabPaneIdx]="5" 
+                  cNavLink 
+                  [ngClass]="{'active-tab': tabContent1.activeTabPaneIdx === 5}"
+                  class="d-flex align-items-center position-relative"
+                  [style.border]="tabContent1.activeTabPaneIdx === 5 ? '2px solid white' : '2px solid #003E85'"
+          [style.backgroundColor]="tabContent1.activeTabPaneIdx === 5 ? '#003E85' : 'transparent'"
+          [style.color]="tabContent1.activeTabPaneIdx === 5 ? '#fff' : '#003E85'"
+          (click)="cargarIdentidadSiEsNecesario()">
+          <svg cIcon class="me-2" name="cilBadge"></svg>
+                  Carnet              
+                </a>
+              </c-nav-item> 
+          </c-nav>
+            <c-tab-content #tabContent1="cTabContent" [activeTabPaneIdx]="0" cRounded="bottom">
+                <c-tab-pane class="p-3 preview" role="tabpanel">
+                    <div class="note mt-4">
+                        <c-alert color="info" class="d-flex align-items-start alert-responsive">
+                          <svg cIcon class="me-2 icon-responsive" width="40" height="40" name="cilWarning"></svg>
+                          <div class="alert-content">
+                            <strong>Nota Importante:</strong> Los datos personales mostrados aquí no pueden ser modificados directamente en el sistema por motivos de seguridad e integridad de la información. 
+                            Si necesitas realizar cambios, por favor dirígete a la Dirección de Control de Estudios con los documentos que acrediten la información correcta o envía un correo electrónico a 
+                            <strong>soportesice&#64;unetrans.edu.ve</strong> con los soportes correspondientes.
+                          </div>
+                        </c-alert>
+                      </div>
+                    <div class="estudiante-container">
+                      <!-- Contenedor de la Foto -->
+                      <div class="foto-estudiante">
+                        <img [src]="'data:image/jpeg;base64,' + estudiante.identidad.foto" alt="Foto de Estudiante" />
+                        
+                        <!-- Mensajes de estado de la foto -->
+                        <div *ngIf="estudiante.identidad.estatus_foto === 1" class="alert alert-warning">
+                          La foto está en validación.
+                        </div>
+                        <div *ngIf="estudiante.identidad.estatus_foto === 2" class="alert alert-success">
+                          La foto es válida.
+                        </div>
+                        <div *ngIf="estudiante.identidad.estatus_foto === 3" class="alert alert-danger">
+                          La foto no es válida. Por favor, sube una nueva.
+                        </div>
+                        
+                        <!-- Botón para cargar foto -->
+                        <button class="btn-cargar-foto" 
+                                (click)="mostrarRequisitosFoto()"
+                                [disabled]="estudiante.identidad.estatus_foto === 1 || estudiante.identidad.estatus_foto === 3">
+                          Cargar Foto
+                        </button>
+                      </div>
+                      
+                      
+                      <!-- Contenedor de Datos -->
+                      <div class="datos-estudiante-container">
+                        <!-- Datos Personales -->
+                        <div class="datos-estudiante">
+                          <h4>Datos Personales</h4>
+                          <p><strong>Documento de Identidad:</strong> {{ estudiante.identidad.nac }}-{{ estudiante.identidad.cedula }} 
+                            <strong>Fecha de Nacimiento:</strong> {{ estudiante.identidad.fec_nac }}</p>
+                          <p><strong>Nombres:</strong> {{ estudiante.identidad.primer_nombre }} {{ estudiante.identidad.segundo_nombre }}
+                            <strong>Apellidos:</strong> {{ estudiante.identidad.primer_apellido }} {{ estudiante.identidad.segundo_apellido }}</p>
+                          <p><strong>Género:</strong> {{ estudiante.identidad.genero_descripcion }} 
+                             <strong>Estado Civil:</strong> {{ estudiante.identidad.edo_civil_descripcion }} 
+                             <strong>Grupo Sanguíneo:</strong> {{ estudiante.identidad.grupo_sanguineo }}</p>
+                        </div>
+                        
+                        <!-- Ubicación Geográfica del Lugar de Nacimiento -->
+                        <div class="ubicacion-nacimiento">
+                          <!-- <button class="btn-actualizar" (click)="actualizarUbicacion()">Actualizar</button> -->
+                          <h4>Ubicación Geográfica del lugar de nacimiento</h4>
+                          <p>
+                            <strong>País:</strong> {{ estudiante.identidad.pais_nacimiento }} 
+                            <strong>Estado:</strong> {{ estudiante.identidad.estado_nacimiento }} 
+                            <strong>Municipio:</strong> {{ estudiante.identidad.municipio_nacimiento }} 
+                            <strong>Parroquia:</strong> {{ estudiante.identidad.parroquia_nacimiento }}
+                          </p>
+                        </div>
+                  
+                        <!-- Información Complementaria -->
+                        <div class="informacion-complementaria">
+                          <!-- <button class="btn-actualizar" (click)="actualizarInformacion()">Actualizar</button> -->
+                          <h4>Información Complementaria</h4>
+                          <p>
+                            <strong>Etnia:</strong> {{ estudiante.identidad.etnia_descripcion }} 
+                            <strong>Discapacidad:</strong> {{ estudiante.identidad.discapacidad_descripcion }}
+                          </p>
+                          <p>
+                            <strong>Trabaja Actualmente:</strong> {{ estudiante.identidad.trabajo_descripcion }} 
+                            <span *ngIf="estudiante.identidad.trabajo === '1'">
+                              <strong>Sector de Trabajo:</strong> {{ estudiante.identidad.sector_trabajo }} 
+                            </span>
+                            <strong>¿Tiene Hijos?:</strong> {{ estudiante.identidad.hijos_descripcion }} 
+                            <span *ngIf="estudiante.identidad.hijos === '1'">
+                              <strong>Cantidad de Hijos:</strong> {{ estudiante.identidad.cantidad_hijos }}
+                            </span>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </c-tab-pane>
+                  
+              <c-tab-pane class="p-3 preview" role="tabpanel">
+                <!-- <div *ngIf="hayResultadosGestionadas">
+                    <mat-form-field>
+                        <input matInput (keyup)="applyFilterGestionadas($event)" placeholder="Buscar solicitud en proceso de gestión" #input>
+                      </mat-form-field>
+                      <table mat-table [dataSource]="gestionadas" [hover]="true"
+                      [responsive]="true"
+                      [striped]="true"
+                      align="middle"
+                      cTable
+                      class="mb-0 border" cTable>
+                        <ng-container matColumnDef="fecha_solicitud">
+                          <th mat-header-cell *matHeaderCellDef> Fecha de solicitud </th>
+                          <td mat-cell *matCellDef="let solicitud"> {{solicitud.fecha_solicitud}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="id_estudiante">
+                          <th mat-header-cell *matHeaderCellDef> Identificación </th>
+                          <td mat-cell *matCellDef="let solicitud"> {{solicitud.id_estudiante}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="nombre_completo">
+                          <th mat-header-cell *matHeaderCellDef> Apellidos y nombres </th>
+                          <td mat-cell *matCellDef="let solicitud"> {{solicitud.nombre_completo}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="tipo_revision">
+                          <th mat-header-cell *matHeaderCellDef> Tipo revisión </th>
+                          <td mat-cell *matCellDef="let solicitud"> {{solicitud.desc_tipo_revision}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="gestion">
+                            <th mat-header-cell *matHeaderCellDef> Gestionar </th>
+                            <td mat-cell *matCellDef="let solicitud">
+              <div class="button-container">
+                <button *ngIf="solicitud.tipo_revision === 'RDI'"  
+        cButton 
+        [ngClass]="solicitud.en_gestion ? 'btn-secondary' : 'btn-primary'" 
+        data-toggle="modal" 
+        size="sm" 
+        (click)="abrirModalRevision(solicitud.cedula)"
+        [cTooltip]="solicitud.en_gestion ? 'En gestión por: ' + solicitud.nombre_gestor : 'Gestionar'"
+        cTooltipPlacement="top">
+  <svg cIcon [name]="solicitud.en_gestion ? 'cilLockLocked' : 'cilMagnifyingGlass'"></svg>
+  </button>
+  
+  
+                  <button *ngIf="solicitud.tipo_revision === 'RPM'"  cButton 
+                  [ngClass]="solicitud.en_gestion ? 'btn-secondary' : 'btn-primary'" 
+                  data-toggle="modal" 
+                  size="sm" 
+                  (click)="irAGestionPostMigracion(solicitud.cedula)"
+                  [cTooltip]="solicitud.en_gestion ? 'En gestión por: ' + solicitud.nombre_gestor : 'Gestionar'"
+                  cTooltipPlacement="top" >
+                  <svg cIcon [name]="solicitud.en_gestion ? 'cilLockLocked' : 'cilMagnifyingGlass'"></svg>
+                  </button>
+              </div>
+                            </td>
+                          </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="displayedColumnsGestion"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumnsGestion;"></tr>
+                      </table>
+                      
+                </div>
+                <div *ngIf="sinResultadosGestionadas">
+                    <c-alert color="success" class="d-flex align-items-center">
+                      <svg cIcon class="me-2" width="24" height="24" name="cilCheckCircle"></svg>
+                      <div>No existen solicitudes en proceso de gestión</div>
+                    </c-alert>
+                  </div>
+                  <mat-paginator  [hidePageSize]="true" [pageSize]="5"  #paginatorGestionadas></mat-paginator> -->
+            </c-tab-pane>
+
+            <c-tab-pane class="p-3 preview" role="tabpanel">
+              <!-- <div *ngIf="hayResultadosDiferidas">
+                  <mat-form-field>
+                      <input matInput (keyup)="applyFilterDiferidas($event)" placeholder="Buscar solicitud diferida" #input>
+                    </mat-form-field>
+                    <table mat-table [dataSource]="diferidas" [hover]="true"
+                    [responsive]="true"
+                    [striped]="true"
+                    align="middle"
+                    cTable
+                    class="mb-0 border" cTable>
+                      <ng-container matColumnDef="fecha_solicitud">
+                        <th mat-header-cell *matHeaderCellDef> Fecha de solicitud </th>
+                        <td mat-cell *matCellDef="let solicitud"> {{solicitud.fecha_solicitud}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="id_estudiante">
+                        <th mat-header-cell *matHeaderCellDef> Identificación </th>
+                        <td mat-cell *matCellDef="let solicitud"> {{solicitud.id_estudiante}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="nombre_completo">
+                        <th mat-header-cell *matHeaderCellDef> Apellidos y nombres </th>
+                        <td mat-cell *matCellDef="let solicitud"> {{solicitud.nombre_completo}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="tipo_revision">
+                        <th mat-header-cell *matHeaderCellDef> Tipo revisión </th>
+                        <td mat-cell *matCellDef="let solicitud"> {{solicitud.desc_tipo_revision}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="gestion">
+                          <th mat-header-cell *matHeaderCellDef> Gestionar </th>
+                          <td mat-cell *matCellDef="let solicitud">
+            <div class="button-container">
+              <button *ngIf="solicitud.tipo_revision === 'RDI'"  
+      cButton 
+      [ngClass]="solicitud.en_gestion ? 'btn-secondary' : 'btn-primary'" 
+      data-toggle="modal" 
+      size="sm" 
+      (click)="abrirModalRevision(solicitud.cedula)"
+      [cTooltip]="solicitud.en_gestion ? 'En gestión por: ' + solicitud.nombre_gestor : 'Gestionar'"
+      cTooltipPlacement="top">
+  <svg cIcon [name]="solicitud.en_gestion ? 'cilLockLocked' : 'cilMagnifyingGlass'"></svg>
+  </button>
+  
+  
+                <button *ngIf="solicitud.tipo_revision === 'RPM'"  cButton 
+                [ngClass]="solicitud.en_gestion ? 'btn-secondary' : 'btn-primary'" 
+                data-toggle="modal" 
+                size="sm" 
+                (click)="irAGestionPostMigracion(solicitud.cedula)"
+                [cTooltip]="solicitud.en_gestion ? 'En gestión por: ' + solicitud.nombre_gestor : 'Gestionar'"
+                cTooltipPlacement="top" >
+                <svg cIcon [name]="solicitud.en_gestion ? 'cilLockLocked' : 'cilMagnifyingGlass'"></svg>
+                </button>
+            </div>
+                          </td>
+                        </ng-container>
+                      <tr mat-header-row *matHeaderRowDef="displayedColumnsDiferidas"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumnsDiferidas;"></tr>
+                    </table>
+                    
+              </div>
+              <div *ngIf="sinResultadosDiferidas">
+                  <c-alert color="success" class="d-flex align-items-center">
+                    <svg cIcon class="me-2" width="24" height="24" name="cilCheckCircle"></svg>
+                    <div>No existen solicitudes diferidas</div>
+                  </c-alert>
+                </div>
+                <mat-paginator  [hidePageSize]="true" [pageSize]="5"  #paginatorDiferidas></mat-paginator> -->
+          </c-tab-pane>
+
+              <c-tab-pane class="p-3 preview" role="tabpanel">
+                  <!-- <div *ngIf="hayResultadosProcesadas">
+                      <mat-form-field>
+                          <input matInput (keyup)="applyFilterProcesadas($event)" placeholder="Buscar solicitud procesada" #input>
+                        </mat-form-field>
+                        <table mat-table [dataSource]="procesadas"  [hover]="true"
+                        [responsive]="true"
+                        [striped]="true"
+                        align="middle"
+                        cTable
+                        class="mb-0 border" cTable>
+                          <ng-container matColumnDef="estatus">
+                              <th mat-header-cell *matHeaderCellDef> Estatus </th>
+                              <td mat-cell *matCellDef="let solicitud">
+                                  <div class="container" cTooltip="{{solicitud.desc_estatus}}" cTooltipPlacement="right">
+                                      <svg *ngIf="solicitud.estatus == '0'" cIcon width="30" height="30" name="cilCheckCircle" style="color: #2EB85C;" ></svg>
+                                      <svg *ngIf="solicitud.estatus == '1'" cIcon width="30" height="30" name="cilToggleOn" style="color: #2EB85C;" ></svg>
+                                      <svg *ngIf="solicitud.estatus == '4'" cIcon width="30" height="30" name="cilXCircle" style="color: orangered;"></svg>
+                                    </div>
+                              </td>
+                            </ng-container>
+                          <ng-container matColumnDef="id_estudiante">
+                            <th mat-header-cell *matHeaderCellDef> Identificación </th>
+                            <td mat-cell *matCellDef="let solicitud"> {{solicitud.id_estudiante}} </td>
+                          </ng-container>
+                          <ng-container matColumnDef="nombre_completo">
+                            <th mat-header-cell *matHeaderCellDef> Apellidos y nombres </th>
+                            <td mat-cell *matCellDef="let solicitud"> {{solicitud.nombre_completo}} </td>
+                          </ng-container>
+                          <ng-container matColumnDef="telefono">
+                            <th mat-header-cell *matHeaderCellDef> Teléfono </th>
+                            <td mat-cell *matCellDef="let solicitud"> {{solicitud.celular}} </td>
+                          </ng-container>
+                          <ng-container matColumnDef="pnf">
+                            <th mat-header-cell *matHeaderCellDef> PNF </th>
+                            <td mat-cell *matCellDef="let solicitud"> {{solicitud.nombre_programa}} </td>
+                          </ng-container>
+                          <ng-container matColumnDef="usrproceso">
+                            <th mat-header-cell *matHeaderCellDef> Procesado por </th>
+                            <td mat-cell *matCellDef="let solicitud"> {{solicitud.nombre_corto}} </td>
+                          </ng-container>
+                         
+                          <tr mat-header-row *matHeaderRowDef="displayedColumnsProcesadas"></tr>
+                          <tr mat-row *matRowDef="let row; columns: displayedColumnsProcesadas;"></tr>
+                        </table>
+                  </div>
+                  <div *ngIf="sinResultadosProcesadas">
+                      <c-alert color="info" class="d-flex align-items-center">
+                        <svg cIcon class="me-2" width="24" height="24" name="cilCheckCircle"></svg>
+                        <div>No existen solicitudes procesadas</div>
+                      </c-alert>
+                    </div>
+                    <mat-paginator [hidePageSize]="true" [pageSize]="5" #paginatorProcesadas></mat-paginator> -->
+              </c-tab-pane>
+
+              <c-tab-pane class="p-3 preview" role="tabpanel">
+                <!-- <div *ngIf="hayResultadosProcesadas">
+                    <mat-form-field>
+                        <input matInput (keyup)="applyFilterProcesadas($event)" placeholder="Buscar solicitud procesada" #input>
+                      </mat-form-field>
+                      <table mat-table [dataSource]="procesadas"  [hover]="true"
+                      [responsive]="true"
+                      [striped]="true"
+                      align="middle"
+                      cTable
+                      class="mb-0 border" cTable>
+                        <ng-container matColumnDef="estatus">
+                            <th mat-header-cell *matHeaderCellDef> Estatus </th>
+                            <td mat-cell *matCellDef="let solicitud">
+                                <div class="container" cTooltip="{{solicitud.desc_estatus}}" cTooltipPlacement="right">
+                                    <svg *ngIf="solicitud.estatus == '0'" cIcon width="30" height="30" name="cilCheckCircle" style="color: #2EB85C;" ></svg>
+                                    <svg *ngIf="solicitud.estatus == '1'" cIcon width="30" height="30" name="cilToggleOn" style="color: #2EB85C;" ></svg>
+                                    <svg *ngIf="solicitud.estatus == '4'" cIcon width="30" height="30" name="cilXCircle" style="color: orangered;"></svg>
+                                  </div>
+                            </td>
+                          </ng-container>
+                        <ng-container matColumnDef="id_estudiante">
+                          <th mat-header-cell *matHeaderCellDef> Identificación </th>
+                          <td mat-cell *matCellDef="let solicitud"> {{solicitud.id_estudiante}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="nombre_completo">
+                          <th mat-header-cell *matHeaderCellDef> Apellidos y nombres </th>
+                          <td mat-cell *matCellDef="let solicitud"> {{solicitud.nombre_completo}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="telefono">
+                          <th mat-header-cell *matHeaderCellDef> Teléfono </th>
+                          <td mat-cell *matCellDef="let solicitud"> {{solicitud.celular}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="pnf">
+                          <th mat-header-cell *matHeaderCellDef> PNF </th>
+                          <td mat-cell *matCellDef="let solicitud"> {{solicitud.nombre_programa}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="usrproceso">
+                          <th mat-header-cell *matHeaderCellDef> Procesado por </th>
+                          <td mat-cell *matCellDef="let solicitud"> {{solicitud.nombre_corto}} </td>
+                        </ng-container>
+                       
+                        <tr mat-header-row *matHeaderRowDef="displayedColumnsProcesadas"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumnsProcesadas;"></tr>
+                      </table>
+                </div>
+                <div *ngIf="sinResultadosProcesadas">
+                    <c-alert color="info" class="d-flex align-items-center">
+                      <svg cIcon class="me-2" width="24" height="24" name="cilCheckCircle"></svg>
+                      <div>No existen solicitudes procesadas</div>
+                    </c-alert>
+                  </div>
+                  <mat-paginator [hidePageSize]="true" [pageSize]="5" #paginatorProcesadas></mat-paginator> -->
+            </c-tab-pane>
+
+            <c-tab-pane class="p-3 preview" role="tabpanel">
+              <div *ngIf="estudiante.identidad.estatus_foto === 1">
+                <c-alert color="warning" class="d-flex align-items-start alert-responsive">
+                  <svg cIcon class="me-2 icon-responsive" width="40" height="40" name="cilWarning"></svg>
+                  <div class="alert-content">
+                    <strong>Nota:</strong> La foto está en validación.
+                  </div>
+                </c-alert>
+              </div>
+            
+              <div *ngIf="estudiante.identidad.estatus_foto === 3">
+                <c-alert color="danger" class="d-flex align-items-start alert-responsive">
+                  <svg cIcon class="me-2 icon-responsive" width="40" height="40" name="cilWarning"></svg>
+                  <div class="alert-content">
+                    <strong>Nota:</strong> La foto no es válida.
+                  </div>
+                </c-alert>
+              </div>
+            
+              <div *ngIf="estudiante.identidad.estatus_foto === 2">
+                <c-alert color="success" class="d-flex align-items-start alert-responsive">
+                  <svg cIcon class="me-2 icon-responsive" width="40" height="40" name="cilCheckCircle"></svg>
+                  <div class="alert-content">
+                    <strong>Nota:</strong> La foto es válida.
+                  </div>
+                </c-alert>
+            
+                <!-- Contenedor del Carnet -->
+                <div class="carnet-container" *ngIf="estudiante.identidad.estatus_foto === 2">
+                  <canvas #carnetCanvas width="400" height="250"></canvas>
+                </div>
+                
+              </div>
+            </c-tab-pane>
+            
+            </c-tab-content>
+        </c-card-body>
+      </c-card>
+    </c-col>
+  <!-- Modal -->
+<!-- Modal para mostrar requisitos de la fotografía -->
+<!-- Modal para mostrar requisitos de la fotografía -->
+<div bsModal #fotoModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="fotoModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Requisitos para la Fotografía</h2>
+        <button type="button" class="close" (click)="fotoModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Debe garantizar una fotografía digital que cumpla con las siguientes características:</p>
+        <ol>
+          <li>Fotografía tipo carnet, sin objetos en el rostro y la cabeza.</li>
+          <li>El fondo de la fotografía debe ser Blanco.</li>
+          <li>El formato debe ser de tipo jpg.</li>
+        </ol>
+        <p><strong>Todas las características exigidas en este instructivo deben cumplirse para que su fotografía sea válida y pueda ser usada dentro de su perfil del SICE y su carnet estudiantil.</strong></p>
+        <p>Por favor, asegúrese de cumplir con estos requisitos antes de subir su fotografía.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="fotoModal.hide()">Cerrar</button>
+        <button type="button" class="btn btn-primary" (click)="aceptarRequisitos()">He leído y estoy de acuerdo</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+

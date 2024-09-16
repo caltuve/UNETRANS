@@ -1,0 +1,67 @@
+<mat-card>
+    <mat-card-header>
+      <mat-card-title>Detalles del Plan</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <table class="details-table">
+        <tr>
+          <td><strong>Nombre del programa:</strong></td>
+          <td>{{ detallePlan?.nombre_programa }}</td>
+          <td><strong>Mención:</strong></td>
+          <td>{{ detallePlan?.sigla_mencion ? detallePlan?.nombre_mencion : 'No aplica' }}</td>
+        </tr>
+        <tr>
+          <td><strong>Nombre del plan:</strong></td>
+          <td>{{ detallePlan?.nombre_plan }}</td>
+          <td><strong>Tipo de plan:</strong></td>
+          <td>{{ detallePlan?.tipo_plan }}</td>
+        </tr>
+        <tr>
+          <td><strong>Duración (en años):</strong></td>
+          <td>{{ detallePlan?.duracion }}</td>
+          <td><strong>Situación:</strong></td>
+          <td>{{ detallePlan?.estatus }}</td>
+        </tr>
+        <tr>
+          <td><strong>Afiliación:</strong></td>
+          <td colspan="3">{{ detallePlan?.afiliacion }}</td>
+        </tr>
+      </table>
+  
+      <div *ngFor="let trayecto of trayectosData">
+        <h3>{{ trayecto?.nombre_trayecto }}</h3>
+        <table class="trayecto-table">
+          <thead>
+            <tr>
+              <th style="width: 12%;">Código</th>
+              <th style="width: 83%;">Unidad Curricular</th>
+              <th class="center-align" style="width: 5%;">Créditos</th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngIf="trayecto?.tieneUnidades; else noUnidades">
+              <tr *ngFor="let unidad of trayecto?.unidades">
+                <td>{{ unidad?.codigo_uc }}</td>
+                <td>{{ unidad?.nombre_reporte }}</td>
+                <td class="center-align">{{ unidad?.creditos }}</td>
+              </tr>
+            </ng-container>
+            <ng-template #noUnidades>
+              <tr>
+                <td colspan="3" class="no-unidades">{{ trayecto?.unidades[0]?.mensaje }}</td>
+              </tr>
+            </ng-template>
+            <tr *ngIf="trayecto?.certificacion">
+              <td colspan="3" class="certificacion">{{ trayecto?.certificacion?.titulo_certificacion }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+    </mat-card-content>
+  </mat-card>
+  
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="onClose()">Salir</button>
+  </div>
+  

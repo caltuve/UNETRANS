@@ -37,6 +37,8 @@
       <div *ngIf="hayResultados" class="mat-elevation-z8">
         <button cButton color="primary" type="button" (click)="obtenerYDescargarPDF()"> <svg cIcon class="me-2" name="cilMagnifyingGlass"></svg>&nbsp;Descargar Record</button>&nbsp;
         <button cButton color="primary" type="button" (click)="obtenerResumen()"> <svg cIcon class="me-2" name="cilMagnifyingGlass"></svg>&nbsp;Descargar Resumen</button>
+        &nbsp;
+        <button cButton color="primary" type="button" (click)="obtenerNotasCertificadasSecre()"> <svg cIcon class="me-2" name="cilMagnifyingGlass"></svg>&nbsp;Notas Certificadas</button>
         <table mat-table [dataSource]="dataSource" [hover]="true"
         [responsive]="true"
         [striped]="true"
@@ -50,22 +52,10 @@
             <td class="carnet-ancho" mat-cell *matCellDef="let row"> {{row.carnet}}</td>
           </ng-container>
 
-        <!-- Columna de  Ult. Periodo -->
-        <ng-container matColumnDef="ult_per_ins">
-          <th class="ult-per-ancho" mat-header-cell *matHeaderCellDef  > Ult. Periodo</th>
-          <td class="ult-per-ancho" mat-cell *matCellDef="let row"> {{row.ult_per_inscrito}}</td>
-        </ng-container>
-
         <!-- Columna de cohorte -->
         <ng-container matColumnDef="cohorte">
           <th class="cohorte-ancho" mat-header-cell *matHeaderCellDef  > Cohorte</th>
           <td class="cohorte-ancho" mat-cell *matCellDef="let row"> {{row.cohorte}}</td>
-        </ng-container>
-
-         <!-- Columna de año -->
-         <ng-container matColumnDef="annio">
-          <th class="trayecto-ancho" mat-header-cell *matHeaderCellDef  > Año</th>
-          <td class="trayecto-ancho" mat-cell *matCellDef="let row"> {{row.trayecto}}</td>
         </ng-container>
 
           <!-- Columna de cedula / rif -->
@@ -85,14 +75,20 @@
 
           <!-- Columna de PNF -->
           <ng-container matColumnDef="pnf">
-            <th mat-header-cell *matHeaderCellDef  > PNF </th>
-            <td mat-cell *matCellDef="let row"> {{row.pnf}}</td>
+            <th mat-header-cell *matHeaderCellDef  > Programa </th>
+            <td mat-cell *matCellDef="let row"> {{row.programa}}</td>
+          </ng-container>
+
+           <!-- Columna de PNF -->
+           <ng-container matColumnDef="grado">
+            <th mat-header-cell *matHeaderCellDef  > Grado </th>
+            <td mat-cell *matCellDef="let row"> {{row.titulo_certif_corto}}</td>
           </ng-container>
 
           <!-- Columna de PNF -->
           <ng-container matColumnDef="plan">
             <th mat-header-cell *matHeaderCellDef  > Plan </th>
-            <td mat-cell *matCellDef="let row"> {{row.codigo_plan}}</td>
+            <td mat-cell *matCellDef="let row"> {{row.cod_plan}}-{{row.estatus_plan}} </td>
           </ng-container>
 
   
@@ -110,10 +106,8 @@
           </ng-container>
           -->
   
-          
-  
           <tr mat-header-row *matHeaderRowDef="displayedColumns" align="center"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="onFilaClic(row.codigo_plan, row.t_ingreso, row.regimen)"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="onFilaClic(row.tipo_titulacion,row.carnet)"></tr>
       
           <!-- Row shown when there is no matching data. -->
           
@@ -122,77 +116,35 @@
       <div *ngIf="sinResultados">
         <c-alert color="info" class="d-flex align-items-center">
           <svg cIcon class="me-2" width="24" height="24" name="cilInfo"></svg>
-          <div>Estudiante no cumple con cohorte mínima para carga masiva de calificaciones, verifique en módulo de Consulta de Datos.</div>
+          <div>Estudiante no ha iniciado proceso de migración, no se pueden cargar notas históricas.</div>
         </c-alert>
       </div>
 
 <div>
                 <!-- Detalles del plan de estudios seleccionado, si se seleccionó alguno -->
-                <div *ngIf="planSeleccionado">
-                  <div class="instrucciones-trayectos">
+                <div>
+                  <div *ngIf="trayectos.length > 0" class="instrucciones-trayectos">
                     <br>
                       <p>
                         <svg cIcon name="cil-info" class="me-2"></svg>
                         Por favor pulse sobre cada trayecto para ir cargando las calificaciones que corresponden a cada uno.
                       </p>
                     </div>
-                  <mat-accordion>
+                  <mat-accordion #accordion>
                     <!-- Iterar sobre los trayectos del plan seleccionado -->
-                    <mat-expansion-panel *ngFor="let trayecto of trayectos; trackBy: trackByCodigoUC" (opened)="cargarUnidadesCurriculares(trayecto.nombre_trayecto)">
+                    <mat-expansion-panel *ngFor="let trayecto of trayectos; trackBy: trackByCodigoUC" (opened)="cargarUnidadesCurriculares(trayecto.id)">
                       <mat-expansion-panel-header class="expancion-header mat-expansion-panel-header ng-tns-c48-104 ng-trigger ng-trigger-expansionHeight ng-star-inserted">
                         <mat-panel-title>
                           {{ trayecto.nombre_trayecto }}
                         </mat-panel-title>
-                      </mat-expansion-panel-header>
-                
-                      <!-- Mostrar los semestres para planes semestrales -->
-                      <div *ngIf="datosRegimen?.regimen  === 'SEMESTRAL'">
-                        <mat-accordion>
-                          <mat-expansion-panel *ngFor="let semestre of trayecto.semestres" (opened)="cargarUnidadesCurriculares(trayecto.nombre_trayecto)">
-                            <mat-expansion-panel-header class="expancion-header mat-expansion-panel-header ng-tns-c48-104 ng-trigger ng-trigger-expansionHeight ng-star-inserted">
-                              <mat-panel-title>
-                                Semestre {{ semestre.numero }}
-                              </mat-panel-title>
-                            </mat-expansion-panel-header>
-                            <!-- Contenido del semestre, como un botón para añadir unidades curriculares -->
-                              <div *ngIf="unidadesCurriculares.length">
-                                  <table mat-table [dataSource]="unidadesCurriculares">
-                                    <!-- Columnas del mat-table -->
-                                    <ng-container matColumnDef="codigo_uc">
-                                      <th mat-header-cell *matHeaderCellDef> Código UC </th>
-                                      <td mat-cell *matCellDef="let uc"> {{ uc.codigo_uc }} </td>
-                                    </ng-container>
-  
-                                    <ng-container matColumnDef="nombre_uc">
-                                      <th mat-header-cell *matHeaderCellDef> Nombre UC </th>
-                                      <td mat-cell *matCellDef="let uc"> {{ uc.nombre_uc }} </td>
-                                    </ng-container>
-  
-                                    <ng-container matColumnDef="creditos">
-                                      <th mat-header-cell *matHeaderCellDef> Créditos </th>
-                                      <td mat-cell *matCellDef="let uc"> {{ uc.creditos }} </td>
-                                    </ng-container>
-  
-                                    <ng-container matColumnDef="es_electiva">
-                                      <th mat-header-cell *matHeaderCellDef> Electiva </th>
-                                      <td mat-cell *matCellDef="let uc"> {{ uc.es_electiva }} </td>
-                                    </ng-container>
-                                    <!-- Más columnas para nombre_uc, creditos, es_electiva... -->
-                                    <tr mat-header-row *matHeaderRowDef="['codigo_uc', 'nombre_uc', 'creditos', 'es_electiva']"></tr>
-                                    <tr mat-row *matRowDef="let row; columns: ['codigo_uc', 'nombre_uc', 'creditos', 'es_electiva'];"></tr>
-                                  </table>
-                                </div>
-                          </mat-expansion-panel>
-                        </mat-accordion>
-                      </div>
-                      
-                      <div *ngIf="datosRegimen?.regimen !== 'SEMESTRAL'">
+                      </mat-expansion-panel-header>                      
+                      <div>
                         <br>
                         <div *ngIf="sinResultadosUC">
                           <!-- Mensaje cuando no hay resultados -->
                           <c-alert color="info" class="d-flex align-items-center">
                             <svg cIcon class="me-2" width="24" height="24" name="cilInfo"></svg>
-                            <div>Estudiante ya posee las notas cargadas y APROBADAS de este trayecto.</div>
+                            <div>{{ mensajeSinResultados }}</div>
                           </c-alert>
                         </div>
                           <div *ngIf="unidadesCurriculares.length">
@@ -221,8 +173,8 @@
                                   </ng-container>
 
                                   <ng-container matColumnDef="minima">
-                                    <th mat-header-cell *matHeaderCellDef class="text-center" > Mín. Aprob </th>
-                                    <td mat-cell *matCellDef="let uc" class="text-center" > {{ uc.nota_minima }} </td>
+                                    <th mat-header-cell *matHeaderCellDef class="text-center"> Mín. Aprob </th>
+                                    <td mat-cell *matCellDef="let uc" class="text-center"> {{ uc.nota_aprobatoria_final }} </td>
                                   </ng-container>
 
                                   <ng-container matColumnDef="electiva">
@@ -261,15 +213,15 @@
                                           cTooltip="Sin Calificar" cTooltipPlacement="right"></svg>
                                   
                                       <!-- Aprobado -->
-                                      <svg *ngIf="!uc.noCursado && uc.calificacion != null && uc.calificacion !== '' && uc.calificacion >= uc.nota_minima && uc.calificacion <= 20" cIcon width="30" height="30" name="cilCheck" style="color: green;"
+                                      <svg *ngIf="!uc.noCursado && isApproved(uc)" cIcon width="30" height="30" name="cilCheck" style="color: green;"
                                         cTooltip="Aprobado" cTooltipPlacement="right"></svg>
                                   
                                       <!-- Error -->
-                                      <svg *ngIf="!uc.noCursado && uc.calificacion != null && uc.calificacion !== '' && uc.calificacion > 20" cIcon width="30" height="30" name="cilBan" style="color: red;"
+                                      <svg *ngIf="!uc.noCursado && isOutOfRange(uc)" cIcon width="30" height="30" name="cilBan" style="color: red;"
                                         cTooltip="Error: Calificación fuera de rango" cTooltipPlacement="right"></svg>
                                   
                                       <!-- Reprobado -->
-                                      <svg *ngIf="!uc.noCursado && uc.calificacion != null && uc.calificacion !== '' && uc.calificacion < uc.nota_minima && uc.calificacion <= 20" cIcon width="30" height="30" name="cilXCircle" style="color: red;"
+                                      <svg *ngIf="!uc.noCursado && isFailed(uc)" cIcon width="30" height="30" name="cilXCircle" style="color: red;"
                                       cTooltip="Reprobado" cTooltipPlacement="right"></svg>
                                     </td>
                                   </ng-container>

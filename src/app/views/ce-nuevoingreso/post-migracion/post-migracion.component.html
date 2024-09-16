@@ -1,0 +1,357 @@
+<c-col xs="12">
+  <c-card class="mb-4" class="mb-4">
+      <c-card-header>
+        <div class="d-flex justify-content-between align-items-center">
+          <strong>Proceso de migración de datos académicos - PostMigración</strong>
+          <button cButton class="btn-primary ms-3" style="padding: 5px 10px;" size="sm" (click)="goBack()">
+            <svg cIcon name="cilArrowLeft"></svg> 
+            <span class="ms-2">Regresar al listado</span>
+          </button>
+        </div>        
+      </c-card-header>
+      <c-card-body>
+        <mat-stepper [linear]="true" #stepper>
+          <ng-container>
+            <mat-step [stepControl]="estudianteForm">
+              <form [formGroup]="estudianteForm">
+                <ng-template matStepLabel>Datos personales</ng-template>
+                <div class="form-group">
+                  <c-card class="mb-4" *ngFor="let estudiante of dataSourceEstudiante.data">
+                    <c-card-header ngPreserveWhitespaces>
+                        <strong>Detalles del estudiante</strong>
+                        <!-- <small>Ingresa la cédula sin puntos o el nombre del cliente</small> -->
+                    </c-card-header>
+                    <c-card-body>
+                      <div class="estudiante-container">
+                        <!-- Contenedor de Datos Personales -->
+                        <div class="datos-estudiante">
+                            <p><strong>Carnet:</strong> {{ estudiante.carnet_formateado }}</p>
+                            
+                            <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                                <p style="margin: 0; margin-right: 10px;">
+                                    <strong>Documento de Identidad:</strong> {{ estudiante.nac }}-{{ estudiante.cedula_formateada }}
+                                </p>
+                                <div class="copy-container">
+                                    <button (click)="copiarCedula()" cButton class="btn-primary copy-button" style="padding: 5px 10px;" size="sm">
+                                        <svg cIcon name="cilCopy"></svg> 
+                                        <span class="copy-text">Copiar cédula</span>
+                                    </button>
+                                    <span *ngIf="copiado" class="copiado-text" style="margin-left: 10px;"><strong>¡Copiado!</strong></span>
+                                </div>
+                            </div>
+                    
+                            <p><strong>Nombre completo:</strong> {{ estudiante.nombre_completo }}</p>
+                            <p><strong>Programa académico:</strong> {{ estudiante.pnf }}</p>
+                            <p>
+                                <strong>Correo electrónico:</strong> {{ estudiante.email }} 
+                                <strong>Celular:</strong> {{ estudiante.tlf_cel }}
+                            </p>
+                        </div>
+                    </div>
+                    
+                    </c-card-body>
+                </c-card>
+                  <label>Modalidad de Ingreso</label>
+                  <mat-form-field appearance="fill">
+                    <mat-label>Selecciona la modalidad de ingreso</mat-label>
+                    <mat-select formControlName="modalidadIngreso" required>
+                      <mat-option *ngFor="let modin of modalidadesIngreso" [value]="modin.codelemento">{{modin.descripcion}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="d-flex justify-content-between mt-3">
+                  <button cButton btn btn-primary size="sm" matStepperNext (click)="cargarProgramasDelEstudiante()" [disabled]="!estudianteForm.valid">Siguiente</button>
+                </div>
+              </form>
+            </mat-step>
+            <mat-step label="Datos académicos">
+              <c-card class="mb-4" *ngFor="let estudiante of dataSourceEstudiante.data">
+                <c-card-header ngPreserveWhitespaces>
+                  <strong>Programas académicos y planes de estudio asociados</strong>
+                  <button cButton btn btn-primary size="sm" disabled="1=1" (click)="abrirModalCrear()" >Asociar nuevo programa</button>
+                </c-card-header>
+                <c-card-body>
+                  <div class="alert alert-warning">
+                    <strong>¡IMPORTANTE!</strong>
+                    La asignación correcta de los planes es vital para poder cargar las calificaciones históricas, recuerda que la exactitud en esta fase es fundamental.
+                  </div>
+                  <table mat-table [dataSource]="programas" [hover]="true"
+               [responsive]="true"
+               [striped]="true"
+               align="middle"
+               cTable
+               class="mb-0 border">
+          
+          <ng-container matColumnDef="nombre_programa">
+            <th mat-header-cell *matHeaderCellDef> Programa </th>
+            <td mat-cell *matCellDef="let element"> {{ element.nombre_programa }} </td>
+          </ng-container>
+        
+          <ng-container matColumnDef="afiliacion">
+            <th mat-header-cell *matHeaderCellDef> Afiliación </th>
+            <td mat-cell *matCellDef="let element"> {{ element.afiliacion }} </td>
+          </ng-container>
+        
+          <ng-container matColumnDef="titulacion">
+            <th mat-header-cell *matHeaderCellDef> Titulación </th>
+            <td mat-cell *matCellDef="let element"> {{ element.titulacion }} </td>
+          </ng-container>
+        
+          <ng-container matColumnDef="desc_estatus_est">
+            <th mat-header-cell *matHeaderCellDef> Situación</th>
+            <td mat-cell *matCellDef="let element"> {{ element.desc_estatus_est }} </td>
+          </ng-container>
+        
+          <ng-container matColumnDef="nombre_plan">
+            <th mat-header-cell *matHeaderCellDef> Plan </th>
+            <td mat-cell *matCellDef="let element"> {{ element.nombre_plan }} </td>
+          </ng-container>
+        
+          <ng-container matColumnDef="gestion">
+            <th mat-header-cell *matHeaderCellDef> Gestión </th>
+            <td mat-cell *matCellDef="let element">
+              <button cButton class="btn-primary" data-toggle="modal" (click)="abrirModalGestion(element)" cTooltip="Editar programa" cTooltipPlacement="top">
+                <svg cIcon name="cil-pencil"></svg>
+              </button>
+            </td>
+          </ng-container>
+        
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+        
+                </c-card-body>
+            </c-card>   
+                <div class="d-flex justify-content-between mt-3">
+                  <button cButton btn btn-primary size="sm" matStepperPrevious>Atrás</button>
+                  <button cButton btn btn-primary size="sm" (click)="searchPersona()" matStepperNext [disabled]="!idPlanValido">Siguiente</button>
+                </div>
+            </mat-step>
+            <mat-step>
+              <form>
+                <ng-template matStepLabel>Migración de calificaciones</ng-template>
+                <c-card class="mb-4">
+                  <c-card-header ngPreserveWhitespaces>
+                      <strong>Carga de Calificaciones históricas</strong>
+                      <!-- <small>Ingresa la cédula sin puntos o el nombre del cliente</small> -->
+                  </c-card-header>
+                  <c-card-body>
+                    <div class="alert alert-info">
+                      <strong>INSTRUCCIONES:</strong>
+                      Pulse sobre cada fila que tenga una titulación para ir migrando las calificaciones del estudiante.
+                    </div>
+                    <div *ngIf="hayResultados" class="mat-elevation-z8">
+                      <table mat-table [dataSource]="dataSource" [hover]="true"
+                      [responsive]="true"
+                      [striped]="true"
+                      align="middle"
+                      cTable
+                      class="mb-0 border" cTable>
+                      
+                      <!-- Columna de carnet -->
+                      <ng-container matColumnDef="carnet">
+                          <th class="carnet-ancho" mat-header-cell *matHeaderCellDef  > Carnet </th>
+                          <td class="carnet-ancho" mat-cell *matCellDef="let row"> {{row.carnet}}</td>
+                        </ng-container>
+              
+                      <!-- Columna de cohorte -->
+                      <ng-container matColumnDef="cohorte">
+                        <th class="cohorte-ancho" mat-header-cell *matHeaderCellDef  > Cohorte</th>
+                        <td class="cohorte-ancho" mat-cell *matCellDef="let row"> {{row.cohorte}}</td>
+                      </ng-container>
+                  
+                        <!-- Columna de PNF -->
+                        <ng-container matColumnDef="pnf">
+                          <th mat-header-cell *matHeaderCellDef  > Programa </th>
+                          <td mat-cell *matCellDef="let row"> {{row.programa}}</td>
+                        </ng-container>
+              
+                         <!-- Columna de PNF -->
+                         <ng-container matColumnDef="grado">
+                          <th mat-header-cell *matHeaderCellDef  > Grado </th>
+                          <td mat-cell *matCellDef="let row"> {{row.titulo_certif_corto}}</td>
+                        </ng-container>
+              
+                        <!-- Columna de PNF -->
+                        <ng-container matColumnDef="plan">
+                          <th mat-header-cell *matHeaderCellDef  > Plan </th>
+                          <td mat-cell *matCellDef="let row"> {{row.cod_plan}}-{{row.estatus_plan}} </td>
+                        </ng-container>
+        
+                        <ng-container matColumnDef="estatus">
+                          <th mat-header-cell *matHeaderCellDef  > Situación </th>
+                          <td mat-cell *matCellDef="let row"> {{row.desc_estatus}}</td>
+                        </ng-container>
+              
+                
+                        <!-- Columna de detalle -->
+                        <!-- <ng-container matColumnDef="detalles">
+                          <th class="det-ancho" mat-header-cell *matHeaderCellDef > Detalles </th>
+                          <td class="det-ancho" mat-cell *matCellDef="let row">
+                            <div>
+                              <button  cButton color="vcbu" variant="outline">
+                                <svg cIcon name="cilMagnifyingGlass"></svg></button>
+                            </div> 
+              
+                          </td>
+                
+                        </ng-container>
+                        -->
+                
+                        <tr mat-header-row *matHeaderRowDef="displayedColumnsCalificaciones" align="center"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumnsCalificaciones;" (click)="onFilaClic(row.tipo_titulacion,row.carnet)"></tr>
+                    
+                        <!-- Row shown when there is no matching data. -->
+                        
+                      </table>
+                    </div>
+                    <div *ngIf="sinResultados">
+                      <c-alert color="info" class="d-flex align-items-center">
+                        <svg cIcon class="me-2" width="24" height="24" name="cilInfo"></svg>
+                        <div>Estudiante no ha iniciado proceso de migración, no se pueden cargar notas históricas.</div>
+                      </c-alert>
+                    </div>
+              
+              <div>
+                              <!-- Detalles del plan de estudios seleccionado, si se seleccionó alguno -->
+                              <div>
+                                <div *ngIf="trayectos.length > 0" class="instrucciones-trayectos">
+                                  <br>
+                                    <p>
+                                      <svg cIcon name="cil-info" class="me-2"></svg>
+                                      Por favor pulse sobre cada trayecto para ir cargando las calificaciones que corresponden a cada uno.
+                                    </p>
+                                  </div>
+                                <mat-accordion #accordion>
+                                  <!-- Iterar sobre los trayectos del plan seleccionado -->
+                                  <mat-expansion-panel *ngFor="let trayecto of trayectos; trackBy: trackByCodigoUC" (opened)="cargarUnidadesCurriculares(trayecto.id)">
+                                    <mat-expansion-panel-header class="expancion-header mat-expansion-panel-header ng-tns-c48-104 ng-trigger ng-trigger-expansionHeight ng-star-inserted">
+                                      <mat-panel-title>
+                                        {{ trayecto.nombre_trayecto }}
+                                      </mat-panel-title>
+                                    </mat-expansion-panel-header>                      
+                                    <div>
+                                      <br>
+                                      <div *ngIf="sinResultadosUC">
+                                        <!-- Mensaje cuando no hay resultados -->
+                                        <c-alert color="info" class="d-flex align-items-center">
+                                          <svg cIcon class="me-2" width="24" height="24" name="cilInfo"></svg>
+                                          <div>{{ mensajeSinResultados }}</div>
+                                        </c-alert>
+                                      </div>
+                                        <div *ngIf="unidadesCurriculares.length">
+                                            <table mat-table [dataSource]="unidadesCurriculares">
+                                                <!-- Columnas del mat-table -->
+                                                <ng-container matColumnDef="noCursado">
+                                                  <th mat-header-cell *matHeaderCellDef> No Cursado </th>
+                                                  <td mat-cell *matCellDef="let uc">
+                                                    <input type="checkbox" [(ngModel)]="uc.noCursado" (change)="onNoCursadoChange(uc)" [ngModelOptions]="{standalone: true}">
+                                                  </td>
+                                                </ng-container>
+              
+                                                <ng-container matColumnDef="codigo_uc">
+                                                  <th mat-header-cell *matHeaderCellDef> Código UC </th>
+                                                  <td mat-cell *matCellDef="let uc"> {{ uc.codigo_uc }} </td>
+                                                </ng-container>
+                
+                                                <ng-container matColumnDef="nombre_uc">
+                                                  <th mat-header-cell *matHeaderCellDef> Nombre UC </th>
+                                                  <td mat-cell *matCellDef="let uc"> {{ uc.nombre_uc }} </td>
+                                                </ng-container>
+                
+                                                <ng-container matColumnDef="creditos">
+                                                  <th mat-header-cell *matHeaderCellDef class="text-center"> Créditos </th>
+                                                  <td mat-cell *matCellDef="let uc" class="text-center"> {{ uc.creditos }} </td>
+                                                </ng-container>
+              
+                                                <ng-container matColumnDef="minima">
+                                                  <th mat-header-cell *matHeaderCellDef class="text-center"> Mín. Aprob </th>
+                                                  <td mat-cell *matCellDef="let uc" class="text-center"> {{ uc.nota_aprobatoria_final }} </td>
+                                                </ng-container>
+              
+                                                <ng-container matColumnDef="electiva">
+                                                  <th mat-header-cell *matHeaderCellDef class="text-center" > Electiva </th>
+                                                  <td mat-cell *matCellDef="let uc" class="text-center" > {{ uc.es_electiva }} </td>
+                                                </ng-container>
+              
+                                                <ng-container matColumnDef="periodo">
+                                                  <th mat-header-cell *matHeaderCellDef class="text-center"> Período </th>
+                                                  <td mat-cell *matCellDef="let uc" class="text-center">
+                                                    <select [(ngModel)]="uc.periodoSeleccionado" (change)="onPeriodoChange(uc)" [disabled]="uc.noCursado" [ngModelOptions]="{standalone: true}">
+                                                      <option *ngFor="let periodo of uc.periodosFiltrados || periodos; trackBy: trackByPeriodo" [value]="periodo.periodo">{{ periodo.periodo }}</option>
+                                                    </select>
+                                                  </td>
+                                                </ng-container>
+              
+                                                <ng-container matColumnDef="calificacion">
+                                                  <th class="ancho-nota" mat-header-cell *matHeaderCellDef class="text-center" > Calificación </th>
+                                                  <td class="ancho-nota" mat-cell *matCellDef="let uc" class="text-center">
+                                                    <input type="number" [disabled]="!uc.periodoSeleccionado || uc.noCursado"
+                                                           [(ngModel)]="uc.calificacion"
+                                                           (change)="validarCalificacion(uc)"
+                                                           [ngModelOptions]="{standalone: true}"
+                                                           min="1" max="20" style="width: 60px;">
+                                                  </td>
+                                                </ng-container>
+                                                
+                                                <ng-container matColumnDef="condicion">
+                                                  <th mat-header-cell *matHeaderCellDef class="text-center"> Condición </th>
+                                                  <td mat-cell *matCellDef="let uc" class="text-center">
+                                                    <!-- No Cursado -->
+                                                    <svg *ngIf="uc.noCursado" cIcon width="30" height="30" name="cilBan" style="color: gray;"
+                                                        cTooltip="No Cursado" cTooltipPlacement="right"></svg>
+                                                
+                                                    <!-- Sin Calificar -->
+                                                    <svg *ngIf="!uc.noCursado && (uc.calificacion == null || uc.calificacion === '')" cIcon width="30" height="30" name="cilHistory" style="color: gray;"
+                                                        cTooltip="Sin Calificar" cTooltipPlacement="right"></svg>
+                                                
+                                                    <!-- Aprobado -->
+                                                    <svg *ngIf="!uc.noCursado && isApproved(uc)" cIcon width="30" height="30" name="cilCheck" style="color: green;"
+                                                      cTooltip="Aprobado" cTooltipPlacement="right"></svg>
+                                                
+                                                    <!-- Error -->
+                                                    <svg *ngIf="!uc.noCursado && isOutOfRange(uc)" cIcon width="30" height="30" name="cilBan" style="color: red;"
+                                                      cTooltip="Error: Calificación fuera de rango" cTooltipPlacement="right"></svg>
+                                                
+                                                    <!-- Reprobado -->
+                                                    <svg *ngIf="!uc.noCursado && isFailed(uc)" cIcon width="30" height="30" name="cilXCircle" style="color: red;"
+                                                    cTooltip="Reprobado" cTooltipPlacement="right"></svg>
+                                                  </td>
+                                                </ng-container>
+                                                
+                                                <!-- Más columnas para nombre_uc, creditos, es_electiva... -->
+                                                <tr mat-header-row *matHeaderRowDef="['noCursado','codigo_uc', 'nombre_uc', 'creditos', 'minima','electiva','periodo','calificacion','condicion']"></tr>
+                                                <tr mat-row *matRowDef="let row; columns: ['noCursado','codigo_uc', 'nombre_uc', 'creditos', 'minima','electiva','periodo', 'calificacion','condicion'];"></tr>
+                                              </table>
+                                          </div>
+                                    </div>
+                                    <div class="text-end mt-3" *ngIf="!sinResultadosUC">
+                                      <button type="button" class="btn btn-primary" (click)="guardarCalificaciones()" [disabled]="!validarCalificacionesCompletas()">
+                                        <svg cIcon class="me-2" name="cil-cloud-upload"></svg>Guardar calificaciones
+                                      </button>
+                                    </div>
+                                  </mat-expansion-panel>
+                                </mat-accordion>
+                                <br>
+                              </div>
+              </div>
+                  </c-card-body>
+              </c-card> 
+              <div class="alert alert-info">
+                <strong>INFORMACIÓN IMPORTANTE:</strong>
+                Actualmente estamos trabajando para culminar el proceso de migración,sin embargo es posible gestionar la actualización de los datos académicos del estudiante, así como cargar las calificaciones históricas.
+              </div>
+                <div class="d-flex justify-content-between mt-3">
+                  <button cButton btn btn-primary size="sm" matStepperPrevious>Atrás</button>
+                  <button cButton btn btn-primary size="sm" disabled="1=1" matStepperNext>Finalizar migración (En construcción)</button>
+                </div>
+              </form>
+            </mat-step>
+          </ng-container>
+        </mat-stepper>
+      </c-card-body>
+  </c-card>
+</c-col>
+<ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" size="default" type="ball-atom">
+  <p style="color: white" align="center">Por favor espere... <br>¡Validando información!</p>
+</ngx-spinner>

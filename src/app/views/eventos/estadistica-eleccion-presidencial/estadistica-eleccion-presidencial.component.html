@@ -1,0 +1,125 @@
+<c-header>
+  <c-container fluid>
+    <c-sidebar-brand [brandFull]="{
+        src: 'assets/img/brand/footer-unetrans.png',
+        width: 200,
+        height: 65,
+        alt: 'UNETRANS Logo'
+      }" [brandNarrow]="{
+        src: 'assets/img/brand/logo_circular_unetrans.png',
+        width: 50,
+        height: 50,
+        alt: 'UNETRANS Logo'
+      }" routerLink="./">
+    </c-sidebar-brand>
+    <c-header-nav class=" d-lg-flex me-auto">
+      <c-nav-item>
+        <a cNavLink>
+          Evento: Elección Presidencial 2024
+        </a>
+      </c-nav-item>
+    </c-header-nav>
+
+    <c-header-nav class=" d-lg-flex">
+      <a cNavLink>
+        Módulo de estadísticas
+      </a>
+    </c-header-nav>
+  </c-container>
+</c-header>
+<c-row class="estadisticas-container">
+  <c-col xs>
+    <c-card class="mb-4">
+      <c-card-header>Presentación de estadísticas en tiempo real</c-card-header>
+        <c-card-body> 
+          <div >
+            <h2>Evento: Elección Presidencial 2024</h2>
+            <c-row>
+              <c-col md="12" xl="12" xs="12">
+                <c-row>
+                  <c-col sm="4">
+                    <div class="border-start border-start-4 border-start-info py-1 px-3 mb-3" >
+                      <div class="text-medium-emphasis small">Total estudiantes habilitados: </div>
+                      <div class="fs-5 fw-semibold"> {{ totalHabilitados }}</div>
+                    </div>
+                  </c-col>
+                  <c-col sm="4">
+                    <div class="border-start border-start-4 border-start-info py-1 px-3 mb-3" >
+                      <div class="text-medium-emphasis small"> Total estudiantes que respondieron: </div>
+                      <div class="fs-5 fw-semibold"> {{ totalRespuestas }} </div>
+                    </div>
+                  </c-col>
+                  <c-col sm="4">
+                    <div class="border-start border-start-4 border-start-info py-1 px-3 mb-3" >
+                      <div class="text-medium-emphasis small">Próximo refrescamiento en: </div>
+                      <div class="fs-5 fw-semibold">{{ getFormattedCountdown() }}</div>
+                    </div>
+                  </c-col>
+                </c-row>
+              </c-col>
+            </c-row>
+          
+            <div class="charts-section">
+              <div class="respuestas-section">
+                <div class="chart-container">
+                  <canvas id="respuestasChart"></canvas>
+                </div>
+                <div class="respuestas-detalle" id="respuestas-legend">
+                  <h3>Respuestas</h3>
+                  <ul>
+                    <li>
+                      <span class="legend-color" [style.backgroundColor]="getRespuestaColor('Sí')"></span>
+                      Sí: {{ siRespuestas }} votos ({{ getRespuestaPorcentaje('Sí') }}%)
+                    </li>
+                    <li>
+                      <span class="legend-color" [style.backgroundColor]="getRespuestaColor('No')"></span>
+                      No: {{ noRespuestas }} votos ({{ getRespuestaPorcentaje('No') }}%)
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            
+              <div class="respuestas-section">
+                <div class="chart-container">
+                  <canvas id="estadosChart"></canvas>
+                </div>
+                <div class="respuestas-detalle" id="estados-legend">
+                  <h3>Distribución por Estados</h3>
+                  <ul>
+                    <li *ngFor="let estado of estadosData">
+                      <span class="legend-color" [style.backgroundColor]="getEstadoColor(estado.label)"></span>
+                      {{ estado.label }}: {{ estado.data }} votos ({{ estado.porcentaje }}%)
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          
+            <div>
+              <h3>Disgregación por Estado</h3>
+              <div *ngFor="let estado of disgregacionPorEstado">
+                <button (click)="toggleMunicipios(estado)">{{ estado.estado }}</button>
+                <div *ngIf="estado.showMunicipios">
+                  <ul>
+                    <li *ngFor="let municipio of estado.municipios">
+                      <button (click)="toggleParroquias(municipio)">{{ municipio.municipio }}</button>
+                      <div *ngIf="municipio.showParroquias">
+                        <ul>
+                          <li *ngFor="let parroquia of municipio.parroquias">
+                            {{ parroquia.parroquia }}: {{ parroquia.total }} votos ({{ parroquia.porcentaje }}%)
+                          </li>
+                        </ul>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </c-card-body>
+    </c-card>
+    </c-col>
+</c-row>
+<ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" size="default" type="ball-atom">
+  <p style="color: white" align="center">Por favor espere... <br>¡Refrescando información!</p>
+  </ngx-spinner>

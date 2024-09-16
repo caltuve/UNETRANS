@@ -9,6 +9,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { NotifyInformationGeneralComponent } from '../notify-information-general/notify-information-general.component';
+import { ConfEmailAspiranteComponent } from '../conf-email-aspirante/conf-email-aspirante.component';
 
 @Component({
   selector: 'app-login-aspirante',
@@ -44,6 +45,12 @@ export class LoginAspiranteComponent {
           this.aspirante = data;
           //console.log(this.aspirante)
           switch (data['estatus']) {
+            case 'inactivo':
+              this.SpinnerService.hide(); 
+              this.notifyService.showInfo('El proceso de inscripción aún no se encuentra activo. Por favor, mantente atento a nuestros canales oficiales donde se anunciarán las fechas de apertura.');
+              this.router.navigateByUrl('/login-aspirante');
+              this.firstFormGroup.reset();
+              break;
             case 'NO INICIADO':
               this.SpinnerService.hide(); 
               this.notifyService.showInfo('El proceso de inscripción asignados OPSU/Convenio no ha iniciado, debe verificar la fecha del cronograma publicado.');
@@ -109,6 +116,15 @@ export class LoginAspiranteComponent {
                   this.router.navigateByUrl('/login-aspirante');
                   this.firstFormGroup.reset();
                   break;
+             case 'mail_no_confirmado':
+                  this.SpinnerService.hide(); 
+                  const initialState = {
+                    estudianteBase: data.estudiante
+                };
+                sessionStorage.setItem('currentUser', JSON.stringify(this.aspirante)); 
+                this.abrirModalDetalleEstudiante(initialState);
+
+                  break;
             default:
               this.SpinnerService.hide(); 
               this.aspirante = data
@@ -130,6 +146,26 @@ export class LoginAspiranteComponent {
   
   });
 
+  abrirModalDetalleEstudiante(estudiante: any) {
+    console.log(estudiante);
+    const initialState = {
+      estudianteBase: estudiante.estudianteBase,
+      // Otros datos que necesites pasar al modal
+    };
+
+        this.modalRef = this.modalService.show(ConfEmailAspiranteComponent, { 
+          initialState: initialState,
+          ignoreBackdropClick: true,
+          keyboard: false,
+          class: 'modal-lg modal-dialog-centered',
+        });
+
+        this.modalRef.onHide?.subscribe(() => {
+          // Esto se ejecutará cuando el modal se cierre
+          this.firstFormGroup.reset();
+        });
+
+      };
   
 
   reimpresionPlanilla(): void {
@@ -156,7 +192,7 @@ export class LoginAspiranteComponent {
       const modalRef: BsModalRef = this.modalService.show(NotifyInformationGeneralComponent, {
         ignoreBackdropClick: true,
         keyboard: false,
-        class: 'modal-dialog-centered'
+        class: 'modal-lg modal-dialog-centered'
       });
   
     }

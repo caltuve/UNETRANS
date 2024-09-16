@@ -37,6 +37,8 @@ export class ModalRevMigracionComponent implements OnInit {
 
   copiado = false;
 
+  copiadoCorreo = false;
+
   anioActual = new Date().getFullYear();
   detalles: any;
 
@@ -105,7 +107,7 @@ export class ModalRevMigracionComponent implements OnInit {
 
     actualizarDisponibilidadCampoPNF() {
       const rol = this.rol; // Obtiene el rol del usuario
-      const esRolPermitido = this.rol.some(rol => rol === '001' || rol === '002');
+      const esRolPermitido = this.rol.some(rol => rol === '001' || rol === '003');
       const esPnfNull = !this.form.get('pnf')?.value;
     
       // Habilita el campo si el rol es permitido o si el valor de PNF es null
@@ -120,7 +122,8 @@ export class ModalRevMigracionComponent implements OnInit {
       const data = { 
         cedula: this.estudianteBase.cedula, 
         en_gestion: false, 
-        gestor: null 
+        gestor: null,
+        revision: 'RDI' 
       };
       this.controlestudiosService.marcarEnGestion(data).subscribe(
         () => {
@@ -132,6 +135,7 @@ export class ModalRevMigracionComponent implements OnInit {
           this.modalRef.hide(); // Asegurarse de cerrar el modal incluso si hay un error
         }
       );
+      this.actualizacionCompleta.emit();
     }
 
   findCarreras(){
@@ -192,6 +196,26 @@ actualizaRdi() {
   }
 }
 
+diferirRevision() {
+  const data = { 
+    cedula: this.estudianteBase.cedula, 
+    revision: 'RDI'  // Constante para la revisión diferida
+  };
+
+  this.controlestudiosService.marcarRevDiferida(data).subscribe(
+    () => {
+      this.modalRef.hide();  // Cierra el modal al completar la operación
+      console.log('Revisión diferida exitosamente');
+    },
+    error => {
+      console.error('Error al diferir la revisión:', error);
+      this.modalRef.hide();  // Asegura que el modal se cierre incluso si hay un error
+    }
+  );
+  this.actualizacionCompleta.emit();  // Emitir evento para indicar que la operación ha completado
+}
+
+
 
 obtenerDescripcionDetalle(tipo: string): string {
   switch (tipo) {
@@ -217,5 +241,18 @@ copiarCedula() {
     console.error('Error al copiar cédula: ', err);
   });
 }
+
+copiarCorreo() {
+  const correo = String(this.estudianteBase.email); // Asegúrate de que sea una cadena de texto
+  navigator.clipboard.writeText(correo).then(() => {
+    this.copiadoCorreo = true;
+    setTimeout(() => {
+      this.copiadoCorreo = false;
+    }, 4000); // Oculta el mensaje después de 4 segundos
+  }, (err) => {
+    console.error('Error al copiar correo: ', err);
+  });
+}
+
 
 }

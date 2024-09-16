@@ -2,13 +2,35 @@ import { Component, OnInit, ChangeDetectorRef  } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { AspiranteService } from '../../aspirante/aspirante.service';
 import { ControlEstudiosService } from '../../control-estudios/control-estudios.service';
-import { FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ValidationErrors, Validators,  AbstractControl, ValidatorFn  } from '@angular/forms';
 import { NgxSpinnerService } from "ngx-spinner";
 import { NotificacionService } from './../../../notificacion.service'
 
 interface RespuestaServidor {
   success?: boolean;
   error?: string;
+}
+
+// function atLeastOneCheckboxSelectedValidator(group: FormGroup): ValidationErrors | null {
+//   const cohorte = group.get('cohorte')?.value;
+//   const pnfCarrera = group.get('pnfCarrera')?.value;
+//   const multipleCarrera = group.get('multipleCarrera')?.value;
+//   const nombresApellidos = group.get('nombresApellidos')?.value;
+
+//   return cohorte || pnfCarrera || multipleCarrera || nombresApellidos ? null : { notChecked: true };
+// }
+
+export function gmailDomainValidator(): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    const email = control.value;
+    if (email && typeof email === 'string') {
+      const lowerCaseEmail = email.toLowerCase();
+      if (lowerCaseEmail.endsWith('@gmail.com')) {
+        return null; // El correo electrónico es válido
+      }
+    }
+    return { gmailDomain: true }; // El correo electrónico no es válido
+  };
 }
 
 function atLeastOneCheckboxSelectedValidator(group: FormGroup): ValidationErrors | null {
@@ -105,7 +127,7 @@ export class DetMigraestudianteModalComponent implements OnInit {
 
      ngOnInit(): void {
       this.form = this.fb.group({
-        email: ['', [Validators.required, Validators.email, Validators.pattern('[a-z0-9._%+-]+@gmail.com')]],
+        email: ['', [Validators.required, Validators.email, gmailDomainValidator()]],
         validationCode: [{value: '', disabled: true}, [Validators.required, Validators.minLength(6)]]
       });
     
@@ -124,21 +146,21 @@ export class DetMigraestudianteModalComponent implements OnInit {
   
       this.secondFormGroup2 = this._formBuilder.group({
         declaracion: [''],  // Campo para la declaración jurada
-        confirmacion: ['', [Validators.required, Validators.pattern(/^ACEPTO$/)]],
+        confirmacion: [''],
         cohorte: [''],
         pnfCarrera: [''],
         multipleCarrera: [''],
         nombresApellidos: [''],
-        primerNombre: ['', Validators.required], 
+        primerNombre: [''], 
         segundoNombre: [''],
-        primerApellido: ['', Validators.required],
+        primerApellido: [''],
         segundoApellido: [''],
-        file: [null, Validators.required],
+        file: [null],
       }, { validator: atLeastOneCheckboxSelectedValidator });
   
       this.thirdFormGroup3 = this._formBuilder.group({
         email: [{ value: this.estudianteBase.email, disabled: this.estudianteBase.estatus_migra === 5 }, 
-          [Validators.required, Validators.email, Validators.pattern('[a-z0-9._%+-]+@gmail.com')]],
+          [Validators.required, Validators.email, gmailDomainValidator()]],
         validationCode: [{ value: '', disabled: true }, [Validators.required, Validators.minLength(6)]]
       });
 
@@ -539,6 +561,7 @@ updateNameFieldsValidation(isChecked: boolean): void {
   if (isChecked) {
     this.secondFormGroup2.get('primerNombre')?.setValidators(Validators.compose([Validators.required, Validators.pattern(/^[^\s]+(\s+[^\s]+)*$/)]));
     this.secondFormGroup2.get('primerApellido')?.setValidators(Validators.compose([Validators.required, Validators.pattern(/^[^\s]+(\s+[^\s]+)*$/)]));
+    this.secondFormGroup2.get('file')?.setValidators(Validators.required);
   } else {
     this.secondFormGroup2.get('primerNombre')?.clearValidators();
     this.secondFormGroup2.get('primerApellido')?.clearValidators();
@@ -548,6 +571,7 @@ updateNameFieldsValidation(isChecked: boolean): void {
   // Actualiza los estados de validación y recalcula el estado del formulario
   this.secondFormGroup2.get('primerNombre')?.updateValueAndValidity();
   this.secondFormGroup2.get('primerApellido')?.updateValueAndValidity();
+  this.secondFormGroup2.get('file')?.updateValueAndValidity();
 }
 
 }

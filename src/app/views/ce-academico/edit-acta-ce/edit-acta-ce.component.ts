@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, EventEmitter, Output   } from '@angular/core';
 import { ControlEstudiosService } from '../../control-estudios/control-estudios.service';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import {FormBuilder, Validators,FormControl, FormGroup} from '@angular/forms';
@@ -22,6 +22,8 @@ export interface Docente {
   styleUrls: ['./edit-acta-ce.component.scss']
 })
 export class EditActaCeComponent implements OnInit{
+
+  @Output() actualizacionCompleta = new EventEmitter<void>();
 
   firstFormGroup: FormGroup;
 
@@ -220,6 +222,7 @@ export class EditActaCeComponent implements OnInit{
                 this.firstFormGroup.reset();
                 //this.mostrarTrayectos = false;
                 break;
+                
           default:
             //this.gestionNewSeccion.hide();
             this.SpinnerService.hide();
@@ -229,6 +232,7 @@ export class EditActaCeComponent implements OnInit{
             //this.mostrarTrayectos = false;
             break;
         }
+        this.actualizacionCompleta.emit(); // Emite el evento
       });
   }
 

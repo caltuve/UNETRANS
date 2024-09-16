@@ -104,7 +104,7 @@
               </div>
               <div class="cohorte-carrera">
                 <p><strong>Cohorte:</strong> {{ estudianteBase.cohorte }}</p>
-                <p><strong>PNF/Carrera:</strong> {{ estudianteBase.pnf }}</p>
+                <p><strong>Programa:</strong> {{ estudianteBase.pnf }}</p>
               </div>
             </div>
           </div>
@@ -165,7 +165,8 @@
         <div class="col-md-6 col-12">
           <mat-checkbox formControlName="multipleCarrera">Múltiple carrera</mat-checkbox>
           <div *ngIf="secondFormGroup2.get('multipleCarrera')?.value" class="explanation">
-            Selecciona esta opción si estudiaste varias carreras en la UNETRANS (antiguo IUT) y necesitas que se muestre la primera carrera que estudiaste en lugar de la última. Si solo has estudiado una carrera, desmarca esta opción y selecciona "PNF/Carrera".
+            Selecciona esta opción si estudiaste varios programas en la UNETRANS (o el antiguo IUT) y el que se muestra no es el primer programa. 
+            Si solo has estudiado un programa y no es el correcto tampoco, desmarca esta opción y selecciona "PNF/Carrera".
           </div>
         </div>
         <div class="col-md-6 col-12">

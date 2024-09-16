@@ -26,3 +26,45 @@
         align-items: center;
       }
       
+      .active-tab {
+        background-color: #003E85 !important; /* Fondo para pestaña activa */
+        color: #fff !important; /* Color del texto para pestaña activa */
+        border: 2px solid #ffffff !important; /* Borde blanco cuando está activa */
+        border-radius: 4px; /* Ajuste opcional para bordes redondeados */
+      }
+
+      .c-nav-item a {
+        border: 2px solid #003E85 !important; /* Borde para pestañas inactivas */
+        border-radius: 4px !important; /* Bordes redondeados */
+        color: #003E85 !important; /* Color del texto para pestañas inactivas */
+        background-color: transparent !important; /* Fondo transparente para pestañas inactivas */
+        padding: 5px 10px !important; /* Ajuste del padding para una mejor apariencia */
+        text-align: center !important; /* Centrar el texto */
+        transition: all 0.3s ease; /* Transición suave entre estados */
+      }
+      
+      .c-nav-item a:hover {
+        border-color: #003E85 !important; /* Borde azul al hacer hover */
+        color: #003E85 !important; /* Texto azul al hacer hover */
+      }
+      
+      .c-nav-item a.active-tab {
+        background-color: #003E85 !important; /* Fondo azul para la pestaña activa */
+        color: #ffffff !important; /* Texto blanco para la pestaña activa */
+        border-color: #ffffff !important; /* Borde blanco para la pestaña activa */
+      }
+      
+      .c-nav-item a:not(.active-tab) {
+        background-color: transparent !important; /* Fondo transparente para pestañas inactivas */
+        border-color: #003E85 !important; /* Borde azul para pestañas inactivas */
+        color: #003E85 !important; /* Texto azul para pestañas inactivas */
+      }
+      
+
+      .badge-adjusted {
+        top: -10px;  /* Ajusta esto según sea necesario para moverlo más hacia arriba */
+        right: -10px; /* Ajusta esto según sea necesario para moverlo más hacia la derecha */
+      }
+      
+      
+      

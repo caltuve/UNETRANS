@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
-import {FormBuilder, Validators,FormControl} from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ControlEstudiosService } from '../../control-estudios/control-estudios.service';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
@@ -19,16 +19,18 @@ import { Router } from '@angular/router';
 })
 export class GestionCuposComponent implements OnInit {
 
+  form: FormGroup;
+  carreras: any[] = []; // Lista de PNF
+  periodos: any[] = []; // Lista de periodos
+  trayectos: any[] = []; // Lista de trayectos
+
   arrayDatos : any []= [];
   detalle_acta : any []= [];
   inscritos : any []= [];
   dataSource = new MatTableDataSource([]);
-  displayedColumns: string[] = ['acta','seccion','tipo','cupos','cupos_dis', 'doc_asignado', 'acciones'];
+  // displayedColumns: string[] = ['acta','seccion','tipo','cupos','cupos_dis', 'doc_asignado', 'acciones'];
   displayedColumnsDetail: string[] = ['orden','carnet','cedula','nombre_completo','telefono','correo'];
-  trayectos: any []= [];
-
-  carreras: any[] = [];
-  periodos: any[] = [];
+  displayedColumns: string[] = ['acta','codigo_uc', 'nombre_uc', 'seccion', 'tipo', 'cupos', 'cupos_dis', 'doc_asignado', 'acciones'];
 
   unidadesCurriculares: any[] = [];
 
@@ -48,6 +50,9 @@ export class GestionCuposComponent implements OnInit {
 
   programaSeleccionado: any = null;
 
+  sinResultados: boolean = false;
+
+  estadisticas: any = {};
   usr={
     nac:null,
     cedula:null,
@@ -79,12 +84,18 @@ export class GestionCuposComponent implements OnInit {
     private notifyService : NotificacionService,
     private SpinnerService: NgxSpinnerService,
     private modalService: BsModalService,
-    private router: Router
+    private router: Router,
+    private fb: FormBuilder,
     ) {
 
     }
 
     ngOnInit() { 
+      this.form = this.fb.group({
+        carreraSeleccionada: ['', Validators.required],
+        periodoSeleccionado: [{ value: '', disabled: true }, Validators.required],
+        trayectoSeleccionado: [{ value: '', disabled: true }, Validators.required]
+      });
       //this.findAspirantesConvenio();
       this.findCarreras();
       this.findTipoSeccion();
@@ -112,57 +123,61 @@ export class GestionCuposComponent implements OnInit {
     );
   }
 
-  // findTrayectos(){
-  //   this.controlestudiosService.getTrayectos().subscribe(
-  //     (result: any) => {
-  //         this.periodos = result;
-  //   }
-  //   );
-  // }
-
-  onPnfSeleccionado(carreraSeleccionada: any) {
-    this.SpinnerService.show();
-    this.controlestudiosService.getPeriodoOfPnfSeleccionado(carreraSeleccionada).subscribe(
-      (data: any) => {
-        this.periodos = data;
-        this.periodoSeleccionado = null; // Reiniciar el valor del segundo mat-select
-        this.programaSeleccionado = null; // Ocultar la información mostrada
+  onPnfSeleccionado(pnf: any) {
+    this.form.get('periodoSeleccionado')?.reset();
+    this.form.get('trayectoSeleccionado')?.reset();
+    this.form.get('periodoSeleccionado')?.enable();
+    this.form.get('trayectoSeleccionado')?.disable();
+    this.unidadesCurriculares = []; // Limpiar los datos de la tabla
+    this.sinResultados = false;
+    // Cargar los periodos desde el servicio
+    this.controlestudiosService.getPeriodoOfPnfSeleccionado(pnf).subscribe(
+      (result: any) => {
+        this.periodos = result;
       },
       error => {
-        // Manejar el error aquí
-        console.error('Error al obtener periodos: ', error);
-      },
-      () => this.SpinnerService.hide() // Ocultar el spinner tanto en éxito como en error
+        console.error('Error al cargar periodos: ', error);
+      }
     );
   }
 
-  onPeriodoSeleccionado(carreraSeleccionada: any, periodoSeleccionado: any) {
-    this.programaSeleccionado = carreraSeleccionada;
-    this.periodoEnviar = periodoSeleccionado;
+  onPeriodoSeleccionado(pnf: any, periodo: any) {
+    this.form.get('trayectoSeleccionado')?.reset();
+    this.form.get('trayectoSeleccionado')?.enable();
     this.SpinnerService.show();
-    this.controlestudiosService.getOfertaAcademicaDCE(carreraSeleccionada, periodoSeleccionado).subscribe(
+    this.controlestudiosService.getOfertaAcademicaDCE(pnf, periodo).subscribe(
       (result: any) => {
-        this.mostrarTrayectos = true;
-        this.usr = JSON.parse(sessionStorage.getItem('currentUser')!); 
         this.trayectos = result;
       },
       error => {
-        // Manejar el error aquí
         console.error('Error al obtener oferta académica: ', error);
       },
-      () => this.SpinnerService.hide() // Ocultar el spinner tanto en éxito como en error
+      () => this.SpinnerService.hide()
     );
   }
 
-  cargarUnidadesCurriculares(trayectoNombre: string): void {
-    this.trayectoAct = trayectoNombre;
+  onTrayectoSeleccionado(trayecto: any) {
+    const pnf = this.form.get('carreraSeleccionada')?.value;
+    const periodo = this.form.get('periodoSeleccionado')?.value;
+    const trayectoId = trayecto.id;
+    const trayectoPeriodo = periodo;
+  
     this.SpinnerService.show();
-    this.controlestudiosService.obtenerUnidadesCurricularesGestionCupos(this.programaSeleccionado, trayectoNombre, this.periodoEnviar)
-      .subscribe(data => {
-        this.unidadesCurriculares = data;
-        this.SpinnerService.hide();
-      });
+    
+    // Realizar la solicitud al backend con los parámetros seleccionados
+    this.controlestudiosService.obtenerUnidadesCurricularesGestionCupos(pnf, trayectoId, trayectoPeriodo).subscribe(
+      (result: any) => {
+        this.unidadesCurriculares = result.detalle;
+        this.estadisticas = result.estadisticas;
+        this.sinResultados = this.unidadesCurriculares.length === 0;
+      },
+      error => {
+        console.error('Error al obtener unidades curriculares: ', error);
+      },
+      () => this.SpinnerService.hide()
+    );
   }
+  
 
   cargarUnidadesCurricularesMencion(trayectoNombre: string, mencion: string): void {
     this.SpinnerService.show();

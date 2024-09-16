@@ -1,0 +1,133 @@
+<div class="modal-header">
+    <h4 class="modal-title">
+      {{ mode === 'edit' ? 'Edición de plan de estudios' : 'Asignación de nuevo programa y plan de estudios' }}
+      <div class="copy-container"></div>
+    </h4>
+  </div>
+  <div class="modal-body">
+    <!-- Alerta Importante -->
+    <div class="alert alert-info">
+      <strong>¡RECUERDA!</strong>
+      La correcta asignación de planes asegura una migración de datos consistente y libre de errores, verifica siempre los datos antes de actualizarlos.
+    </div>
+  
+    <!-- Formulario con los datos del estudiante y detalles incorrectos -->
+    <form [formGroup]="form">
+      <div class="row">
+        <!-- Campos fijos -->
+        <div class="row">
+          <div class="col s12">
+            <mat-form-field>
+              <mat-label>Programa académico</mat-label>
+              <mat-select formControlName="pnf" (selectionChange)="onProgramaChange($event.value)">
+                <mat-option *ngFor="let item of pnfs" [value]="item.codelemento">{{item.descripcion}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col s12">
+            <mat-form-field>
+              <mat-label>Plan</mat-label>
+              <mat-select formControlName="plan" [disabled]="!planes.length" (selectionChange)="onPlanChange($event.value)">
+                <mat-option *ngFor="let plan of planes" [value]="plan.cod_plan">{{plan.plan}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+  
+      <div class="row">
+        <div class="row">
+
+        <div class="col s12">
+            <mat-form-field>
+              <mat-label>Titulación</mat-label>
+              <mat-select formControlName="titulacion" [disabled]="!titulaciones.length" (selectionChange)="onTitulacionChange($event.value)">
+                <mat-option *ngFor="let titulacion of titulaciones" [value]="titulacion.codelemento">{{titulacion.descripcion}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        <div class="col s12">
+          <mat-form-field>
+            <mat-label>Estatus del estudiante</mat-label>
+            <mat-select formControlName="estatus"  (selectionChange)="onEstatusChange($event.value)">
+              <mat-option value="Activo">Activo</mat-option>
+              <mat-option value="Inactivo">Inactivo</mat-option>
+              <mat-option value="Egresado">Egresado</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+    </div>
+      </div>
+  
+      <div class="row" *ngIf="form.get('estatus')?.value === 'Egresado'">
+        <div class="row">
+          <div class="col s12">
+            <mat-form-field>
+              <mat-label>Fecha de grado</mat-label>
+              <input matInput formControlName="fecha_grado" type="date" (blur)="onFechaGradoBlur($event)">
+            </mat-form-field>
+          </div>
+          <div class="col s12">
+            <mat-form-field>
+              <mat-label>Índice académico</mat-label>
+              <input matInput formControlName="indice_academico" (input)="onInputChange($event, 'indice_academico')" type="text" placeholder="Ingrese el índice académico">
+              <mat-error *ngIf="form.get('indice_academico')?.hasError('invalidNumber')">Debe ser un número.</mat-error>
+              <mat-error *ngIf="form.get('indice_academico')?.hasError('outOfRange')">El índice debe estar entre 10.00 y 20.00.</mat-error>
+              <mat-error *ngIf="form.get('indice_academico')?.hasError('invalidFormat')">El formato debe ser XX.XX.</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col s12">
+            <mat-form-field>
+              <mat-label>Índice de rendimiento</mat-label>
+              <input matInput formControlName="indice_rendimiento" (input)="onInputChange($event, 'indice_rendimiento')" type="text" placeholder="Ingrese el índice de rendimiento">
+              <mat-error *ngIf="form.get('indice_rendimiento')?.hasError('invalidNumber')">Debe ser un número.</mat-error>
+              <mat-error *ngIf="form.get('indice_rendimiento')?.hasError('outOfRange')">El índice debe estar entre 10.00 y 20.00.</mat-error>
+              <mat-error *ngIf="form.get('indice_rendimiento')?.hasError('invalidFormat')">El formato debe ser XX.XX.</mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+       <div class="row">
+        <div class="col s12">
+          <mat-form-field>
+            <mat-label>Posición</mat-label>
+            <input matInput formControlName="posicion" type="number">
+          </mat-form-field>
+        </div>
+        <div class="col s12">
+          <mat-form-field>
+            <mat-label>Tomo</mat-label>
+            <input matInput formControlName="tomo" type="text">
+          </mat-form-field>
+        </div>
+        <div class="col s12">
+          <mat-form-field>
+            <mat-label>Folio</mat-label>
+            <input matInput formControlName="folio" type="text">
+          </mat-form-field>
+        </div>
+       </div>
+      </div>
+
+      <div class="row" *ngIf="institucion && autoridades.length">
+        <div class="col s12">
+          <h3>Datos institucionales para la fecha de graduación</h3>
+          <h4>{{ institucion.nombre }}</h4>
+          <ul>
+            <li *ngFor="let autoridad of autoridades">
+              <strong>{{ autoridad.cargo }}:</strong> {{ autoridad.titulo }} {{ autoridad.nombre }}
+            </li>
+          </ul>
+        </div>
+      </div>
+  
+      <!-- Botón para actualizar datos -->
+      <div align="right">
+        <button cButton class="btn-primary" [disabled]="form.invalid" (click)="actualizarDatos()">
+          {{ mode === 'edit' ? 'Actualizar datos' : 'Asignar plan' }}
+        </button>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="closeModal()">Salir</button>
+  </div>

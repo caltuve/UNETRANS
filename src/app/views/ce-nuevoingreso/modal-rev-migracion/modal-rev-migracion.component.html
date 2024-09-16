@@ -18,7 +18,17 @@
     <strong>¡IMPORTANTE!</strong>
     Estás a punto de revisar solicitudes críticas. Recuerda que la exactitud en este proceso es fundamental.
   </div>
-
+  <div class="correo-container">
+    <p>
+      <strong>Email:</strong> {{ estudianteBase.email }}
+    </p>
+    <div class="copy-container">
+      <button (click)="copiarCorreo()" cButton class="btn-primary copy-button" size="sm">
+        <svg cIcon name="cilCopy"></svg> <span class="copy-text">Copiar correo</span>
+      </button>
+      <span *ngIf="copiadoCorreo" class="copiado-text"><strong>¡Copiado!</strong></span>
+    </div>
+  </div>
   <!-- Formulario con los datos del estudiante y detalles incorrectos -->
   <form [formGroup]="form">
     <div class="row">
@@ -168,5 +178,17 @@
   </form>
 </div>
 <div class="modal-footer">
-  <button type="button" class="btn btn-secondary" (click)="closeModal()">Salir</button>
+  <button 
+    type="button" 
+    class="btn btn-warning d-flex align-items-center"
+    (click)="diferirRevision()">
+    <svg cIcon class="me-2" name="cilClock"></svg>
+    Diferir revisión
+  </button>
+  <button 
+    type="button" 
+    class="btn btn-secondary"
+    (click)="closeModal()">Salir
+  </button>
 </div>
+

@@ -2,7 +2,7 @@ import { Component, AfterViewInit, OnInit, ViewChild} from '@angular/core';
 import { NgForm, FormBuilder, FormGroup, Validators,FormControl, ValidationErrors, AbstractControl} from '@angular/forms';
 import { MigrastudentService } from '../migrastudent.service';
 import {MatTableDataSource} from '@angular/material/table';
-import { EstadoI, MunicipioI, ParroquiaI } from '../../control-estudios/crear-nuevo/model.interface'
+import { PaisI, EstadoI, MunicipioI, ParroquiaI } from '../../control-estudios/crear-nuevo/model.interface'
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { Router } from '@angular/router';
@@ -95,7 +95,10 @@ export class AutomigraEstudianteComponent implements OnInit, AfterViewInit {
   opermovil: any []= [];
   operres: any []= [];
   
+  listPaisesNacimiento!: PaisI[]
+  paisSelectedNacimiento!: string
   listEstadosNacimiento!: EstadoI[]
+
   estadoSelectedNacimiento!: string
   listMunicipiosNacimiento!: MunicipioI[]
   municipioSelectedNacimiento!: string
@@ -183,7 +186,7 @@ export class AutomigraEstudianteComponent implements OnInit, AfterViewInit {
     ngOnInit() {
       this.initForm()
       this.setupSniValidationBasedOnModIngreso();
-      this.setupValidations();
+     // this.setupValidations();
       this.findNac();
       this.findGen();
       this.findEdoCivil();
@@ -236,6 +239,7 @@ this.filteredPlanteles = merge(nombrePlantelChanges, this.plantelUpdated.asObser
       }
 
       ngAfterViewInit() {
+        this.findPaisesNacimiento();
         this.findEstadosNacimiento();
         this.findEstadosResidencia();
         this.findEstadosEducacionMedia();
@@ -254,9 +258,10 @@ this.filteredPlanteles = merge(nombrePlantelChanges, this.plantelUpdated.asObser
           genero: ['', Validators.required],
           edo_civil: ['', Validators.required],
           gruposan: ['', Validators.required],
-          estadoNacimiento: ['', Validators.required],
-          municipioNacimiento: ['', Validators.required],
-          parroquiaNacimiento: ['', Validators.required],
+          paisNacimiento: ['', Validators.required],
+          estadoNacimiento: [{value: '', disabled: true}, Validators.required],
+          municipioNacimiento:[{value: '', disabled: true}, Validators.required],
+          parroquiaNacimiento: [{value: '', disabled: true}, Validators.required],
           etnia: ['', Validators.required],
           discapacidad: ['', Validators.required],
           conapdis: [''],
@@ -335,6 +340,7 @@ this.filteredPlanteles = merge(nombrePlantelChanges, this.plantelUpdated.asObser
          });
         
         this.setupFormChanges();
+       // this.setupValidations();
 
         // Si el usuario ya tiene un usuario SICE, ajusta el formulario acordemente
   if (this.aspirante.usuario_sice === 'S') {
@@ -396,6 +402,42 @@ this.filteredPlanteles = merge(nombrePlantelChanges, this.plantelUpdated.asObser
           }
         });
 
+        this.firstFormGroup.get('paisNacimiento')?.valueChanges.subscribe(value => {
+          if (value) {
+            this.firstFormGroup.get('estadoNacimiento')?.enable();
+            this.onPaisselectedNacto(value);
+          } else {
+            this.firstFormGroup.get('estadoNacimiento')?.disable();
+          }
+          // Asegúrate de restablecer los valores cada vez que cambie el estado
+          this.firstFormGroup.get('estadoNacimiento')?.reset();
+          this.firstFormGroup.get('municipioNacimiento')?.reset();
+          this.firstFormGroup.get('parroquiaNacimiento')?.reset();
+        });
+
+
+        this.firstFormGroup.get('estadoNacimiento')?.valueChanges.subscribe(value => {
+          if (value) {
+            this.firstFormGroup.get('municipioNacimiento')?.enable();
+            this.onEstadoselectedNacimiento(value);
+          } else {
+            this.firstFormGroup.get('municipioNacimiento')?.disable();
+          }
+          // Asegúrate de restablecer los valores cada vez que cambie el estado
+          this.firstFormGroup.get('municipioNacimiento')?.reset();
+          this.firstFormGroup.get('parroquiaNacimiento')?.reset();
+        });
+    
+        this.firstFormGroup.get('municipioNacimiento')?.valueChanges.subscribe(value => {
+          if (value) {
+            this.firstFormGroup.get('parroquiaNacimiento')?.enable();
+            this.onMunicipioselectedNacimiento(value);
+          } else {
+            this.firstFormGroup.get('parroquiaNacimiento')?.disable();
+          }
+          this.firstFormGroup.get('parroquiaNacimiento')?.reset();
+        });
+
 
         this.thirdFormGroup.get('estadoplantel')?.valueChanges.subscribe(value => {
           if (value) {
@@ -432,6 +474,34 @@ this.filteredPlanteles = merge(nombrePlantelChanges, this.plantelUpdated.asObser
             // Opcionalmente restablece 'nombreplantel' si la parroquia cambia
             this.thirdFormGroup.get('nombreplantel')?.reset();
           });
+
+          // Validaciones dinámicas para trayecto
+  if (this.aspirante.trayecto === 3) {
+    //console.log("Trayecto es 3, aplicando validaciones");
+    this.thirdFormGroup.get('nombreies')?.setValidators([
+      Validators.required,
+      Validators.minLength(3),
+      Validators.maxLength(10)
+    ]);
+    console.log(this.thirdFormGroup.get('nombreies')?.errors);
+    this.thirdFormGroup.get('tituloies')?.setValidators([Validators.required]);
+    this.thirdFormGroup.get('mencionies')?.setValidators([Validators.required]);
+    this.thirdFormGroup.get('fechagradoies')?.setValidators([Validators.required]);
+    this.thirdFormGroup.get('nombreies')?.updateValueAndValidity();
+    this.thirdFormGroup.get('tituloies')?.updateValueAndValidity();
+    this.thirdFormGroup.get('mencionies')?.updateValueAndValidity();
+    this.thirdFormGroup.get('fechagradoies')?.updateValueAndValidity();
+  } else {
+    console.log("Trayecto no es 3, removiendo validaciones");
+    this.thirdFormGroup.get('nombreies')?.clearValidators();
+      this.thirdFormGroup.get('tituloies')?.clearValidators();
+      this.thirdFormGroup.get('mencionies')?.clearValidators();
+      this.thirdFormGroup.get('fechagradoies')?.clearValidators();
+      this.thirdFormGroup.get('nombreies')?.updateValueAndValidity();
+      this.thirdFormGroup.get('tituloies')?.updateValueAndValidity();
+      this.thirdFormGroup.get('mencionies')?.updateValueAndValidity();
+      this.thirdFormGroup.get('fechagradoies')?.updateValueAndValidity();
+  }
       }
 
       
@@ -441,32 +511,34 @@ this.filteredPlanteles = merge(nombrePlantelChanges, this.plantelUpdated.asObser
         const sniControl = this.thirdFormGroup.get('sni');
         if (this.aspirante.mod_ingreso === '001') {
           // Si mod_ingreso es '001', sni es requerido
-          sniControl?.setValidators([Validators.required, Validators.min(1)]);
+          sniControl?.setValidators([Validators.required, Validators.minLength(1), Validators.maxLength(10)]);
         } else {
           // Si mod_ingreso no es '001', sni no es requerido pero tiene un mínimo
-          sniControl?.setValidators([Validators.min(1)]);
+          sniControl?.setValidators([Validators.minLength(1), Validators.maxLength(10)]);
         }
         sniControl?.updateValueAndValidity();
       }
 
-      setupValidations() {
-        if (this.aspirante.trayecto === '3') {
-          this.thirdFormGroup.get('nombreies')?.setValidators([Validators.required, Validators.minLength(3), Validators.maxLength(10)]);
-          this.thirdFormGroup.get('tituloies')?.setValidators([Validators.required]);
-          this.thirdFormGroup.get('mencionies')?.setValidators([Validators.required]);
-          this.thirdFormGroup.get('fechagradoies')?.setValidators([Validators.required]);
-        } else {
-          this.thirdFormGroup.get('nombreies')?.clearValidators();
-          this.thirdFormGroup.get('tituloies')?.clearValidators();
-          this.thirdFormGroup.get('mencionies')?.clearValidators();
-          this.thirdFormGroup.get('fechagradoies')?.clearValidators();
-        }
-        
-        this.thirdFormGroup.get('nombreies')?.updateValueAndValidity();
-        this.thirdFormGroup.get('tituloies')?.updateValueAndValidity();
-        this.thirdFormGroup.get('mencionies')?.updateValueAndValidity();
-        this.thirdFormGroup.get('fechagradoies')?.updateValueAndValidity();
-      }
+      // setupValidations() {
+      //   if (this.aspirante.trayecto === '3') {
+      //     this.thirdFormGroup.get('nombreies')?.setValidators([Validators.required, Validators.minLength(3), Validators.maxLength(10)]);
+      //     this.thirdFormGroup.get('tituloies')?.setValidators([Validators.required]);
+      //     this.thirdFormGroup.get('mencionies')?.setValidators([Validators.required]);
+      //     this.thirdFormGroup.get('fechagradoies')?.setValidators([Validators.required]);
+      //   } else {
+      //     this.thirdFormGroup.get('nombreies')?.clearValidators();
+      //     this.thirdFormGroup.get('tituloies')?.clearValidators();
+      //     this.thirdFormGroup.get('mencionies')?.clearValidators();
+      //     this.thirdFormGroup.get('fechagradoies')?.clearValidators();
+      //   }
+      
+      //   // Ahora actualizamos los validadores en el orden correcto
+      //   this.thirdFormGroup.get('nombreies')?.updateValueAndValidity();
+      //   this.thirdFormGroup.get('tituloies')?.updateValueAndValidity();
+      //   this.thirdFormGroup.get('mencionies')?.updateValueAndValidity();
+      //   this.thirdFormGroup.get('fechagradoies')?.updateValueAndValidity();
+      // }
+      
 
 
       private _filter(name: string): Colegio[] {
@@ -536,6 +608,12 @@ findDiscapacidad(){
   );
 }
 
+private findPaisesNacimiento(){
+  this.aspiranteService.getPaises().subscribe(data=>{
+    this.listPaisesNacimiento = data
+  })
+}
+
 private findEstadosNacimiento(){
   this.aspiranteService.getEstados().subscribe(data=>{
     this.listEstadosNacimiento = data
@@ -546,6 +624,18 @@ private findEstadosResidencia(){
   this.aspiranteService.getEstados().subscribe(data=>{
     this.listEstadosResidencia = data
   })
+}
+
+onPaisselectedNacto(selectedPaisId: any){
+  this.aspiranteService.getEstadoOfSelectedPaisNacto(selectedPaisId).subscribe(
+    data=>{
+      this.hayResultadosPlanteles = false;
+      this.sinResultadosPlanteles= false;
+      this.municipioSelectedNacimiento = '';
+      this.parroquiaSelectedNacimiento = '';
+      this.listEstadosNacimiento = data
+    }
+  )
 }
 
 onEstadoselectedNacimiento(selectedEstadoId: any){

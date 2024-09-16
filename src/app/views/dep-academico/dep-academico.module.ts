@@ -72,7 +72,7 @@ import {MatSortModule} from '@angular/material/sort';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatRadioModule} from '@angular/material/radio';
-
+import { ModalViewDocumentComponent } from './modal-view-document/modal-view-document.component';
 
 @NgModule({
   declarations: [
@@ -80,7 +80,8 @@ import {MatRadioModule} from '@angular/material/radio';
     MallaAcademicaComponent,
     GestionDocenteComponent,
     ProgramaAcademicoComponent,
-    GestionPlanEstudiosComponent
+    GestionPlanEstudiosComponent,
+    ModalViewDocumentComponent
   ],
   imports: [
     CommonModule,

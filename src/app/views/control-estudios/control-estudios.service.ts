@@ -142,6 +142,14 @@ getAspirantesConvenio() {
   return this.http.get(`${this.url}resumen_convenio_dace.php`);
 }
 
+getAspirantesConvenioVerify(cedula: any): Observable<any>{
+  return this.http.get(`${this.url}verify_aspirante_ente.php?cedula=${cedula}`);
+}
+
+getAspirantesConvenioEnte(id_ente: any): Observable<any>{
+  return this.http.get(`${this.url}resumen_convenio_ente.php?id_ente=${id_ente}`);
+}
+
 getAutopostulado() {
   return this.http.get(`${this.url}resumen_autopostulados_dace.php`);
 }
@@ -163,6 +171,10 @@ getReincorporacion() {
 
   getDocentesDep(usrsice: any): Observable<any>{
     return this.http.get(`${this.url}docentesfordep.php?usrsice=${usrsice}`);
+  }
+
+  getStudentsMigraDep(usrsice: any): Observable<any>{
+    return this.http.get(`${this.url}studentmigrafordep.php?usrsice=${usrsice}`);
   }
 
   getCursosDocente(usrsice: any): Observable<any>{
@@ -228,6 +240,10 @@ getReincorporacion() {
 
   createPersonConvenio(datospersona : any): Observable<any>{
     return this.http.post(`${this.url}crearpersonaconvenio.php`, JSON.stringify(datospersona))
+  }
+
+  deletePersonConvenio(datospersona : any): Observable<any>{
+    return this.http.post(`${this.url}deletepersonaconvenio.php`, JSON.stringify(datospersona))
   }
 
   procesarAutopostulado(datospersona : any): Observable<any>{
@@ -314,8 +330,20 @@ getReincorporacion() {
     return this.http.post(`${this.url}marcargestion.php`, JSON.stringify(dato));
   }
 
+  marcarRevDiferida(dato: any){
+    return this.http.post(`${this.url}marcardiferida.php`, JSON.stringify(dato));
+  }
+
   findPersonaExpediente(dato: any){
     return this.http.post(`${this.url}findpersonaexp.php`, JSON.stringify(dato));
+  }
+
+  findPersonaPostMigracion(cedula: number): Observable<any> {
+    return this.http.get(`${this.url}findpersonapm.php?cedula=${cedula}`)
+  }
+
+  findProgramsForStudent(cedula: number):  Observable<any> {
+    return this.http.get(`${this.url}findprogramsstudent.php?cedula=${cedula}`);
   }
 
   findPersonaInscripcion(dato: any){
@@ -339,6 +367,10 @@ getReincorporacion() {
     return this.http.post(`${this.url}enviacorreo.php`, JSON.stringify(identificacion))
   }
 
+  generaOtpOpsu(datos: any): Observable<any>{
+    return this.http.post(`${this.url}generaotpopsu.php`, JSON.stringify(datos))
+  }
+
   generaOtp(datos: any): Observable<any>{
     return this.http.post(`${this.url}generaotp.php`, JSON.stringify(datos))
   }
@@ -353,6 +385,10 @@ getReincorporacion() {
 
   validarOTP2(datos: any): Observable<any>{
     return this.http.post(`${this.url}validaotp2.php`, JSON.stringify(datos))
+  }
+
+  validarOTPOpsu(datos: any): Observable<any>{
+    return this.http.post(`${this.url}validaotpOpsu.php`, JSON.stringify(datos))
   }
 
   crearPlantel(datosplantel : any): Observable<any>{
@@ -412,6 +448,14 @@ getReincorporacion() {
     return this.http.get(`${this.url}obtenerPlan.php?id=${id}`)
   }
 
+  obtenerDetallePlan(id: number): Observable<any> {
+    return this.http.get(`${this.url}obtenerPlanReporte.php?id=${id}`)
+  }
+
+  getImageReports(): Observable<any> {
+    return this.http.get(`${this.url}buscarImagenesReportes.php`)
+  }
+
   obtenerSeccionesPeriodo(codigoUC: string, periodo: string): Observable<any> {
     return this.http.get(`${this.url}obtenerSeccionesPeriodo.php?uc=${codigoUC}&periodo=${periodo}`)
   }
@@ -458,16 +502,13 @@ obtenerUnidadesCurricularesMencionGestionCupos(planSeleccionado: string, trayect
   return this.http.get(url);
 }
 
-obtenerUnidadesCurricularesGrado(planSeleccionado: string, trayectoNombre: string, carnetEstudiante: string, semestreNumero?: number | null): Observable<any> {
-  let url = `${this.url}obtenerUCCalificaciones.php?plan=${planSeleccionado}&trayecto=${trayectoNombre}&carnet=${carnetEstudiante}`;
-  if (semestreNumero !== null && semestreNumero !== undefined) {
-      url += `&semestre=${semestreNumero}`;
-  }
+obtenerUnidadesCurricularesGrado(idTrayecto: number, carnetEstudiante: string): Observable<any> {
+  const url = `${this.url}obtenerUCCalificaciones.php?id_trayecto=${idTrayecto}&carnet=${carnetEstudiante}`;
   return this.http.get(url);
 }
 
-obtenerTrayectosPorCodigoPlanYTrayecto(codigoPlan: string, trayectoNombre: string): Observable<any> {
-  return this.http.get(`${this.url}obtenerTrayectosPorPlanYTrayecto.php?id=${codigoPlan}&trayecto=${trayectoNombre}`)
+obtenerTrayectosPorCodigoPlanYTrayecto(tipo_titulacion: number, carnet: string): Observable<any> {
+  return this.http.get(`${this.url}obtenerTrayectosPorPlanYTrayecto.php?tipoTitulacion=${tipo_titulacion}&carnet=${carnet}`)
 }
 
 findPersonaCalificaciones(dato: any){
@@ -478,7 +519,7 @@ enviarCalificaciones(calificacionesParaEnviar: any): Observable<any>{
   return this.http.post(`${this.url}cargaCalificacionesContingenciaGrado.php`, JSON.stringify(calificacionesParaEnviar));
 }
 
-buscarRecordAcademico(carnet: string) {
+buscarRecordAcademico(carnet: string): Observable<any> {
   // Asegúrate de que el objeto enviado tenga la estructura correcta
   const postData = { carnet: carnet };
   return this.http.post(`${this.url}buscarRecord.php`, JSON.stringify(postData));
@@ -498,6 +539,22 @@ buscarResumenAcademico(carnet: string, plan: string): Observable<any> {
 
   actualizarDatos(dato: any){
     return this.http.post(`${this.url}actualizardatos.php`, JSON.stringify(dato));
+  }
+
+  actualizarDatosAcadPM(dato: any){
+    return this.http.post(`${this.url}actdatosacadpm.php`, JSON.stringify(dato));
+  }
+
+  asignarNuevoPlan(dato: any){
+    return this.http.post(`${this.url}actdatosacadpm.php`, JSON.stringify(dato));
+  }
+
+  getDetallesPlanPM(dato: any){
+    return this.http.post(`${this.url}detallesPlanPM.php`, JSON.stringify(dato));
+  }
+
+  actualizarModalidadIngresoPM(dato: any){
+    return this.http.post(`${this.url}actdatosmipm.php`, JSON.stringify(dato));
   }
 
   
@@ -530,19 +587,85 @@ cargaProcesoCalificaciones(dato: any): Observable<any> {
 }
 
 getPlanes(): Observable<any> {
-  return this.http.get(`${this.url}/planes.php`);
+  return this.http.get(`${this.url}planes.php`);
 }
 
 getUnidades(): Observable<any> {
-  return this.http.get(`${this.url}/obtenerUCall.php`);
+  return this.http.get(`${this.url}obtenerUCall.php`);
 }
 
 getTrayectosUC(idPlan: number): Observable<any> {
-  return this.http.post(`${this.url}/trayectosUC.php`, JSON.stringify(idPlan));
+  return this.http.post(`${this.url}trayectosUC.php`, JSON.stringify(idPlan));
 }
 
 getSemestresUC(idTrayecto: number): Observable<any> {
-  return this.http.post(`${this.url}/semestresUC.php`, JSON.stringify(idTrayecto));
+  return this.http.post(`${this.url}semestresUC.php`, JSON.stringify(idTrayecto));
+}
+
+getUnidadesAsociadas(idTrayecto: number): Observable<any> {
+  return this.http.post(`${this.url}unidadesasociadas.php`, JSON.stringify(idTrayecto));
+}
+
+getCertificacionesYTitulos(idPlan: number): Observable<any> {
+  return this.http.post(`${this.url}certifTitulos.php`, JSON.stringify(idPlan));
+}
+
+addUnidadToTrayecto(variables: any): Observable<any> {
+  return this.http.post(`${this.url}addUnidadToTrayecto.php`, JSON.stringify(variables));
+}
+
+removeUnidadFromTrayecto(variables: any): Observable<any> {
+  return this.http.post(`${this.url}removeUnidadToTrayecto.php`, JSON.stringify(variables));
+}
+
+obtenerNotaMinima(codigoUC: string, periodo: string): Observable<any> {
+  return this.http.get(`${this.url}getNotaMinima.php?codigoUC=${codigoUC}&periodo=${periodo}`)
+}
+
+getPlanesByPrograma(programaId: string): Observable<any[]> {
+  return this.http.get<any[]>(`${this.url}getPlanesByPrograma.php?programaId=${programaId}`);
+}
+
+getTitulacionesByPlan(planId: string): Observable<any[]> {
+  return this.http.get<any[]>(`${this.url}getTitulacionesByPlan.php?planId=${planId}`);
+}
+
+getDatosGraduacion(fechagrado: string): Observable<any[]> {
+  return this.http.get<any[]>(`${this.url}obtenerDatosGraduacion.php?fecha_grado=${fechagrado}`);
+}
+
+/*metodos para obtener datos del perfil del estudiante*/
+
+getIdentidad(cedula: string): Observable<any> {
+  return this.http.post(`${this.url}getIdentidad.php`, JSON.stringify(cedula));
+}
+
+// Método para buscar los datos de residencia
+getResidencia(cedula: string): Observable<any> {
+  return this.http.post(`${this.url}getResidencia.php`, JSON.stringify(cedula));
+}
+
+// Método para buscar los datos académicos
+getAcademicos(cedula: string): Observable<any> {
+  return this.http.post(`${this.url}getAcademicos.php`, JSON.stringify(cedula));
+}
+
+// Método para buscar los datos de UNETRANS
+getUnetrans(cedula: string): Observable<any> {
+  return this.http.post(`${this.url}getUnetrans.php`, JSON.stringify(cedula));
+}
+
+// Método para buscar los datos de SICE
+getSICE(cedula: string): Observable<any> {
+  return this.http.post(`${this.url}getSICE.php`, JSON.stringify(cedula));
+}
+
+guardarImagenConCodpersona(codpersona: number, imagenBase64: string): Observable<any> {
+  const payload = {
+    imagen: imagenBase64,
+    codpersona: codpersona
+  };
+  return this.http.post<any>(`${this.url}guardar-imagen.php`, payload);
 }
 
 }

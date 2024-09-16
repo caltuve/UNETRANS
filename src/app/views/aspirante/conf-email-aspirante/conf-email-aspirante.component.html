@@ -1,0 +1,53 @@
+<div class="modal-header" style="background-color: #003E85; color: white !important; padding: 20px; text-align: center;">
+    <h1 class="modal-title pull-left" style="color: white !important;">👋 ¡Hola, {{ estudianteBase.primer_nombre | titlecase }}!</h1>
+</div>
+
+<div class="modal-body">
+    <form [formGroup]="thirdFormGroup3">
+        <ng-template matStepLabel>Verificación de Correo Electrónico</ng-template>
+        <div>
+            <c-alert color="info" class="custom-justify">
+                <strong>Información Importante:</strong><br>
+                Antes de iniciar el proceso de inscripción, es necesario que registres un <strong>correo electrónico GMAIL válido</strong> al que tengas acceso. Te enviaremos un código de verificación a esta dirección. <br>
+                Verifica tu bandeja de entrada y la carpeta de SPAM. Para asistencia, contacta a: soportesice&#64;unetrans.edu.ve
+            </c-alert>
+            <label>Verificación del correo electrónico:</label>
+            <div class="row">
+                <div class="col-md-6 col-12">
+                    <mat-form-field appearance="fill">
+                        <mat-label>Correo electrónico</mat-label>
+                        <input type="email" matInput formControlName="email">
+                        <button mat-button matSuffix 
+                                (click)="verifyEmail2()" 
+                                [disabled]="!thirdFormGroup3.get('email')?.valid || emailDuplicado">
+                            Verificar
+                        </button>
+                        <mat-error *ngIf="thirdFormGroup3.get('email')?.errors?.['emailDuplicado']">
+                            El correo ya está registrado.
+                        </mat-error>
+                        <mat-error *ngIf="thirdFormGroup3.get('email')?.errors?.['pattern']">
+                            Solo se aceptan correos de dominio &#64;gmail.com
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="col-md-6 col-12">
+                    <mat-form-field appearance="fill">
+                        <mat-label>Código de verificación</mat-label>
+                        <input type="text" matInput formControlName="validationCode">
+                        <button mat-button matSuffix (click)="validateCode2()" [disabled]="!thirdFormGroup3.get('validationCode')?.valid">
+                            Validar
+                        </button>
+                        <mat-error *ngIf="thirdFormGroup3.get('validationCode')?.errors?.['minlength']">
+                            El código debe tener al menos 6 dígitos.
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary custom-button" (click)="closeModal()">❌ Abandonar proceso</button>
+</div>
+
+

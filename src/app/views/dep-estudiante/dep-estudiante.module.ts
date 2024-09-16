@@ -67,6 +67,7 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatRadioModule} from '@angular/material/radio';
 import { InscripcionComponent } from './inscripcion/inscripcion.component';
 import { ModalInscripcionComponent } from './modal-inscripcion/modal-inscripcion.component';
+import { MigracionComponent } from './migracion/migracion.component';
 
 
 
@@ -74,7 +75,8 @@ import { ModalInscripcionComponent } from './modal-inscripcion/modal-inscripcion
   declarations: [
     ConsultarDatosComponent,
     InscripcionComponent,
-    ModalInscripcionComponent
+    ModalInscripcionComponent,
+    MigracionComponent
   ],
   imports: [
     CommonModule,

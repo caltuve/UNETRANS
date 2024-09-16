@@ -71,6 +71,7 @@ import { NgxSpinnerModule } from "ngx-spinner";
 import {MatDialogModule} from '@angular/material/dialog';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { NotifyInformationGeneralComponent } from './notify-information-general/notify-information-general.component';
+import { ConfEmailAspiranteComponent } from './conf-email-aspirante/conf-email-aspirante.component';
 
 
 @NgModule({
@@ -79,6 +80,7 @@ import { NotifyInformationGeneralComponent } from './notify-information-general/
     AutomatriculacionComponent,
     AutopostulacionComponent,
     NotifyInformationGeneralComponent,
+    ConfEmailAspiranteComponent,
   ],
   imports: [
     CommonModule,

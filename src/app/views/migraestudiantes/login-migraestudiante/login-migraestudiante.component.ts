@@ -42,7 +42,7 @@ export class LoginMigraestudianteComponent {
             case 'mantenimiento':
               this.SpinnerService.hide();
               //this.myModalCompletado.show(); 
-              this.notifyService.showInfoMtto('El acceso al proceso de migración estudiantil está temporalmente suspendido debido a mantenimiento programado. No podrá realizar ninguna operación hasta que finalice este proceso. Agradecemos su paciencia y comprensión.');
+              this.notifyService.showInfoMtto('En este momento estamos haciendo una actualización de la aplicación, por favor intenta nuevamente más tarde.');
               this.firstFormGroup.reset();
               this.router.navigateByUrl('/login-migraestudiante');
                 break;

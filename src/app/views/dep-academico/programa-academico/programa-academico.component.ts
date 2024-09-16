@@ -16,8 +16,11 @@ import { Router } from '@angular/router';
 export class ProgramaAcademicoComponent implements AfterViewInit {
   bsModalRef: BsModalRef;
 
+  hayResultadosProcesos: boolean = false;
+  sinResultadosProcesos: boolean = false;
+
   programas = new MatTableDataSource();
-  displayedColumnsProcesos: string[] = ['cod_opsu', 'tipo_prog', 'nom_pro',  'regimen', 'departamento', 'jefe', 'gestion'];
+  displayedColumnsProcesos: string[] = ['codigo','sigla','cod_opsu', 'tipo_prog', 'nom_pro', 'departamento', 'jefe', 'gestion'];
 
   usr={
     nac:null,
@@ -88,16 +91,21 @@ export class ProgramaAcademicoComponent implements AfterViewInit {
     this.SpinnerService.show();
     this.controlestudiosService.getProgramasActivosDep(usrsice).subscribe(
       (data: any) => {
+        this.hayResultadosProcesos = false;
+      this.sinResultadosProcesos= false; 
         this.programas.data = data;
-        
-      if (this.programas.data.length == 0) {
-        
+        if (this.programas.data.length === 0) {
+          this.sinResultadosProcesos = true;
+          this.SpinnerService.hide();
+        } else {
+          this.hayResultadosProcesos = true;
+          this.programas.paginator = this.paginatorProcesos;
+          this.SpinnerService.hide();
+        }
+      },
+      error => {
+        console.error('Error al obtener los programas:', error);
         this.SpinnerService.hide();
-       } else{
-        this.programas.paginator = this.paginatorProcesos;
-        this.programas.data = data;
-        this.SpinnerService.hide();
-       }
       }
     );
   }

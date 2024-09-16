@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ConsultarDatosComponent } from './consultar-datos/consultar-datos.component';
 import { InscripcionComponent } from './inscripcion/inscripcion.component';
+import { MigracionComponent } from './migracion/migracion.component';
 
 const routes: Routes = [
   {
@@ -27,6 +28,13 @@ const routes: Routes = [
         component: InscripcionComponent,
         data: {
           title: 'Inscribir estudiante'
+        }
+      },
+      {
+        path: 'migracion',
+        component: MigracionComponent,
+        data: {
+          title: 'Migración estudiantil'
         }
       },
       // {

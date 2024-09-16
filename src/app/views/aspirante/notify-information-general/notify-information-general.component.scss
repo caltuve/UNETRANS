@@ -1,3 +1,55 @@
-.text-justify {
+body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.custom-modal-header {
+    background-color: #003E85;
+    color: white;
+    padding: 20px;
+    text-align: center;
+
+    .modal-title {
+        color: white;
+    }
+}
+
+.custom-modal-body {
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+.custom-justify {
     text-align: justify;
+}
+
+.custom-bold {
+    font-weight: bold !important;
+}
+
+.custom-link {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: white;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold !important;
+}
+
+.custom-email-link {
+    color: #003E85;
+    text-decoration: underline;
+}
+
+.custom-modal-footer {
+    text-align: center;
+}
+
+.custom-button {
+    background-color: #003E85;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
 }

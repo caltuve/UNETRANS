@@ -195,46 +195,43 @@
                   <div class="row">
                     <div class="col s12">
                       <mat-form-field>
+                        <mat-label>País</mat-label>
+                        <mat-select formControlName="paisNacimiento" required>
+                          <mat-option *ngFor="let pais of listPaisesNacimiento" [value]="pais.codpais">
+                            {{pais.nombpais}}</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                    <div class="col s12">
+                      <mat-form-field>
                         <mat-label>Estado</mat-label>
-                        <mat-select (ngModelChange)="onEstadoselectedNacimiento($event)"
-                          (ngModelChange)="onMunicipioselectedNacimiento($event)" formControlName="estadoNacimiento"
-                          required>
+                        <mat-select formControlName="estadoNacimiento" required>
                           <mat-option *ngFor="let estado of listEstadosNacimiento" [value]="estado.codestado">
                             {{estado.nombestado}}</mat-option>
                         </mat-select>
-                        <mat-error
-                          *ngIf="firstFormGroup.get('estadoNacimiento')?.touched && firstFormGroup.get('estadoNacimiento')?.hasError('required')">
-                          ¡Estado es un campo obligatorio!
-                        </mat-error>
                       </mat-form-field>
                     </div>
                     <div class="col s12">
                       <mat-form-field>
                         <mat-label>Municipio</mat-label>
-                        <mat-select (ngModelChange)="onMunicipioselectedNacimiento($event)"
-                          formControlName="municipioNacimiento" required>
-                          <mat-option *ngFor="let municipio of listMunicipiosNacimiento" [value]="municipio.codmuni">
+                        <mat-select formControlName="municipioNacimiento" required>
+                          <mat-option *ngFor="let municipio of listMunicipiosNacimiento"
+                            [value]="municipio.codmuni">
                             {{municipio.nombmuni}}</mat-option>
                         </mat-select>
-                        <mat-error
-                          *ngIf="firstFormGroup.get('municipioNacimiento')?.touched && firstFormGroup.get('municipioNacimiento')?.hasError('required')">
-                          ¡Municipio es un campo obligatorio!
-                        </mat-error>
                       </mat-form-field>
                     </div>
                     <div class="col s12">
                       <mat-form-field>
                         <mat-label>Parroquia</mat-label>
                         <mat-select formControlName="parroquiaNacimiento" required>
-                          <mat-option *ngFor="let parroquia of listParroquiasNacimiento" [value]="parroquia.codparroq">
+                          <mat-option *ngFor="let parroquia of listParroquiasNacimiento"
+                            [value]="parroquia.codparroq">
                             {{parroquia.nombparroq}}</mat-option>
                         </mat-select>
-                        <mat-error
-                          *ngIf="firstFormGroup.get('parroquiaNacimiento')?.touched && firstFormGroup.get('parroquiaNacimiento')?.hasError('required')">
-                          ¡Parroquia es un campo obligatorio!
-                        </mat-error>
                       </mat-form-field>
                     </div>
+      
                   </div>
                 </div>
               </div>
@@ -810,7 +807,7 @@
                       <p>
                         Si el nombre del Plantel o Instituto no se muestra en la lista por favor notifícalo
                         inmediatamente al correo <strong>soportesice&#64;unetrans.edu.ve</strong> <br>
-                        Deberás indicar el ESTADO, MUNICIPIO, PARROQUIA y NOMBRE DE LA INSTITUCIÓN. <br>
+                        Deberás indicar el ESTADO, MUNICIPIO, PARROQUIA, NOMBRE DE LA INSTITUCIÓN y la imagen del titulo de bachiller.<br>
                         <strong>¡EVITE SELECCIONAR OTRA INSTITUCIÓN QUE NO SEA EN LA CUAL SE GRADUÓ!</strong>
                       </p>
                     </c-alert>
@@ -820,7 +817,7 @@
                 </mat-expansion-panel>
 
 
-                <mat-expansion-panel *ngIf="(aspirante.trayecto == '3')">
+                <mat-expansion-panel *ngIf="aspirante.trayecto == '3' && aspirante.sucre != 'S'">
                   <mat-expansion-panel-header
                     class="expancion-header mat-expansion-panel-header ng-tns-c48-104 ng-trigger ng-trigger-expansionHeight ng-star-inserted">
                     <mat-panel-title>
@@ -833,8 +830,22 @@
                         <div class="col s12">
                           <mat-form-field>
                             <mat-label>Siglas Instituto/Universidad</mat-label>
-                            <input type="string" style='text-transform:uppercase' formControlName="nombreies" matInput
-                              required>
+                            <input matInput formControlName="nombreies" type="text" required>
+                            
+                            <!-- Error para el campo requerido -->
+                            <mat-error *ngIf="thirdFormGroup.get('nombreies')?.hasError('required') && thirdFormGroup.get('nombreies')?.touched">
+                              Este campo es obligatorio.
+                            </mat-error>
+                            
+                            <!-- Error para el mínimo de caracteres -->
+                            <mat-error *ngIf="thirdFormGroup.get('nombreies')?.hasError('minlength') && thirdFormGroup.get('nombreies')?.touched">
+                              Debe tener al menos 3 caracteres.
+                            </mat-error>
+                            
+                            <!-- Error para el máximo de caracteres -->
+                            <mat-error *ngIf="thirdFormGroup.get('nombreies')?.hasError('maxlength') && thirdFormGroup.get('nombreies')?.touched">
+                              No puede exceder 10 caracteres.
+                            </mat-error>
                           </mat-form-field>
                         </div>
                         <div class="col s12">
@@ -1052,7 +1063,7 @@
                                 <mat-label>Usuario:</mat-label>
                                 <input [readonly]="true" style='text-transform:uppercase'
                                   [(ngModel)]="aspirante.usrsice" matInput formControlName="usrsice">
-                                  <mat-hint>Este es su usuario, no se puede modificar</mat-hint>
+                                  <mat-hint>Este es tu usuario, no se puede modificar</mat-hint>
                               </mat-form-field>
                             </div>
                           </div>
@@ -1269,3 +1280,6 @@
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+<ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" size="default" type="ball-atom">
+  <p style="color: white" align="center">Por favor espere... <br>¡Validando información!</p>
+  </ngx-spinner>

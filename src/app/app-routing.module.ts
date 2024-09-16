@@ -18,6 +18,9 @@ import { LoginDocenteComponent } from './views/docentes/login-docente/login-doce
 import { AutoregistroDocenteComponent } from './views/docentes/autoregistro-docente/autoregistro-docente.component';
 import { AutomigraEstudianteComponent } from './views/migraestudiantes/automigra-estudiante/automigra-estudiante.component';
 import { LoginMigraestudianteComponent } from './views/migraestudiantes/login-migraestudiante/login-migraestudiante.component';
+import { EleccionPresidencial2024Component } from './views/eventos/eleccion-presidencial2024/eleccion-presidencial2024.component';
+import { EstadisticaEleccionPresidencialComponent } from './views/eventos/estadistica-eleccion-presidencial/estadistica-eleccion-presidencial.component';
+import { ValidarCertificadoComponent } from './views/autenticacion/validar-certificado/validar-certificado.component';
 
 import { AuthGuard } from './guards/auth.guard';
 
@@ -63,6 +66,10 @@ const routes: Routes = [
         loadChildren: () => 
           import('./views/ce-nuevoingreso/ce-nuevoingreso.module').then(m => m.CeNuevoingresoModule) 
       },
+      { path: 'entes', canActivate: [AuthGuard],
+        loadChildren: () => 
+          import('./views/entes/entes.module').then(m => m.EntesModule) 
+      },
       { path: 'administrativo', 
           loadChildren: () => 
             import('./views/administrativo/administrativo.module').then(m => m.AdministrativoModule) 
@@ -83,6 +90,10 @@ const routes: Routes = [
           loadChildren: () => 
           import('./views/doc-academico/doc-academico.module').then(m => m.DocAcademicoModule)
       },
+      { path: 'est-perfil', canActivate: [AuthGuard],
+          loadChildren: () => 
+          import('./views/est-perfil/est-perfil.module').then(m => m.EstPerfilModule) 
+      },
       { path: 'est-solicitud', canActivate: [AuthGuard],
           loadChildren: () => 
           import('./views/est-solicitud/est-solicitud.module').then(m => m.EstSolicitudModule) 
@@ -90,6 +101,14 @@ const routes: Routes = [
       { path: 'migraestudiantes', 
           loadChildren: () => 
           import('./views/migraestudiantes/migraestudiantes.module').then(m => m.MigraestudiantesModule) 
+      },
+      { path: 'eventos', 
+          loadChildren: () => 
+          import('./views/eventos/eventos.module').then(m => m.EventosModule) 
+      },
+      { path: 'autenticacion', 
+          loadChildren: () => 
+          import('./views/autenticacion/autenticacion.module').then(m => m.AutenticacionModule) 
       },
 
       /* Fin de rutas UNETRANS */
@@ -248,7 +267,28 @@ const routes: Routes = [
       title: 'Login Estudiantil'
     }
   },
+  {
+    path: 'eleccion-presidencial2024',
+    component: EleccionPresidencial2024Component,
+    data: {
+      title: 'Registro de Ejercicio del Derecho al Voto | 28/07/2024'
+    }
+  },
+  {
+    path: 'estadistica-eleccion-presidencial',
+    component: EstadisticaEleccionPresidencialComponent,
+    data: {
+      title: 'Estadistica Elección Presidencial'
+    }
+  },
 
+  {
+    path: 'validar-certificado/:hash',
+    component: ValidarCertificadoComponent,
+    data: {
+      title: 'Estadistica Elección Presidencial'
+    }
+  },
   {
     path: 'logout',
     component: LogoutComponent,
@@ -256,10 +296,17 @@ const routes: Routes = [
       title: 'Salir'
     }
   }, 
-  
-  
-  
-  {path: '**', redirectTo: '404'}
+
+  {
+    path: 'validar-certificado',
+    redirectTo: '/login', // Redirige a la página de login si no hay hash
+    pathMatch: 'full'
+  },
+  {
+    path: '**',
+    redirectTo: '/login', // Ruta comodín para manejar cualquier otra URL no válida
+    pathMatch: 'full'
+  }
 ];
 
 @NgModule({

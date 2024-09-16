@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
-import { EstadoI, MunicipioI } from '../control-estudios/crear-nuevo/model.interface';
+import { PaisI, EstadoI, MunicipioI } from '../control-estudios/crear-nuevo/model.interface';
 import { Observable } from "rxjs";
 import { environment } from '../../../environments/environment';
 
@@ -72,9 +72,21 @@ export class AspiranteService {
       })
     };
 
+  getPaises(): Observable<PaisI[]> {
+    return this.http.get<PaisI[]>(`${this.url}paises.php` );
+}
   getEstados(): Observable<EstadoI[]> {
     return this.http.get<EstadoI[]>(`${this.url}estados.php` );
 }
+
+getEstadoOfSelectedPaisNacto(selectedEstadoId: string): Observable<any>{
+  return this.http.get(`${this.url}estadosnacto.php?codpais=${selectedEstadoId}`)
+}
+
+getMunicipioOfSelectedEstadoNacto(selectedEstadoId: string): Observable<any>{
+  return this.http.get(`${this.url}municipios.php?codestado=${selectedEstadoId}`)
+}
+
 
 getMunicipioOfSelectedEstado(selectedEstadoId: string): Observable<any>{
   return this.http.get(`${this.url}municipios.php?codestado=${selectedEstadoId}`)

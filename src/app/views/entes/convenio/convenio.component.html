@@ -1,0 +1,131 @@
+<c-col xs="12">
+    <c-card class="mb-4">
+      <c-card-header>
+        <strong>Aspirantes por Convenio</strong> &nbsp; <small>Módulo para gestión de aspirantes por convenio</small>  &nbsp; 
+        <button cButton color="primary" size="sm" [disabled]="!procesoActivo" (click)="abrirModalNuevoAspirante()">
+          <svg cIcon class="me-2" name="cilUserPlus"></svg>Nuevo aspirante
+        </button>        
+      </c-card-header>
+      <c-card-body >
+          Listado de aspirantes por convenio para el periodo académico actual.
+          <br>
+          <c-row *ngIf="hayResultadosRecibidas">
+            <c-col sm="3">
+              <div class="border-start border-start-4 border-start-info py-1 px-3 mb-3">
+                <div class="text-medium-emphasis small">Total programas</div>
+                <div class="fs-5 fw-semibold">{{arrayDatos.total_pnf}}</div>
+              </div>
+            </c-col>
+            <c-col sm="3">
+              <div class="border-start border-start-4 border-start-info py-1 px-3 mb-3">
+                <div class="text-medium-emphasis small">Total postulados</div>
+                <div class="fs-5 fw-semibold">{{arrayDatos.total_asignados_uni}}</div>
+              </div>
+            </c-col>
+            <c-col sm="3">
+              <div class="border-start border-start-4 border-start-success py-1 px-3 mb-3">
+                <div class="text-medium-emphasis small">Total inscritos</div>
+                <div class="fs-5 fw-semibold">{{arrayDatos.total_inscritos_uni}}</div>
+              </div>
+            </c-col>
+            <c-col sm="3">
+              <div class="border-start border-start-4 border-start-success py-1 px-3 mb-3">
+                <div class="text-medium-emphasis small">% Inscripción</div>
+                <div class="fs-5 fw-semibold">{{arrayDatos.porc_inscritos_uni}} %</div>
+              </div>
+            </c-col>
+          </c-row>
+          
+          <div *ngIf="hayResultadosRecibidas">
+            <mat-form-field>
+                <input matInput (keyup)="applyFilterProcesadas($event)" placeholder="Buscar aspirante" #input>
+              </mat-form-field>
+              <table mat-table [dataSource]="procesadas"  [hover]="true"
+              [responsive]="true"
+              [striped]="true"
+              align="middle"
+              cTable
+              class="mb-0 border" cTable>
+              <ng-container matColumnDef="estatus">
+                <th class="estatus-ancho" mat-header-cell *matHeaderCellDef> Estatus </th>
+                <td class="estatus-ancho" mat-cell *matCellDef="let solicitud">
+                  <div class="container" 
+                       cTooltip="{{ 
+                          solicitud.confirma == '0' ? 'Precargado: El aspirante está precargado en el sistema pero aún no se ha inscrito.' : 
+                          solicitud.confirma == '1' ? 'Inscrito: El aspirante ya completó la inscripción.' : 
+                          solicitud.confirma == '99' ? 'En revisión: El aspirante está en revisión por la Escuela.' : '' }}" 
+                       cTooltipPlacement="right">
+                    
+                    <!-- Icono para Estatus 0: No inscrito, pero precargado en el sistema -->
+                    <svg *ngIf="solicitud.confirma == '0'" cIcon width="30" height="30" name="cilClock" style="color: #f9b115;"></svg>
+              
+                    <!-- Icono para Estatus 1: Inscrito -->
+                    <svg *ngIf="solicitud.confirma == '1'" cIcon width="30" height="30" name="cilCheckCircle" style="color: #2EB85C;"></svg>
+              
+                    <!-- Icono para Estatus 99: En revisión -->
+                    <svg *ngIf="solicitud.confirma == '99'" cIcon width="30" height="30" name="cilSearch" style="color: #ffcc00;"></svg>
+                    
+                  </div>
+                </td>
+              </ng-container>              
+                <ng-container matColumnDef="id_estudiante">
+                  <th class="cedula-ancho" mat-header-cell *matHeaderCellDef> Identificación </th>
+                  <td class="cedula-ancho" mat-cell *matCellDef="let solicitud"> {{solicitud.id_estudiante}} </td>
+                </ng-container>
+                <ng-container matColumnDef="nombre_completo">
+                  <th mat-header-cell *matHeaderCellDef> Apellidos y nombres </th>
+                  <td mat-cell *matCellDef="let solicitud"> {{solicitud.nombre_completo}} </td>
+                </ng-container>
+                <ng-container matColumnDef="pnf">
+                  <th mat-header-cell *matHeaderCellDef> Programa Académico </th>
+                  <td mat-cell *matCellDef="let solicitud"> {{solicitud.nombre_programa}} </td>
+                </ng-container>
+                <ng-container matColumnDef="fecha_carga">
+                  <th mat-header-cell *matHeaderCellDef> Fecha de carga </th>
+                  <td mat-cell *matCellDef="let solicitud"> {{solicitud.fecha_carga}} </td>
+                </ng-container>
+                <ng-container matColumnDef="gestion">
+                  <th class="gestion-ancho" mat-header-cell *matHeaderCellDef> Gestionar </th>
+                  <td class="gestion-ancho" mat-cell *matCellDef="let solicitud">
+                    <div class="d-flex justify-content-center align-items-center">
+                      <!-- Botón para editar, deshabilitado si solicitud.confirma no es '0' -->
+                      <div class="m-1">
+                        <button cButton class="btn-primary" size="sm" cTooltip="Editar datos" cTooltipPlacement="top" 
+                        [disabled]="solicitud.confirma !== 0 && solicitud.confirma !== 99"
+                        (click)="abrirModalEditarAspirante(solicitud)">
+                          <svg cIcon name="cil-pencil"></svg>
+                        </button>
+                      </div>
+                      
+                      <!-- Botón para eliminar, deshabilitado si solicitud.confirma no es '0' -->
+                      <div class="m-1">
+                        <button cButton color="danger" size="sm" cTooltip="Eliminar registro" cTooltipPlacement="top" 
+                        [disabled]="solicitud.confirma !== 0 && solicitud.confirma !== 99"
+                        (click)="eliminarRegistro(solicitud)">
+                          <svg cIcon name="cil-trash"></svg>
+                        </button>
+                      </div>
+                    </div>
+                  </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumnsProcesadas"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumnsProcesadas;"></tr>
+              </table>
+        </div>
+
+<br>
+          <div *ngIf="sinResultadosRecibidas">
+            <c-alert color="success" class="d-flex align-items-center">
+              <svg cIcon class="me-2" width="24" height="24" name="cilNoteAdd"></svg>
+              <div>No existen aspirantes por convenio cargados</div>
+            </c-alert>
+          </div>
+          <mat-paginator [hidePageSize]="true" [pageSize]="5" #paginatorProcesadas></mat-paginator>
+      </c-card-body>
+    </c-card>
+  </c-col>
+
+<!-- Modal -->
+  <ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" size="default" type="ball-atom">
+		<p style="color: white" align="center">Por favor espere... <br>¡Validando información!</p>
+	  </ngx-spinner>

@@ -1,0 +1,73 @@
+/* estadistica-eleccion-presidencial.component.css */
+.estadisticas-container {
+  margin: 20px;
+}
+
+.charts-section {
+  display: flex;
+  flex-wrap: wrap;
+  //justify-content: space-between;
+  gap: 20px;
+}
+
+.respuestas-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
+  max-width: 600px;
+  min-width: 300px;
+}
+
+.chart-container {
+  flex: 1;
+  max-width: 300px; /* Ajusta este valor según tus necesidades */
+}
+
+.respuestas-detalle {
+  flex: 1;
+  margin-left: 20px;
+}
+
+#respuestas-legend ul,
+#estados-legend ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.legend-color {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin-right: 5px;
+  vertical-align: middle;
+}
+
+@media (max-width: 768px) {
+  .respuestas-section {
+    flex-direction: column;
+    align-items: flex-start;
+    max-width: 100%;
+  }
+
+  .chart-container,
+  .respuestas-detalle {
+    max-width: 100%;
+    margin-left: 0;
+  }
+}
+
+button {
+  margin: 5px 0;
+}
+
+ul {
+  list-style-type: none;
+  padding-left: 20px;
+}
+
+canvas {
+  display: block;
+  width: 100% !important;
+  height: auto !important;
+}

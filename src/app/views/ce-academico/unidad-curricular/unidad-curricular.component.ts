@@ -1,10 +1,14 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, ViewChildren, QueryList } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ControlEstudiosService } from '../../control-estudios/control-estudios.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
-
+import { MatStepper } from '@angular/material/stepper';
+import { AddUnidadCurricularModalComponent } from './../add-unidad-curricular-modal/add-unidad-curricular-modal.component';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+import { NgxSpinnerService } from "ngx-spinner";
+import { NotificacionService } from './../../../notificacion.service'
 
 @Component({
   selector: 'app-unidad-curricular',
@@ -12,8 +16,11 @@ import { MatPaginator } from '@angular/material/paginator';
   styleUrls: ['./unidad-curricular.component.scss']
 })
 export class UnidadCurricularComponent implements OnInit,AfterViewInit  {
-  @ViewChild('asociadasPaginator') asociadasPaginator!: MatPaginator;
-  @ViewChild('todasPaginator') todasPaginator!: MatPaginator;
+  @ViewChild('stepper') stepper: MatStepper;
+  @ViewChildren('asociadasPaginator') asociadasPaginators: QueryList<MatPaginator>;
+  @ViewChildren('todasPaginator') todasPaginators: QueryList<MatPaginator>;
+
+  @ViewChildren(MatPaginator) paginators: QueryList<MatPaginator>;
 
   idPlan: number;
   planes: any[] = [];
@@ -25,12 +32,18 @@ export class UnidadCurricularComponent implements OnInit,AfterViewInit  {
   asociadasDisplayedColumns: string[] = ['nombre', 'creditos', 'remove'];
   dataSource!: MatTableDataSource<any>;
   asociadasDataSource = new MatTableDataSource<any>();
+  allAssociatedUnits: Set<number> = new Set();
+
+  modalRef: BsModalRef; 
 
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
+    private modalService: BsModalService,
     private _formBuilder: FormBuilder,
-    private controlEstudiosService: ControlEstudiosService
+    private controlEstudiosService: ControlEstudiosService,
+    private SpinnerService: NgxSpinnerService,
+    private notifyService : NotificacionService,
   ) {
     this.unidadesForm = this.fb.group({
       unidades: this.fb.array([])
@@ -55,37 +68,111 @@ export class UnidadCurricularComponent implements OnInit,AfterViewInit  {
       console.log(this.isSemestral); // Para verificar
     });
 
+    this.initializeStepData();
+
+    this.findUC();
+    
+  }
+
+  initializeStepData(): void {
+    this.SpinnerService.show();
     this.controlEstudiosService.getTrayectosUC(this.idPlan).subscribe((data: any) => {
       this.trayectos = data;
       if (this.isSemestral) {
         this.controlEstudiosService.getSemestresUC(this.idPlan).subscribe((semestresData: any) => {
-          this.semestres = semestresData;
-          console.log(this.semestres); // Para verificar
+          this.semestres = this.semestres.concat(semestresData);
         });
       }
+      setTimeout(() => {
+        this.loadUnidadesCurriculares(this.trayectos[0]?.id_trayecto);
+      });
     });
-
-    this.findUC();
-  }
-
-  ngAfterViewInit(): void {
-    // Escuchar el cambio de selección del stepper
-
-   
   }
 
   onStepChange(event: any): void {
     const stepIndex = event.selectedIndex;
-    const idTrayecto = this.isSemestral ? this.semestres[stepIndex].id_trayecto : this.trayectos[stepIndex].id_trayecto;
-console.log(idTrayecto);
-    //this.loadUnidadesForStep(idTrayecto);
+    const selectedTrayecto = this.trayectos[stepIndex];
+    console.log('Step changed to:', stepIndex, 'Selected trayecto:', selectedTrayecto);
+    this.loadUnidadesCurriculares(selectedTrayecto.id_trayecto);
+}
+
+
+loadUnidadesCurriculares(idTrayecto: number): void {
+  this.controlEstudiosService.getUnidadesAsociadas(idTrayecto).subscribe((data: any[]) => {
+    this.asociadasDataSource = new MatTableDataSource(data);
+    this.setPaginatorForDataSource(this.asociadasDataSource, this.asociadasPaginators);
+
+    this.controlEstudiosService.getUnidades().subscribe((allData: any[]) => {
+      const asociadasIds = data.map(uc => uc.id_uc);
+      this.dataSource = new MatTableDataSource(allData.filter(uc => !asociadasIds.includes(uc.id_uc)));
+      this.setPaginatorForDataSource(this.dataSource, this.todasPaginators);
+    });
+  });
+}
+
+setPaginatorForDataSource(dataSource: MatTableDataSource<any>, paginators: QueryList<MatPaginator>): void {
+  paginators.changes.subscribe(() => {
+      const paginator = paginators.first;
+      if (paginator) {
+          dataSource.paginator = paginator;
+          this.configurePaginator(paginator, dataSource);
+      }
+  });
+  const paginator = paginators.first;
+  if (paginator) {
+      dataSource.paginator = paginator;
+      this.configurePaginator(paginator, dataSource);
+  }
+}
+
+
+
+ngAfterViewInit(): void {
+  this.asociadasPaginators.changes.subscribe(() => {
+      this.asociadasPaginators.forEach((paginator, index) => {
+          if (this.asociadasDataSource) {
+              this.asociadasDataSource.paginator = paginator;
+              this.configurePaginator(paginator, this.asociadasDataSource);
+          }
+      });
+  });
+
+  this.todasPaginators.changes.subscribe(() => {
+      this.todasPaginators.forEach((paginator, index) => {
+          if (this.dataSource) {
+              this.dataSource.paginator = paginator;
+              this.configurePaginator(paginator, this.dataSource);
+          }
+      });
+  });
+}
+
+
+
+  updateAllAssociatedUnits(currentIdTrayecto: number): void {
+    this.allAssociatedUnits.clear();
+    const currentTrayectoIndex = this.trayectos.findIndex(trayecto => trayecto.id_trayecto === currentIdTrayecto);
+
+    for (let i = 0; i <= currentTrayectoIndex; i++) {
+      const idTrayecto = this.trayectos[i].id_trayecto;
+      this.controlEstudiosService.getUnidadesAsociadas(idTrayecto).subscribe((data: any[]) => {
+        data.forEach(unit => this.allAssociatedUnits.add(unit.id_uc));
+        this.updateAvailableUnidades();
+        this.ngAfterViewInit();
+      });
+    }
+  }
+
+  updateAvailableUnidades(): void {
+    this.dataSource.data = this.dataSource.data.filter(item => !this.allAssociatedUnits.has(item.id_uc));
+    this.setPaginatorForDataSource(this.dataSource, this.todasPaginators);
+    this.SpinnerService.hide();
   }
 
   configurePaginator(paginator: MatPaginator, dataSource: MatTableDataSource<any>): void {
-    //paginator._intl.itemsPerPageLabel = 'Mostrando de ${start} – ${end} registros';
     paginator._intl.getRangeLabel = (page: number, pageSize: number, length: number) => {
       if (length === 0 || pageSize === 0) {
-        //return `Mostrando 0 de ${length}`;
+        return `Mostrando 0 de ${length}`;
       }
       length = Math.max(length, 0);
       const startIndex = page * pageSize;
@@ -103,79 +190,59 @@ console.log(idTrayecto);
         return !this.asociadasDataSource.data.some((uc: any) => uc.nombre === data.nombre) &&
                (data.nombre.toLowerCase().includes(searchText) || data.creditos.toString().includes(searchText));
       };
-      if (this.todasPaginator) {
-        this.configurePaginator(this.todasPaginator, this.dataSource);
-      }
-      
+      this.setPaginatorForDataSource(this.dataSource, this.todasPaginators);
     });
-  }
-
-  get unidades() {
-    return this.unidadesForm.get('unidades') as FormArray;
-  }
-
-  addUnidad() {
-    const unidadFormGroup = this.fb.group({
-      nombre: ['', Validators.required],
-      descripcion: ['', Validators.required],
-      creditos: [0, Validators.required]
-    });
-    this.unidades.push(unidadFormGroup);
   }
 
   addExistingUnidad(element: any): void {
-    const unidadesArray = this.unidadesForm.get('unidades') as FormArray;
-    unidadesArray.push(this.fb.group({
-      nombre: [element.nombre],
-      descripcion: [element.descripcion],
-      creditos: [element.creditos]
-    }));
+    this.SpinnerService.show();
+    const stepIndex = this.stepper.selectedIndex;
+    const idTrayecto = this.trayectos[stepIndex].id_trayecto;
 
-    // Agregar a la tabla de unidades curriculares asociadas
-    this.asociadasDataSource.data = [...this.asociadasDataSource.data, element];
-    this.dataSource.data = this.dataSource.data.filter(item => item.nombre !== element.nombre);
+    const variables = { id_trayecto: idTrayecto, id_uc: element.id_uc };
 
-    // Configurar el paginador de unidades asociadas si aún no se ha configurado
-    if (!this.asociadasPaginator) {
-      setTimeout(() => {
-        this.configurePaginator(this.asociadasPaginator, this.asociadasDataSource);
-      });
-    } else {
-      this.asociadasDataSource.paginator = this.asociadasPaginator;
-    }
-
-    this.dataSource.paginator = this.todasPaginator;
+    this.controlEstudiosService.addUnidadToTrayecto(variables).subscribe(response => {
+      if (response.success) {
+        this.asociadasDataSource.data = [...this.asociadasDataSource.data, element];
+        this.dataSource.data = this.dataSource.data.filter(item => item.id_uc !== element.id_uc);
+        this.setPaginatorForDataSource(this.dataSource, this.todasPaginators);
+        this.setPaginatorForDataSource(this.asociadasDataSource, this.asociadasPaginators);
+        this.SpinnerService.hide();
+      } else {
+        console.error('Error al añadir la unidad curricular:', response.message);
+        this.SpinnerService.hide();
+      }
+    });
   }
+  
 
   removeUnidadAsociada(element: any): void {
-    const unidadesArray = this.unidadesForm.get('unidades') as FormArray;
-    const index = unidadesArray.controls.findIndex(control => control.value.nombre === element.nombre);
-    if (index >= 0) {
-      unidadesArray.removeAt(index);
-    }
+    this.SpinnerService.show();
+    const stepIndex = this.stepper.selectedIndex;
+    const idTrayecto = this.trayectos[stepIndex].id_trayecto;
 
-    // Remover de la tabla de unidades curriculares asociadas
-    this.asociadasDataSource.data = this.asociadasDataSource.data.filter(item => item.nombre !== element.nombre);
-    this.dataSource.data = [...this.dataSource.data, element];
+    const variables = { id_trayecto: idTrayecto, id_uc: element.id_uc };
 
-    // Configurar el paginador de unidades asociadas si aún no se ha configurado
-    if (!this.asociadasPaginator) {
-      setTimeout(() => {
-        this.configurePaginator(this.asociadasPaginator, this.asociadasDataSource);
-      });
-    } else {
-      this.asociadasDataSource.paginator = this.asociadasPaginator;
-    }
-
-    this.dataSource.paginator = this.todasPaginator;
+    this.controlEstudiosService.removeUnidadFromTrayecto(variables).subscribe(response => {
+      if (response.success) {
+        this.asociadasDataSource.data = this.asociadasDataSource.data.filter(item => item.id_uc !== element.id_uc);
+        this.dataSource.data = [...this.dataSource.data, element];
+        this.setPaginatorForDataSource(this.dataSource, this.todasPaginators);
+        this.setPaginatorForDataSource(this.asociadasDataSource, this.asociadasPaginators);
+        this.SpinnerService.hide();
+      } else {
+        console.error('Error al eliminar la unidad curricular:', response.message);
+        this.SpinnerService.hide();
+      }
+    });
   }
-  applyFilterAsociadas(filterValue: string):void {
-    //  const filterValue = (event.target as HTMLInputElement).value;
+
+
+  applyFilterAsociadas(filterValue: string): void {
     this.asociadasDataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  applyFilter(filterValue: string):void {
-    //const filterValue = (event.target as HTMLInputElement).value;
+  applyFilter(filterValue: string): void {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
@@ -197,5 +264,27 @@ console.log(idTrayecto);
 
   onSubmit() {
     console.log(this.unidadesForm.value);
+  }
+
+  addUnidadesCurriculares(): void {
+    const stepIndex = this.stepper.selectedIndex;
+    const modalOptions = {
+      class: 'modal-xl'
+    };
+
+    const bsModalRef: BsModalRef = this.modalService.show(AddUnidadCurricularModalComponent, modalOptions); 
+    // Suscribirse al evento emitido por el modal
+  const modalComponent = bsModalRef.content as AddUnidadCurricularModalComponent;
+  modalComponent.actualizacionCompleta.subscribe((completo) => {
+    if (completo) {
+      // Realizar alguna acción, como recargar los datos
+      if (stepIndex === 0) {
+        this.loadUnidadesCurriculares(this.trayectos[0]?.id_trayecto);
+      } else {
+        this.loadUnidadesCurriculares(this.trayectos[stepIndex]?.id_trayecto);
+      }
+    } 
+  });
+
   }
 }

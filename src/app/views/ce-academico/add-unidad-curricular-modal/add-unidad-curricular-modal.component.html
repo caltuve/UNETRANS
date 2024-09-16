@@ -63,21 +63,8 @@
         <!-- Checkbox para prelaciones -->
          <!-- Checkbox para consultar si es proyecto -->
         <mat-checkbox formControlName="esProyecto">¿La unidad curricular es Proyecto?</mat-checkbox>
-        <mat-checkbox formControlName="esElectiva">¿La unidad curricular es Electiva?</mat-checkbox>
-        <mat-checkbox formControlName="tienePrelaciones">¿Tiene prelaciones?</mat-checkbox>
-
-        <!-- Lista dinámica para agregar prelaciones -->
-        <div *ngIf="unidadCurricularForm.get('tienePrelaciones')?.value">
-            <div formArrayName="prelaciones">
-              <div *ngFor="let prelacion of prelacionesFormArray.controls; let i = index" [formGroupName]="i">
-                <mat-form-field>
-                  <mat-label>Prelación {{ i + 1 }}</mat-label>
-                  <input matInput formControlName="codigo_uc_prelacion">
-                </mat-form-field>
-              </div>
-            </div>
-            <button class="btn btn-primary" type="button" (click)="agregarPrelacion()">Agregar Prelación</button>
-          </div>
+        <mat-checkbox formControlName="esElectiva">¿La unidad curricular es una Electiva?</mat-checkbox>
+        <mat-checkbox formControlName="esElectivaPadre">¿La unidad curricular tiene Electiva(s)?</mat-checkbox>
     </form>
 </div>
   <div class="modal-footer">

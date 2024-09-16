@@ -6,119 +6,147 @@
             <!-- <button  cButton color="primary" size="sm" data-toggle="modal" (click)="gestionNewSeccion.show()"> <svg cIcon class="me-2" name="cilUserPlus"></svg>Nuevo aspirante</button> -->
         </c-card-header>
         <c-card-body>
-            Listado de trayectos, unidades curriculares y actas (secciones).
-            <br>
             <div *ngIf="hayResultados">
-              <div class="row">
-                <div class="col s12"><label>Seleccione un PNF:</label>
-                    <mat-form-field>
-                        <mat-label>PNF:</mat-label>
-                        <mat-select [(ngModel)]="carreraSeleccionada"
-                        (selectionChange)="onPnfSeleccionado(carreraSeleccionada)">
-                        <mat-option [value]="item.codelemento"
-                            *ngFor="let item of carreras">{{item.descripcion}}</mat-option>
-                    </mat-select>
-                    </mat-form-field>
-                </div>
-                <div class="col s12"><label>Seleccione un Periodo:</label>
-                    <mat-form-field>
-                        <mat-label>Periodo:</mat-label>
-                        <mat-select [disabled]="!carreraSeleccionada" [(ngModel)]="periodoSeleccionado"
-                            (ngModelChange)="onPeriodoSeleccionado(carreraSeleccionada,periodoSeleccionado)">
-                            <mat-option [value]="tray.periodo"
-                                *ngFor="let tray of periodos">{{tray.periodo_estatus}}</mat-option>
+                <p>Listado de trayectos, unidades curriculares y actas (secciones).</p>
+                <form [formGroup]="form">
+                  <div class="row">
+                    <div class="col s12">
+                      <mat-form-field>
+                        <mat-label>Programa</mat-label>
+                        <mat-select formControlName="carreraSeleccionada" (selectionChange)="onPnfSeleccionado($event.value)">
+                          <mat-option [value]="item.codelemento" *ngFor="let item of carreras">{{item.descripcion}}</mat-option>
                         </mat-select>
-                    </mat-form-field>
-                </div>
+                      </mat-form-field>
+                    </div>
+                    <div class="col s12">
+                      <mat-form-field>
+                        <mat-label>Periodo</mat-label>
+                        <mat-select formControlName="periodoSeleccionado"
+                          (selectionChange)="onPeriodoSeleccionado(form.get('carreraSeleccionada')?.value, $event.value)">
+                          <mat-option [value]="tray.periodo" *ngFor="let tray of periodos">{{tray.periodo_estatus}}</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                    <div class="col s12">
+                      <mat-form-field>
+                        <mat-label>Trayecto/Año</mat-label>
+                        <mat-select formControlName="trayectoSeleccionado"
+                          (selectionChange)="onTrayectoSeleccionado($event.value)">
+                          <mat-option [value]="tray" *ngFor="let tray of trayectos">{{tray.nombre_trayecto}}</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </form>
             </div>
-            <div>
-                <mat-accordion >
-                    <mat-expansion-panel *ngFor="let dato2 of trayectos" [hidden]="!mostrarTrayectos">
-                        <mat-expansion-panel-header
-                            class="expancion-header mat-expansion-panel-header ng-tns-c48-104 ng-trigger ng-trigger-expansionHeight ng-star-inserted">
-                            <mat-panel-title>
-                                {{dato2.trayecto}}
-                            </mat-panel-title>
-                        </mat-expansion-panel-header>
-                        <br>
-                        <mat-expansion-panel *ngFor="let dato3 of dato2.uni_curricular">
-                            <mat-expansion-panel-header
-                                class="expancion-header mat-expansion-panel-header ng-tns-c48-104 ng-trigger ng-trigger-expansionHeight ng-star-inserted">
-                                <mat-panel-title (click)="setSelectedCodUcurr(dato3.cod_ucurr)">
-                                    {{dato3.cod_ucurr}}-{{dato3.nombre_uc}}
-                                </mat-panel-title>
-                            </mat-expansion-panel-header>
-                            <br>
-                            <ng-container *ngIf="dato3.oferta.length > 0; else noData">
-                                <button cButton color="light" size="sm" (click)="gestionNewSeccion.show()" [attr.data-target]="'#modal-' + dato3.cod_ucurr"> <svg cIcon
-                                        class="me-2" name="cilPlaylistAdd"></svg>Abrir sección</button>
-                                <table mat-table [dataSource]="dato3.oferta" [hover]="true" [responsive]="true" cTable>
-                                    <tr>
-                                        <ng-container matColumnDef="acta">
-                                            <th mat-header-cell *matHeaderCellDef> Acta</th>
-                                            <td mat-cell *matCellDef="let row">{{row.acta}} </td>
-                                        </ng-container>
-                                        <ng-container matColumnDef="seccion">
-                                            <th mat-header-cell *matHeaderCellDef> Sección</th>
-                                            <td mat-cell *matCellDef="let row">{{row.seccion}} </td>
-                                        </ng-container>
-                                        <ng-container matColumnDef="tipo">
-                                            <th mat-header-cell *matHeaderCellDef> Tipo</th>
-                                            <td mat-cell *matCellDef="let row">{{row.tipo_secc}} </td>
-                                        </ng-container>
-                                        <ng-container matColumnDef="cupos">
-                                            <th mat-header-cell *matHeaderCellDef> Cupos</th>
-                                            <td mat-cell *matCellDef="let row">{{row.cupos_ini}} </td>
-                                        </ng-container>
-                                        <ng-container matColumnDef="cupos_dis">
-                                            <th mat-header-cell *matHeaderCellDef> Cupos disp.</th>
-                                            <td mat-cell *matCellDef="let row">{{row.cupos_disp}} </td>
-                                        </ng-container>
-                                        <ng-container matColumnDef="doc_asignado">
-                                            <th mat-header-cell *matHeaderCellDef> Docente</th>
-                                            <td mat-cell *matCellDef="let row">{{row.prof_asignado}} </td>
-                                        </ng-container>
-                                        <ng-container matColumnDef="acciones">
-                                            <th mat-header-cell *matHeaderCellDef> Acciones </th>
-                                            <td mat-cell *matCellDef="let row">
-                                                <div>
-                                                    <button cButton class="btn-primary" data-toggle="modal" (click)="openActaDetail(row.acta)"
-                                                        cTooltip="Ver acta" cTooltipPlacement="top"  [disabled]="row.cupos_ini === row.cupos_disp">
-                                                         <svg cIcon name="cilMagnifyingGlass"></svg></button>
-                                                           &nbsp;
-                                                    <button cButton class="btn-primary" data-toggle="modal" (click)="editActaDetail(row.acta)"
-                                                        cTooltip="Modificar" cTooltipPlacement="top" [disabled]="row.cupos_ini === row.cupos_disp">
-                                                        <svg cIcon name="cil-pencil"></svg></button><!-- &nbsp;
-                                                    <button cButton class="btn-primary" data-toggle="modal"
-                                                        cTooltip="Eliminar" cTooltipPlacement="top">
-                                                        <svg cIcon name="cilTrash"></svg></button> -->
-                                                </div>
-                                            </td>
-                                        </ng-container>
-                                    </tr>
-                                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                                </table>
-
-                            </ng-container>
-                            <ng-template #noData>
-                                <c-alert color="info" class="d-flex align-items-center">
-                                    <svg cIcon class="me-2" width="24" height="24" name="cilBellExclamation"></svg>
-                                    <div>No existen secciones creadas</div>
-                                </c-alert>
-                            </ng-template>
-                        </mat-expansion-panel>
-                    </mat-expansion-panel>
-                </mat-accordion>
-            </div>
-            </div>
-            <br>
             <div *ngIf="sinResultados">
               <c-alert color="danger" class="d-flex align-items-center">
                 <svg cIcon class="me-2" width="24" height="24" name="cilWarning"></svg>
                 <div>Usted no es Jefe de Departamento, si cree que es un error notifíquelo a: soportesice&#64;unetrans.edu.ve</div>
               </c-alert>
             </div>
+            <div *ngIf="sinResultadosUC">
+                <c-alert color="danger" class="d-flex align-items-center">
+                  <svg cIcon class="me-2" width="24" height="24" name="cilXCircle"></svg>
+                  <div>No hay secciones configuradas para ese periodo</div>
+                </c-alert>
+              </div>
+              <div *ngIf="!sinResultadosUC && unidadesCurriculares.length > 0">
+                <c-row>
+                    <p>Resumen estadístico del trayecto/año:</p>
+                    <c-col sm="4">
+                      <div class="border-start border-start-4 border-start-info py-1 px-3 mb-3" >
+                        <div class="text-medium-emphasis small">Total de actas: </div>
+                        <div class="fs-5 fw-semibold"> {{ estadisticas.actas }}</div>
+                      </div>
+                    </c-col>
+                    <c-col sm="4">
+                      <div class="border-start border-start-4 border-start-info py-1 px-3 mb-3" >
+                        <div class="text-medium-emphasis small"> Total de secciones: </div>
+                        <div class="fs-5 fw-semibold"> {{ estadisticas.secciones }} </div>
+                      </div>
+                    </c-col>
+                    <c-col sm="4">
+                      <div class="border-start border-start-4 border-start-info py-1 px-3 mb-3" >
+                        <div class="text-medium-emphasis small">Total de inscritos: </div>
+                        <div class="fs-5 fw-semibold">{{ estadisticas.inscritos }}</div>
+                      </div>
+                    </c-col>
+                  </c-row>
+                <table mat-table [dataSource]="unidadesCurriculares" [hover]="true" [responsive]="true" [striped]="true"
+                  align="middle" cTable class="mb-0 border" cTable>
+                  <!-- Acta Column -->
+                  <ng-container matColumnDef="acta">
+                    <th mat-header-cell *matHeaderCellDef> Acta</th>
+                    <td mat-cell *matCellDef="let row">{{row.acta}} </td>
+                  </ng-container>
+        
+                  <ng-container matColumnDef="codigo_uc">
+                    <th mat-header-cell *matHeaderCellDef> Código</th>
+                    <td mat-cell *matCellDef="let row">{{row.cod_ucurr}} </td>
+                  </ng-container>
+        
+                  <ng-container matColumnDef="nombre_uc">
+                    <th mat-header-cell *matHeaderCellDef> Nombre U.C.</th>
+                    <td mat-cell *matCellDef="let row">{{row.nombre_uc}} </td>
+                  </ng-container>
+        
+                  <!-- Sección Column -->
+                  <ng-container matColumnDef="seccion">
+                    <th mat-header-cell *matHeaderCellDef> Sección</th>
+                    <td mat-cell *matCellDef="let row">{{row.seccion}} </td>
+                  </ng-container>
+        
+                  <!-- Tipo Column -->
+                  <ng-container matColumnDef="tipo">
+                    <th mat-header-cell *matHeaderCellDef> Tipo</th>
+                    <td mat-cell *matCellDef="let row">{{row.tipo_secc}} </td>
+                  </ng-container>
+        
+                  <!-- Cupos Column -->
+                  <ng-container matColumnDef="cupos">
+                    <th mat-header-cell *matHeaderCellDef> Cupos</th>
+                    <td mat-cell *matCellDef="let row">{{row.cupos_ini}} </td>
+                  </ng-container>
+        
+                  <!-- Cupos Disponibles Column -->
+                  <ng-container matColumnDef="cupos_dis">
+                    <th mat-header-cell *matHeaderCellDef> Cupos disp.</th>
+                    <td mat-cell *matCellDef="let row">{{row.cupos_disp}} </td>
+                  </ng-container>
+        
+                  <!-- Docente Asignado Column -->
+                  <ng-container matColumnDef="doc_asignado">
+                    <th mat-header-cell *matHeaderCellDef> Docente</th>
+                    <td mat-cell *matCellDef="let row">{{row.prof_asignado}} </td>
+                  </ng-container>
+        
+                  <!-- Acciones Column -->
+                  <ng-container matColumnDef="acciones">
+                    <th mat-header-cell *matHeaderCellDef> Acciones </th>
+                    <td mat-cell *matCellDef="let row">
+                      <div class="d-flex flex-wrap">
+                        <div class="m-1">
+                          <button cButton class="btn-primary" data-toggle="modal" (click)="openActaDetail(row.acta)" cTooltip="Ver acta" cTooltipPlacement="top"
+                          [disabled]="row.cupos_ini === row.cupos_disp">
+                          <svg cIcon name="cilMagnifyingGlass"></svg>
+                        </button>
+                        </div>
+                       
+                        <div class="m-1">
+                          <button cButton class="btn-primary" data-toggle="modal" (click)="editActaDetail(row.acta)" cTooltip="Modificar" cTooltipPlacement="top"
+                          [disabled]="row.cupos_ini === row.cupos_disp">
+                          <svg cIcon name="cil-pencil"></svg>
+                        </button>
+                        </div>
+                        
+                      </div>
+                    </td>
+                  </ng-container>
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+              </div>
         </c-card-body>
     </c-card>
 </c-col>

@@ -79,6 +79,9 @@ import { DetalleEstudianteModalComponent } from './detalle-estudiante-modal/deta
 import { ModificarEstudianteModalComponent } from './modificar-estudiante-modal/modificar-estudiante-modal.component';
 import { MigracionComponent } from './migracion/migracion.component';
 import { ModalRevMigracionComponent } from './modal-rev-migracion/modal-rev-migracion.component';
+import { PostMigracionComponent } from './post-migracion/post-migracion.component';
+import { ModalPostMigracionPlanesEstudiosComponent } from './modal-post-migracion-planes-estudios/modal-post-migracion-planes-estudios.component';
+import { ConsultaDetalleAcademicoComponent } from './consulta-detalle-academico/consulta-detalle-academico.component';
 
 
 @NgModule({
@@ -96,7 +99,10 @@ import { ModalRevMigracionComponent } from './modal-rev-migracion/modal-rev-migr
     DetalleEstudianteModalComponent,
     ModificarEstudianteModalComponent,
     MigracionComponent,
-    ModalRevMigracionComponent
+    ModalRevMigracionComponent,
+    PostMigracionComponent,
+    ModalPostMigracionPlanesEstudiosComponent,
+    ConsultaDetalleAcademicoComponent
   ],
   imports: [
     CommonModule,

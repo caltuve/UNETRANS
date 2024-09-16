@@ -78,6 +78,9 @@ export class AutoregistroComponent {
   parentesco: any []= [];
   sectortrab: any []= [];
   questsec: any []= [];
+  questsec1: any[] = [];
+  questsec2: any[] = [];
+  questsec3: any[] = [];
   sede: string ='001';
   turno: string='X';
   mingresoopsu: string='001';
@@ -150,6 +153,19 @@ export class AutoregistroComponent {
       this.findParentescoEmer();
       this.findSectorTrabajo();
       this.findQuestSec();
+
+      this.fiveFormGroup.get('quest1')?.valueChanges.subscribe(value => {
+        this.filterQuestions();
+      });
+    
+      this.fiveFormGroup.get('quest2')?.valueChanges.subscribe(value => {
+        this.filterQuestions();
+      });
+    
+      this.fiveFormGroup.get('quest3')?.valueChanges.subscribe(value => {
+        this.filterQuestions();
+      });
+      
       }
 
       ngAfterViewInit() {
@@ -397,12 +413,20 @@ findSectorTrabajo(){
   );
 }
 
-findQuestSec(){
-  this.administrativoService.getQuestSec().subscribe(
-    (result: any) => {
-        this.questsec = result;
-  }
-  );
+findQuestSec() {
+  this.administrativoService.getQuestSec().subscribe((result: any) => {
+    this.questsec = result;
+    this.filterQuestions();
+  });
+}
+
+filterQuestions() {
+  const quest1 = this.fiveFormGroup.get('quest1')?.value;
+  const quest2 = this.fiveFormGroup.get('quest2')?.value;
+
+  this.questsec1 = this.questsec;
+  this.questsec2 = this.questsec.filter(q => q.descripcion !== quest1);
+  this.questsec3 = this.questsec.filter(q => q.descripcion !== quest1 && q.descripcion !== quest2);
 }
 
 crearPersona(f: any) {

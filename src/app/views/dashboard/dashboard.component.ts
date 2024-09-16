@@ -55,6 +55,8 @@ interface Curso {
 })
 export class DashboardComponent implements OnInit {
 
+  cargandoDatos: boolean = true;
+mostrarMensaje: boolean = false;
   visible: boolean = true;
 
   constructor(private chartsData: DashboardChartsData,
@@ -104,6 +106,7 @@ export class DashboardComponent implements OnInit {
       case 1: return 'cil-book';
       case 2: return 'cil-school';
       case 3: return 'cil-clock';
+      case 4: return 'cil-ban';
       default: return 'cil-bug'; // Ícono por defecto
     }
   }
@@ -180,25 +183,46 @@ export class DashboardComponent implements OnInit {
   }
 
   buscarDatosAcademicos(): void {
-    this.controlestudiosService.findDatosAcademicosDash({  cedula: this.usr.cedula }).subscribe(datos => {
-      // Aquí asignas los datos a tu modelo Estudiante
-      this.estudiante = {
-        nombre: this.usr.nombre ?? '', // O la propiedad correcta donde tengas el nombre del estudiante
-        genero_mensaje: this.usr.genero_mensaje ?? '',
-        matriculas: datos.map((dato: any) => ({
-          programa: dato.programa,
-          estatus: dato.estatus,
-          grados: dato.grados.map((grado: any) => ({
-            nombre: grado.nombre,
-            estatus: grado.estatus,
-            desc_estatus: grado.desc_estatus,
-            revision: grado.revision
-          }))
-        }))
-      };
-
+    this.controlestudiosService.findDatosAcademicosDash({ cedula: this.usr.cedula }).subscribe(datos => {
+        if (datos && datos.length > 0) {
+            // Asignar los datos a tu modelo Estudiante
+            this.estudiante = {
+                nombre: this.usr.nombre ?? '', 
+                genero_mensaje: this.usr.genero_mensaje ?? '',
+                matriculas: datos.map((dato: any) => ({
+                    programa: dato.programa,
+                    estatus: dato.estatus,
+                    grados: dato.grados.map((grado: any) => ({
+                        nombre: grado.nombre,
+                        estatus: grado.estatus,
+                        desc_estatus: grado.desc_estatus,
+                        revision: grado.revision
+                    }))
+                }))
+            };
+        } else {
+            this.estudiante = {
+                nombre: this.usr.nombre ?? '',
+                genero_mensaje: this.usr.genero_mensaje ?? '',
+                matriculas: [] 
+            };
+        }
+        this.mostrarMensaje = this.tieneRevisionesPendientes(this.estudiante.matriculas);
+        this.cargandoDatos = false;
+    }, error => {
+        console.error('Error al buscar datos académicos:', error);
+        this.estudiante = {
+            nombre: this.usr.nombre ?? '',
+            genero_mensaje: this.usr.genero_mensaje ?? '',
+            matriculas: [] 
+        };
+        this.mostrarMensaje = false; // O maneja esto como necesites en caso de error
+        this.cargandoDatos = false;
     });
-  }
+}
+
+
+  
 
   buscarDatosDocente(): void {
     const cedulaCompleta = (this.usr.nac ?? '') + (this.usr.cedula ?? '');
@@ -213,6 +237,7 @@ export class DashboardComponent implements OnInit {
         actas_cargadas: dato.actas_cargadas
       }))
     });
+    this.cargandoDatos = false;
   }
 
   // buscarDatosJefe(): void {
@@ -248,10 +273,17 @@ export class DashboardComponent implements OnInit {
   }
 
   tieneRevisionesPendientes(matriculas: any[]): boolean {
-    // Revisa cada matrícula y sus grados para verificar si alguno necesita revisión
+    console.log('Matriculas:', matriculas);
+    if (!matriculas || matriculas.length === 0) {
+        return true; // Si matriculas es null o un array vacío, hay revisiones pendientes
+    }
     return matriculas.some(matricula => 
-      matricula.grados.some((grado: { revision: number; }) => grado.revision === 0)
+        matricula.grados.some((grado: { revision: number | null; }) => grado.revision != null && grado.revision != 0)
     );
-  }
+    
+}
+
+
+  
 
 }

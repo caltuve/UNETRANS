@@ -1,0 +1,129 @@
+<div class="modal-header">
+    <h2 class="modal-title">{{ isEditMode ? 'Editar aspirante' : 'Cargar nuevo aspirante' }}: </h2>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="firstFormGroup">
+      <div class="row">
+        <div class="col l6 m12 s12">
+          <label class="label-custom">Documento de identidad:</label>
+          <div class="row">
+            <div class="col s12">
+              <mat-form-field>
+                <mat-label>Tipo de documento</mat-label>
+                <mat-select formControlName="nac">
+                  <mat-option [value]="item.codelemento" *ngFor="let item of nacs">{{ item.descripcion }}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col s12">
+              <mat-form-field appearance="fill">
+                <mat-label>Nro de documento</mat-label>
+                <input matInput type="number" formControlName="cedula" (blur)="onBlurCedula()" [min]="1" [max]="100000000" required>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="col s12">
+          <label class="label-custom">Programa Nacional de Formación</label>
+          <mat-form-field>
+            <mat-label>PNF:</mat-label>
+            <mat-select formControlName="pnf">
+              <mat-option [value]="item.codelemento" *ngFor="let item of carreras2">{{ item.descripcion }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col l12 m12 s12">
+          <label>Nombres:</label>
+          <div class="row">
+            <div class="col s12">
+              <mat-form-field>
+                <mat-label>Primer:</mat-label>
+                <input matInput formControlName="primer_nombre" style="text-transform: uppercase">
+              </mat-form-field>
+            </div>
+            <div class="col s12">
+              <mat-form-field>
+                <mat-label>Segundo:</mat-label>
+                <input matInput formControlName="segundo_nombre" style="text-transform: uppercase">
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="col l12 m12 s12">
+          <label>Apellidos:</label>
+          <div class="row">
+            <div class="col s12">
+              <mat-form-field>
+                <mat-label>Primer:</mat-label>
+                <input matInput formControlName="primer_apellido" style="text-transform: uppercase">
+              </mat-form-field>
+            </div>
+            <div class="col s12">
+              <mat-form-field>
+                <mat-label>Segundo:</mat-label>
+                <input matInput formControlName="segundo_apellido" style="text-transform: uppercase">
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </div>
+       <!-- Nuevo campo para tipo de aspirante -->
+       <div class="row">
+        <div class="col l6 m6 s12">
+          <label class="label-custom">Tipo de aspirante:</label>
+          <mat-form-field appearance="fill">
+            <mat-label>Tipo de aspirante</mat-label>
+            <mat-select formControlName="tipoAspirante" (selectionChange)="onTipoAspiranteChange($event.value)">
+              <mat-option value="Bachiller">Bachiller</mat-option>
+              <mat-option value="TSU">Técnico Superior Universitario</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      
+        <!-- Se muestra solo si el aspirante es TSU -->
+        <div *ngIf="firstFormGroup.get('tipoAspirante')?.value === 'TSU'" class="col l6 m6 s12">
+          <label class="label-custom">Subir título de T.S.U.:</label>
+          <input cFormControl  (change)="onFileSelected($event)"  sizing="sm" type="file" />
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="col s12">
+          <label>Trayecto de ingreso:</label>
+          <mat-form-field>
+            <mat-label>Trayecto:</mat-label>
+            <mat-select formControlName="trayecto">
+              <mat-option [value]="tray.codelemento" *ngFor="let tray of trayectos">{{ tray.descripcion }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col s12">
+          <label>Modalidad de ingreso:</label>
+          <mat-form-field>
+            <mat-label>Modalidad de ingreso:</mat-label>
+            <mat-select formControlName="mingreso">
+              <mat-option [value]="modin.codelemento" *ngFor="let modin of moding">{{ modin.descripcion }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col s12">
+          <label>Convenio:</label>
+          <mat-form-field>
+            <mat-label>Convenio:</mat-label>
+            <mat-select formControlName="convenio">
+              <mat-option [value]="conv.codelemento" *ngFor="let conv of convenios">{{ conv.descripcion }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="decline()">Cerrar</button>
+    <button type="button" class="btn btn-primary" [disabled]="!firstFormGroup.valid" (click)="guardar()">
+      <svg cIcon class="me-2" name="cil-cloud-upload"></svg>{{ isEditMode ? 'Actualizar aspirante' : 'Cargar aspirante' }}
+    </button>
+  </div>

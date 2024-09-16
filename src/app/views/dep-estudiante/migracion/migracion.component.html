@@ -1,0 +1,57 @@
+<c-col xs="12">
+    <c-card class="mb-4">
+        <c-card-header>
+            <strong>Detalle de estudiantes migrados</strong> &nbsp; <small>Módulo para verificar las solicitudes de migración</small>
+        </c-card-header>
+        <c-card-body>
+            <c-alert color="info">
+                <strong>Atención Jefe de Departamento:</strong><br>
+                Este módulo actualmente aún está en desarrollo, sin embargo permitirá poder llevar un control de los estudiantes que han iniciado el proceso de migración, cualquier inquietud o novedad favor escribir al correo: soportesice&#64;unetrans.edu.ve.<br>
+                Estamos trabajando arduamente para completarlo y ponerlo a su disposición lo antes posible.
+              </c-alert>
+            <div *ngIf="hayResultadosDocente">
+                <mat-form-field>
+                    <input matInput (keyup)="applyFilter($event)" placeholder="Buscar estudiante" #input>
+                  </mat-form-field>
+                <table mat-table [dataSource]="dataSource" [hover]="true" [responsive]="true" [striped]="true"
+                    align="middle" cTable class="mb-0 border" cTable>
+                    <ng-container matColumnDef="cedula">
+                        <th mat-header-cell *matHeaderCellDef  > Cédula </th>
+                        <td mat-cell *matCellDef="let row" class="vertical-align-center"> {{row.id_estudiante}}</td>
+                      </ng-container>
+                    <ng-container matColumnDef="nombre_persona">
+                      <th mat-header-cell *matHeaderCellDef  > Nombre completo </th>
+                      <td mat-cell *matCellDef="let row"> {{row.nombre_completo}}</td>
+                    </ng-container>
+                    <ng-container matColumnDef="detalle_solicitudes">
+                        <th mat-header-cell *matHeaderCellDef  > Detalle solicitudes </th>
+                        <td mat-cell *matCellDef="let row"> <span [innerHTML]="row.detalle_solicitudes"></span></td>
+                      </ng-container>
+                    <ng-container matColumnDef="gestion">
+                        <th mat-header-cell *matHeaderCellDef> Gestionar </th>
+                        <td mat-cell *matCellDef="let calendar">
+                            <div>
+                                <button cButton class="btn-primary" [disabled]="1 === 1">
+                                    <svg cIcon name="cil-pencil"></svg></button>
+                            </div>
+                        </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+  
+            </div>
+            <div *ngIf="sinResultadosDocente">
+                <c-alert color="danger" class="d-flex align-items-center">
+                    <svg cIcon class="me-2" width="24" height="24" name="cilXCircle"></svg>
+                    <div>No existen docentes asignados al departamento </div>
+                </c-alert>
+            </div>
+            <mat-paginator [hidePageSize]="true" [pageSize]="10" #paginatorProcesos></mat-paginator>
+        </c-card-body>
+        
+    </c-card>
+</c-col>
+<ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" size="default" type="ball-atom">
+    <p style="color: white" align="center">Por favor espere... <br>¡Validando información!</p>
+  </ngx-spinner>

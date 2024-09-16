@@ -9,6 +9,7 @@ import { Observable } from "rxjs";
 
 import { DetalleEstudianteModalComponent } from '../detalle-estudiante-modal/detalle-estudiante-modal.component';
 import { ModificarEstudianteModalComponent } from '../modificar-estudiante-modal/modificar-estudiante-modal.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-consultar-datos',
@@ -16,7 +17,7 @@ import { ModificarEstudianteModalComponent } from '../modificar-estudiante-modal
   styleUrls: ['./consultar-datos.component.scss']
 })
 export class ConsultarDatosComponent {
-  displayedColumns: string[] = ['estatus','carnet', 'ult_per_ins', 'cohorte', 'annio', 'cedula','nombre_persona','pnf','gestion'];
+  displayedColumns: string[] = ['estatus', 'cedula','nombre_persona','gestion'];
   dataSource = new MatTableDataSource();
   hayResultados: boolean = false;
   sinResultados: boolean = false;
@@ -35,7 +36,8 @@ export class ConsultarDatosComponent {
   constructor(public controlestudiosService: ControlEstudiosService,
               private SpinnerService: NgxSpinnerService,
               private notifyService : NotificacionService,
-              private modalService: BsModalService
+              private modalService: BsModalService,
+              private router: Router
 ) {}
 
 
@@ -179,5 +181,9 @@ findInscripcion(carnet: string): Observable<any> {
         });
       };
 
+      irADetalleAcademico(idPersona: number): void {
+        console.log(idPersona);
+        this.router.navigate(['/ce-nuevoingreso/consultar-datos/consulta-detalle-academico/', idPersona]);
+      }
 
 }

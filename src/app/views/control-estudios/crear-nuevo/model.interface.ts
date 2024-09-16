@@ -1,3 +1,7 @@
+export interface PaisI {
+    codpais: string;
+    nombpais: string;
+}
 export interface EstadoI {
     codestado: string;
     nombestado: string;

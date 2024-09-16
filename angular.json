@@ -40,9 +40,7 @@
               "node_modules/ngx-spinner/animations/ball-atom.css",
               "node_modules/ngx-toastr/toastr.css"
             ],
-            "scripts": [
-              "node_modules/bootstrap/dist/js/bootstrap.min.js"
-            ],
+            "scripts": [],
             "allowedCommonJsDependencies": [
               "chart.js",
               "@coreui/chartjs/dist/js/coreui-chartjs.js"
@@ -85,10 +83,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "coreui-free-angular-admin-template:build:production"
+              "browserTarget": "coreui-free-angular-admin-template:build:production"
             },
             "development": {
-              "buildTarget": "coreui-free-angular-admin-template:build:development"
+              "browserTarget": "coreui-free-angular-admin-template:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -96,7 +94,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "coreui-free-angular-admin-template:build"
+            "browserTarget": "coreui-free-angular-admin-template:build"
           }
         },
         "test": {
@@ -115,9 +113,7 @@
               "@angular/material/prebuilt-themes/indigo-pink.css",
               "src/scss/styles.scss"
             ],
-            "scripts": [
-              "node_modules/bootstrap/dist/js/bootstrap.min.js"
-            ]
+            "scripts": []
           }
         }
       }
