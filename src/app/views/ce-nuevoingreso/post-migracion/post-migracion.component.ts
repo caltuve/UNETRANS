@@ -564,18 +564,18 @@ export class PostMigracionComponent implements OnInit {
   
             this.SpinnerService.hide();
             this.notifyService.showSuccess('Calificaciones procesadas');
-  
+            this.reiniciarAcordeon();
           } else if (response.error) {
   
             this.SpinnerService.hide();
             this.notifyService.showError(`Error al procesar las calificaciones: ${response.error}`);
-  
+            this.reiniciarAcordeon();
           }
         },
         error: (error) => {
           this.notifyService.showError('Error al enviar los datos al servidor.');
           this.SpinnerService.hide();
-  
+          this.reiniciarAcordeon();
         }
       });
     }

@@ -1,21 +1,41 @@
 <div class="modal-header">
-    <h2 class="modal-title">Actualización de datos del proceso: {{calendar.proceso}}</h2>
+  <h2 class="modal-title">Actualización de datos del proceso: {{ calendar.proceso }}</h2>
+</div>
+
+<div class="modal-body">
+  <!-- Si hay solicitudes pendientes, mostrar advertencia -->
+  <div *ngIf="solicitudesEncontradas" class="alert alert-warning">
+    <h4>⚠️ Solicitudes Pendientes</h4>
+    <p>
+      Hay {{ solicitudesPendientes.length }} programas con solicitudes pendientes que requieren revisión:
+    </p>
+    <ul>
+      <li *ngFor="let solicitud of solicitudesPendientes">
+        Programa: {{ solicitud.nombre_programa }} ({{ solicitud.cantidad }} pendientes) - Jefe: {{ solicitud.jefe }}
+      </li>
+    </ul>
+    <p>
+      No se puede aperturar la inscripción de convenio hasta que estas solicitudes sean revisadas.
+    </p>
   </div>
-  <div class="modal-body">
+
+  <!-- Mostrar campos solo si no hay solicitudes pendientes -->
+  <div *ngIf="!solicitudesEncontradas">
     <div class="row">
-        <div class="col s12">
-          <mat-form-field>
-            <mat-label>Periodicidad</mat-label>
-            <input matInput [value]="calendar.periodicidad" disabled>
-          </mat-form-field>
-        </div>
-        <div class="col s12">
-          <mat-form-field>
-            <mat-label>Periodo</mat-label>
-            <input matInput [value]="calendar.periodo" disabled>
-          </mat-form-field>
-        </div>
+      <div class="col s12">
+        <mat-form-field>
+          <mat-label>Periodicidad</mat-label>
+          <input matInput [value]="calendar.periodicidad" disabled>
+        </mat-form-field>
       </div>
+      <div class="col s12">
+        <mat-form-field>
+          <mat-label>Periodo</mat-label>
+          <input matInput [value]="calendar.periodo" disabled>
+        </mat-form-field>
+      </div>
+    </div>
+    
     <!-- Campos para Actualizar Fechas -->
     <div class="row">
       <div class="col s12">
@@ -36,7 +56,9 @@
       </div>
     </div>
   </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" (click)="bsModalRef.hide()">Salir</button>
-    <button type="button" class="btn btn-primary" (click)="guardarCambios()">Guardar cambios</button>
-  </div>
+</div>
+
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" (click)="bsModalRef.hide()">Salir</button>
+  <button type="button" class="btn btn-primary" (click)="guardarCambios()" [disabled]="!guardarHabilitado">Guardar cambios</button>
+</div>

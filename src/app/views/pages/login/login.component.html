@@ -23,24 +23,48 @@
                 <img src="assets/img/brand/unetrans_sin_fondo_lnegras.png" alt="logo" width="250" height="85" >
                 <p class="login-card-description">Sistema Integral de Control de Estudios - SICE</p>
               </div>
-             <form [formGroup]="loginFormGroup" (ngSubmit)="login() ">
-                  <div class="form-group">
-                    <div>
-                      <mat-form-field appearance="fill">
-                        <mat-label>Usuario</mat-label>
-                        <input formControlName="usrsice" matInput [(ngModel)]="usrsice" placeholder="V12345678" autocomplete="cualquier-cosa" name="usrsice" required>
-                      </mat-form-field>
-                      </div>
-                      <div>
-                        <mat-form-field appearance="fill">
-                          <mat-label>Contraseña</mat-label>
-                          <input formControlName="password" matInput type="password" name="password" id="password" [(ngModel)]="password" autocomplete="cualquier-cosa" name="password" required>
-                          
-                        </mat-form-field>
-                        </div>
-                        <button type="submit" [disabled]="!loginFormGroup.valid" class="btn btn-block login-btn mb-4">Iniciar sesión</button>
+              <form [formGroup]="loginFormGroup" (ngSubmit)="login()">
+                <div class="form-group">
+                  <div>
+                    <mat-form-field appearance="fill">
+                      <mat-label>Usuario</mat-label>
+                      <input 
+                        formControlName="usrsice" 
+                        matInput 
+                        [(ngModel)]="usrsice" 
+                        (input)="formatUserInput($event)"
+                        placeholder="V12345678" 
+                        autocomplete="off" 
+                        required>
+                        <mat-error *ngIf="loginFormGroup.get('usrsice')?.hasError('required')">
+                          El usuario es obligatorio.
+                        </mat-error>
+                        <mat-error *ngIf="loginFormGroup.get('usrsice')?.hasError('pattern')">
+                          Formato incorrecto. Ejemplo: V12345678.
+                        </mat-error>
+                    </mat-form-field>
                   </div>
-                </form>
+                  <div>
+                    <mat-form-field appearance="fill">
+                      <mat-label>Contraseña</mat-label>
+                      <input
+                      [(ngModel)]="password" 
+                        formControlName="password"
+                        matInput
+                        type="password"
+                        autocomplete="off"
+                        required
+                      >
+                      <!-- Mensaje de error -->
+                      <mat-error *ngIf="loginFormGroup.get('password')?.hasError('required')">
+                        La contraseña es obligatoria.
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  <button type="submit" [disabled]="!loginFormGroup.valid" class="btn btn-block login-btn mb-4">Iniciar sesión</button>
+                </div>
+              </form>
+              
                 <a routerLink="/forgot-password" class="login-card-footer-text">¿Olvidaste tu contraseña? 🔑</a>
                 <p class="login-card-footer-text">Para poder ingresar al SICE primero debes crear tu cuenta.</p>
                 <input name="login" id="login" class="btn btn-block login-btn mb-4" type="button" data-toggle="modal" (click)="myModal.show()" value="Crear cuenta">
@@ -53,20 +77,20 @@
                           <span aria-hidden="true">&times;</span>
                         </button>
                       </div>
-                      <div class="modal-body" >
-                        <input name="nuevoingreso" id="nuevoingreso" class="btn btn-block login-btn mb-4" type="button"  routerLink="/login-aspirante" value="Nuevo ingreso o autopostulación">
-                        <input name="estudiantes" id="estudiantes" class="btn btn-block login-btn mb-4" type="button"  routerLink="/login-migraestudiante" value="Estudiantes (Activos, Inactivos, Egresados)">
-                        <input name="docentes" id="docentes" class="btn btn-block login-btn mb-4" type="button"  routerLink="/login-docente" value="Docentes">
-                        <input name="administrativo" id="administrativo" class="btn btn-block login-btn mb-4" type="button"  routerLink="/login-administrativo" value="Administrativo UNETRANS / Entes del transporte">
+                      <div class="modal-body">
+                        <input name="nuevoingreso" id="nuevoingreso" class="btn btn-block login-btn mb-4" type="button" routerLink="/login-aspirante" value="Nuevo ingreso o autopostulación">
+                        <input name="estudiantes" id="estudiantes" class="btn btn-block login-btn mb-4" type="button" routerLink="/login-migraestudiante" value="Estudiantes (Activos, Inactivos, Egresados)">
+                        <input name="docentes" id="docentes" class="btn btn-block login-btn mb-4" type="button" routerLink="/login-docente" value="Docentes">
+                        <input name="administrativo" id="administrativo" class="btn btn-block login-btn mb-4" type="button" routerLink="/login-administrativo" value="Administrativo UNETRANS / Entes del transporte">
                       </div>
                       <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" (click)="myModal.hide()">Cerrar</button>
                       </div>
                     </div><!-- /.modal-content -->
                   </div><!-- /.modal-dialog -->
-                </div><!-- /.modal -->
+                </div><!-- /.modal -->                
                 <p class="login-card-footer-text"><svg cIcon class="me-2"
-                  name="cilFork"></svg>Versión: 1.0.36</p>
+                  name="cilFork"></svg>Versión: 1.0.37</p>
               </div>
           </div>
         </div>

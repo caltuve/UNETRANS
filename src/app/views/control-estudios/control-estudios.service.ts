@@ -150,6 +150,10 @@ getAspirantesConvenioEnte(id_ente: any): Observable<any>{
   return this.http.get(`${this.url}resumen_convenio_ente.php?id_ente=${id_ente}`);
 }
 
+getAspirantesConvenioEnteEscuela(id_jefe: any): Observable<any>{
+  return this.http.get(`${this.url}resumen_convenio_ente_escuela.php?id_jefe=${id_jefe}`);
+}
+
 getAutopostulado() {
   return this.http.get(`${this.url}resumen_autopostulados_dace.php`);
 }
@@ -167,6 +171,10 @@ getReincorporacion() {
 
   getProcesosCalendar() {
     return this.http.get(`${this.url}calendar_procesos.php`);
+  }
+
+  verifyTSUPendientes(): Observable<any>{
+    return this.http.get(`${this.url}verify_entes_tsupendiente.php`);
   }
 
   getDocentesDep(usrsice: any): Observable<any>{
@@ -240,6 +248,10 @@ getReincorporacion() {
 
   createPersonConvenio(datospersona : any): Observable<any>{
     return this.http.post(`${this.url}crearpersonaconvenio.php`, JSON.stringify(datospersona))
+  }
+
+  updatePersonConvenio(datospersona : any): Observable<any>{
+    return this.http.post(`${this.url}updatepersonaconvenio.php`, JSON.stringify(datospersona))
   }
 
   deletePersonConvenio(datospersona : any): Observable<any>{
@@ -580,6 +592,10 @@ findDatosAcademicosDash(dato: any): Observable<any> {
 
 findDatosDocenteDash(dato: any): Observable<any> {
   return this.http.post(`${this.url}finddatosdocentedash.php`, JSON.stringify(dato));
+}
+
+findDatosEnteDash(): Observable<any> {
+  return this.http.get(`${this.url}finddatosentedash.php`);
 }
 
 cargaProcesoCalificaciones(dato: any): Observable<any> {

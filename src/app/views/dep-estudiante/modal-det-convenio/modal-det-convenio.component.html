@@ -1,0 +1,57 @@
+<div class="modal-header">
+    <h2 class="modal-title">Detalle del aspirante</h2>
+    <button type="button" class="btn-close" aria-label="Close" (click)="decline()"></button>
+  </div>
+  
+  <div class="modal-body">
+    <div class="row">
+      <!-- Columna izquierda con los datos del aspirante -->
+      <div class="col-md-4 border-end pe-4">
+        <h4 class="mb-3">Datos del Aspirante</h4>
+        <form [formGroup]="trayectoForm">
+          <div class="mb-3">
+            <p><strong>Identificación:</strong> {{ solicitud.id_estudiante }}</p>
+          </div>
+          <div class="mb-3">
+            <p><strong>Nombre Completo:</strong> {{ solicitud.nombre_completo }}</p>
+          </div>
+          <div class="mb-3">
+            <p><strong>Programa:</strong> {{ solicitud.nombre_programa }}</p>
+          </div>
+          <div class="mb-3">
+            <p><strong>Convenio:</strong> {{ solicitud.convenio }}</p>
+          </div>
+  
+          <!-- Campo de selección para el trayecto -->
+          <div class="mb-3">
+            <label for="trayecto" class="form-label"><strong>Trayecto:</strong></label>
+            <mat-form-field appearance="fill">
+              <mat-label>Seleccionar trayecto</mat-label>
+              <mat-select formControlName="trayecto">
+                <mat-option value="0">Trayecto Inicial</mat-option>
+                <mat-option value="3">Trayecto 3 (o transición)</mat-option>
+                <mat-option value="3">Trayecto 4 (o transición solo para Mecánica o Electricidad)</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </form>
+      </div>
+  
+      <!-- Columna derecha con el PDF en un iframe -->
+      <div class="col-md-8">
+        <h4>Título TSU</h4>
+        <div *ngIf="pdfUrl">
+          <iframe [src]="pdfUrl" type="application/pdf" width="100%" height="500px"></iframe>
+        </div>
+        <div *ngIf="!pdfUrl">
+          <p>No se ha subido el título PDF.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="decline()">Cerrar</button>
+    <button type="button" class="btn btn-primary" [disabled]="trayectoForm.invalid" (click)="guardar()">Guardar cambios</button>
+  </div>
+  

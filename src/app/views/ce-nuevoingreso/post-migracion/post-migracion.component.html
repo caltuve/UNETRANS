@@ -240,7 +240,13 @@
                                         </c-alert>
                                       </div>
                                         <div *ngIf="unidadesCurriculares.length">
-                                            <table mat-table [dataSource]="unidadesCurriculares">
+                                            <table mat-table [dataSource]="unidadesCurriculares"
+                                            [hover]="true"
+                                            [responsive]="true"
+                                            [striped]="true"
+                                            align="middle"
+                                            cTable
+                                            class="mb-0 border" cTable>
                                                 <!-- Columnas del mat-table -->
                                                 <ng-container matColumnDef="noCursado">
                                                   <th mat-header-cell *matHeaderCellDef> No Cursado </th>

@@ -68,6 +68,8 @@ import {MatRadioModule} from '@angular/material/radio';
 import { InscripcionComponent } from './inscripcion/inscripcion.component';
 import { ModalInscripcionComponent } from './modal-inscripcion/modal-inscripcion.component';
 import { MigracionComponent } from './migracion/migracion.component';
+import { ConveniosComponent } from './convenios/convenios.component';
+import { ModalDetConvenioComponent } from './modal-det-convenio/modal-det-convenio.component';
 
 
 
@@ -76,7 +78,9 @@ import { MigracionComponent } from './migracion/migracion.component';
     ConsultarDatosComponent,
     InscripcionComponent,
     ModalInscripcionComponent,
-    MigracionComponent
+    MigracionComponent,
+    ConveniosComponent,
+    ModalDetConvenioComponent
   ],
   imports: [
     CommonModule,

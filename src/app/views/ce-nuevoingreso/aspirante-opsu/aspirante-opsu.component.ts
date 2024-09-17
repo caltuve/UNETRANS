@@ -12,9 +12,12 @@ import { NgxSpinnerService } from "ngx-spinner";
 })
 export class AspiranteOpsuComponent implements OnInit {
   
-  arrayDatos : any []= [];
+  arrayDatos: any = {};
   dataSource = new MatTableDataSource([]);
-  displayedColumns: string[] = ['id_estudiante','nombre_completo','confirma'];
+  procesadas = new MatTableDataSource();
+  displayedColumns: string[] = ['id_estudiante','nombre_completo','convenio','confirma'];
+  displayedColumnsProcesadas: string[] = ['estatus', 'id_estudiante', 'nombre_completo','pnf','gestion'];
+
 
   dato: any []= [];
   nacs: any []= [];
@@ -22,8 +25,11 @@ export class AspiranteOpsuComponent implements OnInit {
   carreras: any []= [];
   aspirantes: any []= [];
 
+  hayResultadosRecibidas: boolean = false;
+  sinResultadosRecibidas: boolean = false;
+
   
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild('paginatorProcesadas') paginatorProcesadas: MatPaginator;
 
   constructor(private _formBuilder: FormBuilder,
     public controlestudiosService: ControlEstudiosService,
@@ -34,6 +40,28 @@ export class AspiranteOpsuComponent implements OnInit {
 
   ngOnInit() { 
     this.findAspirantes();
+}
+
+ngAfterViewInit() {
+      
+  //this.SpinnerService.show();
+this.paginatorProcesadas._intl.itemsPerPageLabel = 'Mostrando de ${start} – ${end} registros';
+this.paginatorProcesadas._intl.getRangeLabel = (page: number, pageSize: number, length: number) => {
+  if (length === 0 || pageSize === 0) {
+    return `Mostrando 0 de ${length}`;
+  }
+  length = Math.max(length, 0);
+  const startIndex = page * pageSize;
+  const endIndex = startIndex < length ? Math.min(startIndex + pageSize, length) : startIndex + pageSize;
+  return `Mostrando ${startIndex + 1} – ${endIndex} de ${length} registro(s)`;
+};
+this.procesadas.paginator = this.paginatorProcesadas;
+//this.loadAllData();
+// this.findSolicitudesMigracion();
+// this.findModIngreso();
+// this.findTrayectos();
+// this.findResolucion();  
+
 }
 
 findNac(){
@@ -60,37 +88,47 @@ findCarreras(){
   );
 }
 
-findAspirantes(){
+findAspirantes() {
   this.SpinnerService.show();
   this.controlestudiosService.getAspirantes().subscribe(
     (result: any) => {
+      // Reiniciar las banderas de resultados
+      this.hayResultadosRecibidas = false;
+      this.sinResultadosRecibidas = false;
 
-      this.arrayDatos = result;
-      this.carreras = result[0].carreras;
+      // Verificar si hay estudiantes en el resultado
+      if (result.estudiantes && result.estudiantes.length > 0) {
+        // Hay estudiantes, asignar datos
+        this.arrayDatos = result.estadistica;
+        this.procesadas.data = result.estudiantes;
+
+        // Mostrar los resultados
+        this.hayResultadosRecibidas = true;
+        this.sinResultadosRecibidas = false;
+      } else {
+        // No hay estudiantes, mostrar sin resultados
+        this.sinResultadosRecibidas = true;
+        this.hayResultadosRecibidas = false;
+      }
+
       this.SpinnerService.hide();
-  }
+    },
+    (error: any) => {
+      // En caso de error, ocultar spinner y manejar error si es necesario
+      this.SpinnerService.hide();
+      console.error('Error al cargar los datos:', error);
+    }
   );
- 
 }
 
-applyFilter(event: Event) {
+applyFilterProcesadas(event: Event) {
   const filterValue = (event.target as HTMLInputElement).value;
-  this.dataSource.filter = filterValue.trim().toLowerCase();
-}
+  this.procesadas.filter = filterValue.trim().toLowerCase();
 
-// this.cargasdbServicio.RecuperarUserDiscoverer().subscribe(
-//   (result: any) => {
-//     if (result['resultado']=='NOK'){
-//       this.SpinnerService.hide();
-//       this.notifyService.showError('ALERTA: Error al recuperar información');
-//     }
-//     else{
-//       this.dataSource.data = result;
-//       this.SpinnerService.hide();
-//       this.notifyService.showSuccess('¡Información recuperada exitosamente!');
-//     }   
-// }
-// );
+  if (this.procesadas.paginator) {
+    this.procesadas.paginator.firstPage();
+  }
+}
 
 
 FormGroupAddAspiranteOpsu = this._formBuilder.group({

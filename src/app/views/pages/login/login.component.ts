@@ -62,6 +62,12 @@ export class LoginComponent {
     )
   }
 
+  formatUserInput(event: any) {
+    const input = event.target as HTMLInputElement;
+    input.value = input.value.toUpperCase();
+    this.loginFormGroup.get('usrsice')?.setValue(input.value);
+  }
+
 
   loginFormGroup = this._formBuilder.group({
     usrsice: ['', [Validators.required, Validators.pattern('^[VEP]{1}[0-9]{6,8}$')]],

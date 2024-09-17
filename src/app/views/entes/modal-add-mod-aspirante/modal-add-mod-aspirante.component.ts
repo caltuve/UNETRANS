@@ -209,7 +209,7 @@ onTipoAspiranteChange(tipoAspirante: string) {
                   });
                 } else {
                   // Manejo genérico de errores
-                  this.notifyService.showError('Ocurrió un error al consultar la API externa.');
+                  this.notifyService.showError('Ocurrió un error al consultar la API externa, ingrese los nombres y apellidos de forma manual');
                 }
                 this.SpinnerService.hide();
                 return of(null); // Finalizar el flujo de errores
@@ -329,24 +329,28 @@ onTipoAspiranteChange(tipoAspirante: string) {
   
     this.controlestudiosService.getEmpConvenio().subscribe(
       (result: any) => {
-        // Filtrar los convenios que coincidan con el id_ente
-        const conveniosFiltrados = result.filter((convenio: { codelemento: string }) => convenio.codelemento === this.usr.id_ente);
+        let conveniosFiltrados;
   
-        // Asignar los convenios filtrados a la variable convenios
-        this.convenios = conveniosFiltrados;
-  
-        // Si se encuentra un convenio, seleccionarlo automáticamente
-        if (this.convenios.length > 0) {
-          const convenioSeleccionado = this.convenios[0].codelemento;
-          
-          // Autoseleccionar el convenio en el formulario
-          this.firstFormGroup.get('convenio')?.setValue(convenioSeleccionado);
-          
-          // Deshabilitar el campo para que no sea editable, pero su valor sea válido
-          //this.firstFormGroup.get('convenio')?.disable();
+        // Si id_ente no existe o es null, mostrar todos los convenios sin seleccionar ninguno
+        if (!this.usr.id_ente) {
+          conveniosFiltrados = result; // Mostrar todos los convenios
+          this.firstFormGroup.get('convenio')?.reset(); // No autoseleccionar ningún valor
         } else {
-          console.log('No se encontró ningún convenio para el id_ente:', this.usr.id_ente);
+          // Filtrar los convenios que coincidan con el id_ente
+          conveniosFiltrados = result.filter((convenio: { codelemento: string }) => convenio.codelemento === this.usr.id_ente);
+  
+          // Si hay convenios filtrados, autoseleccionar el primero
+          if (conveniosFiltrados.length > 0) {
+            const convenioSeleccionado = conveniosFiltrados[0].codelemento;
+            // Autoseleccionar el convenio en el formulario
+            this.firstFormGroup.get('convenio')?.setValue(convenioSeleccionado);
+          } else {
+            console.log('No se encontró ningún convenio para el id_ente:', this.usr.id_ente);
+          }
         }
+  
+        // Asignar los convenios filtrados (o todos) a la variable convenios
+        this.convenios = conveniosFiltrados;
   
         this.SpinnerService.hide();
       },
@@ -356,6 +360,8 @@ onTipoAspiranteChange(tipoAspirante: string) {
       }
     );
   }
+  
+  
   
 
   guardar() {

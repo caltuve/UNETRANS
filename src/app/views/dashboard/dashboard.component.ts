@@ -3,6 +3,7 @@ import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { ControlEstudiosService } from '../control-estudios/control-estudios.service';
 import { DashboardChartsData, IChartProps } from './dashboard-charts-data';
 import { NgxSpinnerService } from "ngx-spinner";
+import { Router } from '@angular/router'; // Importar el router para redirigir
 
 import { ChartjsComponent } from '@coreui/angular-chartjs';
 
@@ -18,6 +19,7 @@ interface Usuario {
      saludo: null,
      nombre: null,
      genero_mensaje: null,
+     ente: null,
   rol: string[];
 }
 
@@ -61,7 +63,9 @@ mostrarMensaje: boolean = false;
 
   constructor(private chartsData: DashboardChartsData,
     private SpinnerService: NgxSpinnerService,
-    public controlestudiosService: ControlEstudiosService,) {
+    public controlestudiosService: ControlEstudiosService,
+    private router: Router
+    ) {
       setTimeout(() => {
         this.visible = false;
       }, 12000);
@@ -85,10 +89,15 @@ mostrarMensaje: boolean = false;
      saludo: null,
      nombre: null,
      genero_mensaje: null,
+     ente: null,
     rol: []
   };
+  
+  persona_ente: { nombre: string, genero_mensaje: string, ente: string } = { nombre: '', genero_mensaje: '', ente: '' };
+
 
   cursosDocente: Curso[] = [];
+  procesos: any[] = [];
 
   getIconName(estatus: string): string {
     switch (estatus) {
@@ -140,9 +149,9 @@ mostrarMensaje: boolean = false;
         case '006':
           this.buscarDatosDocente();
           break;
-        // case '005':
-        //   this.buscarDatosDocente();
-        //   break;
+         case '008':
+           this.buscarDatosEncargadoEnte();
+           break;
         // Añade más casos según sea necesario
       }
     });
@@ -239,6 +248,53 @@ mostrarMensaje: boolean = false;
     });
     this.cargandoDatos = false;
   }
+
+  buscarDatosEncargadoEnte(): void {
+    const cedulaCompleta = (this.usr.nac ?? '') + (this.usr.cedula ?? '');
+  
+    this.controlestudiosService.findDatosEnteDash().subscribe(datos => {
+      // Asignación de los datos traídos por el PHP
+      this.procesos = datos.map((dato: any) => ({
+        periodo: dato.periodo,
+        proceso: dato.proceso,
+        fec_ini: dato.fec_ini,
+        fec_fin: dato.fec_fin,
+        fec_ini_view: dato.fec_ini_view,
+        fec_fin_view: dato.fec_fin_view,
+        mod_ingreso_proceso: dato.mod_ingreso_proceso,
+        periodicidad: dato.periodicidad,
+        estatus: dato.estatus,
+        id: dato.id,
+      }));
+
+      this.persona_ente = {
+        nombre: this.usr.nombre ?? '',
+        genero_mensaje: this.usr.genero_mensaje ?? '',
+        ente: this.usr.ente ?? ''
+      };
+  
+      this.cargandoDatos = false;
+    }, error => {
+      console.error('Error al cargar datos del ente:', error);
+      this.cargandoDatos = false;
+    });
+  }
+  
+
+  procesoHabilitado(fec_ini: string, fec_fin: string): boolean {
+    const fechaActual = new Date();
+    const fechaInicio = new Date(fec_ini);
+    const fechaFin = new Date(fec_fin);
+  
+    // Verificar si la fecha actual está dentro del rango del proceso
+    return fechaActual >= fechaInicio && fechaActual <= fechaFin;
+  }
+
+  irACargaConvenio(): void {
+    this.router.navigate(['/entes/convenio']);
+  }
+  
+
 
   // buscarDatosJefe(): void {
   //   this.controlestudiosService.obtenerDatos().subscribe(datos => {

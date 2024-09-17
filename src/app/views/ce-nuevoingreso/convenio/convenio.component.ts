@@ -6,6 +6,9 @@ import {MatPaginator} from '@angular/material/paginator';
 import { NgxSpinnerService } from "ngx-spinner";
 import { NotificacionService } from './../../../notificacion.service'
 import {ModalDirective} from 'ngx-bootstrap/modal';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+
+import { ModalAddModAspiranteComponent } from '../../entes/modal-add-mod-aspirante/modal-add-mod-aspirante.component'; 
 
 @Component({
   selector: 'app-convenio',
@@ -14,9 +17,11 @@ import {ModalDirective} from 'ngx-bootstrap/modal';
 })
 export class ConvenioComponent implements OnInit{
 
-  arrayDatos : any []= [];
+  arrayDatos: any = {};  // Cambiado a objeto
   dataSource = new MatTableDataSource([]);
+  procesadas = new MatTableDataSource();
   displayedColumns: string[] = ['id_estudiante','nombre_completo','convenio','confirma'];
+  displayedColumnsProcesadas: string[] = ['estatus', 'id_estudiante', 'nombre_completo','ente','pnf','fecha_carga','gestion'];
 
   minDate1!: Date;
   maxDate1!: Date;
@@ -36,8 +41,10 @@ export class ConvenioComponent implements OnInit{
   hayResultadosRecibidas: boolean = false;
   sinResultadosRecibidas: boolean = false;
 
+  modalRef: BsModalRef;
+
   @ViewChild('gestionNewAspConvenio') public gestionNewAspConvenio: ModalDirective;
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild('paginatorProcesadas') paginatorProcesadas: MatPaginator;
 
   nac!: string;
   cedula!: number;
@@ -54,7 +61,9 @@ export class ConvenioComponent implements OnInit{
   constructor(private _formBuilder: FormBuilder,
     public controlestudiosService: ControlEstudiosService,
     private notifyService : NotificacionService,
-    private SpinnerService: NgxSpinnerService,) {
+    private SpinnerService: NgxSpinnerService,
+    private modalService: BsModalService,
+    ) {
 
       const currentYear = new Date().getFullYear();
       const currentMonth = new Date().getMonth();
@@ -72,6 +81,28 @@ export class ConvenioComponent implements OnInit{
     this.findModIngreso();
     this.findTrayectos();
     this.findEmpConvenio();
+}
+
+ngAfterViewInit() {
+      
+  //this.SpinnerService.show();
+this.paginatorProcesadas._intl.itemsPerPageLabel = 'Mostrando de ${start} – ${end} registros';
+this.paginatorProcesadas._intl.getRangeLabel = (page: number, pageSize: number, length: number) => {
+  if (length === 0 || pageSize === 0) {
+    return `Mostrando 0 de ${length}`;
+  }
+  length = Math.max(length, 0);
+  const startIndex = page * pageSize;
+  const endIndex = startIndex < length ? Math.min(startIndex + pageSize, length) : startIndex + pageSize;
+  return `Mostrando ${startIndex + 1} – ${endIndex} de ${length} registro(s)`;
+};
+this.procesadas.paginator = this.paginatorProcesadas;
+//this.loadAllData();
+// this.findSolicitudesMigracion();
+// this.findModIngreso();
+// this.findTrayectos();
+// this.findResolucion();  
+
 }
 
 findNac(){
@@ -98,29 +129,47 @@ findCarreras(){
   );
 }
 
-findAspirantesConvenio(){
+
+findAspirantesConvenio() {
   this.SpinnerService.show();
   this.controlestudiosService.getAspirantesConvenio().subscribe(
     (result: any) => {
+      // Reiniciar las banderas de resultados
       this.hayResultadosRecibidas = false;
-      this.sinResultadosRecibidas= false;
-      switch (result['estatus']) {
-        case 'SIN CONVENIO':
+      this.sinResultadosRecibidas = false;
+
+      if (result['estatus'] === 'SIN CONVENIO') {
+        // No hay convenio, mostrar sin resultados
+        this.sinResultadosRecibidas = true;
+        this.hayResultadosRecibidas = false;
+        this.SpinnerService.hide();
+      } else {
+        // Verificar si hay estudiantes en el resultado
+        if (result.estudiantes && result.estudiantes.length > 0) {
+          // Hay estudiantes, asignar datos
+          this.arrayDatos = result.estadistica;
+          this.procesadas.data = result.estudiantes;
+
+          // Mostrar los resultados
+          this.hayResultadosRecibidas = true;
+          this.sinResultadosRecibidas = false;
+        } else {
+          // No hay estudiantes, mostrar sin resultados
           this.sinResultadosRecibidas = true;
           this.hayResultadosRecibidas = false;
-          this.SpinnerService.hide();
-          break;
-        default:
-          this.arrayDatos = result;
-          this.carreras = result[0].carreras;
-          this.hayResultadosRecibidas = this.carreras.length > 0;
-          this.SpinnerService.hide();
-          break;
+        }
+
+        this.SpinnerService.hide();
       }
-  }
+    },
+    (error: any) => {
+      // En caso de error, ocultar spinner y manejar error si es necesario
+      this.SpinnerService.hide();
+      console.error('Error al cargar los datos:', error);
+    }
   );
- 
 }
+
 
 findModIngreso(){
   this.controlestudiosService.getModIngreso().subscribe(
@@ -150,6 +199,86 @@ findEmpConvenio(){
 applyFilter(event: Event) {
   const filterValue = (event.target as HTMLInputElement).value;
   this.dataSource.filter = filterValue.trim().toLowerCase();
+}
+
+
+applyFilterProcesadas(event: Event) {
+  const filterValue = (event.target as HTMLInputElement).value;
+  this.procesadas.filter = filterValue.trim().toLowerCase();
+
+  if (this.procesadas.paginator) {
+    this.procesadas.paginator.firstPage();
+  }
+}
+
+// Método para abrir el modal para crear un nuevo aspirante
+abrirModalNuevoAspirante() {
+  const modalRef: BsModalRef = this.modalService.show(ModalAddModAspiranteComponent, {
+    ignoreBackdropClick: true,
+    keyboard: false,
+    class: 'modal-dialog-centered modal-xl' // Puedes ajustar el tamaño del modal aquí
+  });
+
+  modalRef.content.isEditMode = false; // Indica que es para agregar un nuevo registro
+
+  modalRef.content.onClose.subscribe((result: any) => {
+    if (result) {
+      console.log('Nuevo aspirante creado:', result);
+      this.findAspirantesConvenio();
+    }
+  });
+}
+
+
+// Método para abrir el modal en modo edición
+abrirModalEditarAspirante(aspiranteData: any) {
+  const modalRef: BsModalRef = this.modalService.show(ModalAddModAspiranteComponent, {
+    ignoreBackdropClick: true,
+    keyboard: false,
+    class: 'modal-dialog-centered modal-xl' // Ajuste de tamaño
+  });
+
+  modalRef.content.isEditMode = true; // Indica que es modo edición
+  modalRef.content.aspiranteData = aspiranteData; // Pasa los datos del aspirante a editar
+
+  modalRef.content.onClose.subscribe((result: any) => {
+    if (result) {
+      this.findAspirantesConvenio();
+    }
+  });
+}
+
+editarRegistro(row: any) {
+  // Aquí puedes añadir la lógica para editar el registro
+  console.log('Editar registro', row);
+}
+
+eliminarRegistro(row: any) {
+  // Confirmación antes de eliminar
+  if (confirm(`¿Estás seguro que deseas eliminar el registro de ${row.nombre_completo}? Esta acción no se puede deshacer.`)) {
+    console.log('Eliminar registro', row);
+
+    // Llamada al servicio para eliminar el registro
+    this.controlestudiosService.deletePersonConvenio(row).subscribe(
+      (response: any) => {
+        // Verificar si la respuesta indica éxito
+        if (response.estatus === 'OK') {
+          // Mostrar notificación de éxito
+          this.notifyService.showSuccess('Aspirante eliminado');
+          // Aquí puedes refrescar la lista de registros o actualizar la tabla
+          this.findAspirantesConvenio();// Si tienes un método para refrescar los datos
+        } else {
+          // Si el estatus no es OK, mostrar error
+          this.notifyService.showError('Error al eliminar el aspirante.');
+        }
+      },
+      (error) => {
+        // Manejar el error en caso de que falle la solicitud
+        console.error('Error al eliminar el aspirante:', error);
+        this.notifyService.showError('Ha ocurrido un error: ' + error.message);
+      }
+    );
+  }
 }
 
 

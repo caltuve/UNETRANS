@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { ConsultarDatosComponent } from './consultar-datos/consultar-datos.component';
 import { InscripcionComponent } from './inscripcion/inscripcion.component';
 import { MigracionComponent } from './migracion/migracion.component';
+import { ConveniosComponent } from './convenios/convenios.component';
 
 const routes: Routes = [
   {
@@ -35,6 +36,13 @@ const routes: Routes = [
         component: MigracionComponent,
         data: {
           title: 'Migración estudiantil'
+        }
+      },
+      {
+        path: 'convenios',
+        component: ConveniosComponent,
+        data: {
+          title: 'Aspirantes  por convenio'
         }
       },
       // {

@@ -101,6 +101,65 @@
                 </c-col>
               </div>
             </div>
+
+            <div *ngIf="tieneRol('008')" class="mis-programas">
+              <h2>Procesos del Ente de Transporte</h2>
+            
+              <c-alert *ngIf="!cargandoDatos" color="info" fade>
+                Estimad{{ persona_ente.genero_mensaje }} <strong>{{ persona_ente.nombre }}</strong>, aquí puedes ver el estado de los procesos actuales de tu ente adscrito <strong>{{ persona_ente.ente }}</strong>
+              </c-alert>
+            
+              <div class="d-flex flex-row flex-wrap">
+                <c-col lg="6" md="6" sm="12" *ngFor="let proceso of procesos">
+                  <c-card class="mb-3">
+                    <c-card-header class="custom-card-header">
+                      <strong>{{ proceso.proceso }}</strong> 
+                    </c-card-header>
+                    <c-card-body>
+                      <h4 cCardTitle>
+                        Periodo: {{ proceso.periodo }}
+                      </h4>
+              
+                      <p cCardText>
+                        <!-- Mostrar "Por definir" si la fecha es null -->
+                        Fecha de inicio: {{ proceso.fec_ini_view ? proceso.fec_ini_view : 'Por definir' }} <br>
+                        Fecha de fin: {{ proceso.fec_fin_view ? proceso.fec_fin_view : 'Por definir' }}
+                      </p>
+              
+                      <!-- Mensaje de estado del proceso -->
+                      <p cCardText>
+                        <strong>Estado: </strong>
+                        <span [ngClass]="{
+                          'text-success': proceso.estatus === 'ACTIVO',
+                          'text-danger': proceso.estatus === 'FINALIZADO'
+                        }">
+                          {{ proceso.estatus }} 
+                          <svg cIcon width="20" height="20" name="cil{{ proceso.estatus === 'ACTIVO' ? 'CheckCircle' : 'XCircle' }}" class="icon-estatus"></svg>
+                        </span>
+                      </p>
+              
+                      <!-- Verificación de si el proceso está habilitado según fechas -->
+                      <div *ngIf="procesoHabilitado(proceso.fec_ini, proceso.fec_fin)" class="alert alert-success d-flex justify-content-between align-items-center">
+                        <span class="w-50 text-center">Este proceso está habilitado.</span>
+                        <button *ngIf="proceso.id === 10" cButton color="primary" size="sm" class="w-50" (click)="irACargaConvenio()">
+                          <svg cIcon class="me-2" name="cilUserPlus"></svg>Ir a la carga de aspirantes
+                        </button>
+                      </div>
+              
+                      <div *ngIf="!procesoHabilitado(proceso.fec_ini, proceso.fec_fin)" class="alert alert-secondary d-flex justify-content-between align-items-center">
+                        <span class="text-center w-100">
+                          <!-- Mostrar "Por definir" si ambas fechas son null -->
+                          {{ proceso.fec_ini === null && proceso.fec_fin === null ? 'Fechas del proceso por definir' : 'Esta fase del proceso finalizó' }}
+                        </span>
+                      </div>
+              
+                    </c-card-body>
+                  </c-card>
+                </c-col>
+              </div>
+              
+            </div>
+            
             
 
             <!-- <div >

@@ -1,41 +1,20 @@
 <c-col xs="12">
     <c-card class="mb-4">
       <c-card-header>
-        <strong>Aspirantes por Convenio</strong> &nbsp; <small>Módulo para gestión de aspirantes por convenio</small>  &nbsp; 
-        <button cButton color="primary" size="sm" [disabled]="!procesoActivo" (click)="abrirModalNuevoAspirante()">
-          <svg cIcon class="me-2" name="cilUserPlus"></svg>Nuevo aspirante
-        </button>        
+        <strong>Aspirantes por Convenio</strong> &nbsp; <small>Módulo para verificación de aspirantes</small>
       </c-card-header>
       <c-card-body >
-          Listado de aspirantes por convenio para el periodo académico actual.
-          <br>
-          <c-row *ngIf="hayResultadosRecibidas">
-            <c-col sm="3">
-              <div class="border-start border-start-4 border-start-info py-1 px-3 mb-3">
-                <div class="text-medium-emphasis small">Total programas</div>
-                <div class="fs-5 fw-semibold">{{arrayDatos.total_pnf}}</div>
-              </div>
-            </c-col>
-            <c-col sm="3">
-              <div class="border-start border-start-4 border-start-info py-1 px-3 mb-3">
-                <div class="text-medium-emphasis small">Total postulados</div>
-                <div class="fs-5 fw-semibold">{{arrayDatos.total_asignados_uni}}</div>
-              </div>
-            </c-col>
-            <c-col sm="3">
-              <div class="border-start border-start-4 border-start-success py-1 px-3 mb-3">
-                <div class="text-medium-emphasis small">Total inscritos</div>
-                <div class="fs-5 fw-semibold">{{arrayDatos.total_inscritos_uni}}</div>
-              </div>
-            </c-col>
-            <c-col sm="3">
-              <div class="border-start border-start-4 border-start-success py-1 px-3 mb-3">
-                <div class="text-medium-emphasis small">% Inscripción</div>
-                <div class="fs-5 fw-semibold">{{arrayDatos.porc_inscritos_uni}} %</div>
-              </div>
-            </c-col>
-          </c-row>
-          
+        <p *ngIf="hayResultadosRecibidas" class="card-text">
+          Este listado muestra a los aspirantes que fueron cargados como T.S.U. para el periodo académico actual.
+          <strong>Las solicitudes que aparecen aquí están pendientes por procesar</strong>, lo que significa que están en fase de revisión por la escuela.
+        </p>
+        
+        <div *ngIf="hayResultadosRecibidas" class="alert alert-warning d-flex justify-content-between align-items-center">
+          <span>
+            <strong>Atención:</strong> Hasta que no se verifiquen y procesen estas solicitudes, no se podrá iniciar el proceso de inscripción de los nuevos ingresos por convenio.
+          </span>
+          <svg cIcon class="me-2" name="cil-warning" width="24" height="24"></svg>
+        </div>
           <div *ngIf="hayResultadosRecibidas">
             <mat-form-field>
                 <input matInput (keyup)="applyFilterProcesadas($event)" placeholder="Buscar aspirante" #input>
@@ -80,6 +59,10 @@
                   <th mat-header-cell *matHeaderCellDef> Programa Académico </th>
                   <td mat-cell *matCellDef="let solicitud"> {{solicitud.nombre_programa}} </td>
                 </ng-container>
+                <ng-container matColumnDef="ente">
+                    <th mat-header-cell *matHeaderCellDef> Ente </th>
+                    <td mat-cell *matCellDef="let solicitud"> {{solicitud.convenio}} </td>
+                  </ng-container>
                 <ng-container matColumnDef="fecha_carga">
                   <th mat-header-cell *matHeaderCellDef> Fecha de carga </th>
                   <td mat-cell *matCellDef="let solicitud"> {{solicitud.fecha_carga}} </td>
@@ -89,22 +72,12 @@
                   <td class="gestion-ancho" mat-cell *matCellDef="let solicitud">
                     <div class="d-flex justify-content-center align-items-center">
                       <!-- Botón para editar, deshabilitado si solicitud.confirma no es '0' -->
-                      <!-- <div class="m-1">
-                        <button cButton class="btn-primary" size="sm" cTooltip="Editar datos" cTooltipPlacement="top" 
-                        [disabled]="solicitud.confirma !== 0 && solicitud.confirma !== 99"
-                        (click)="abrirModalEditarAspirante(solicitud)">
-                          <svg cIcon name="cil-pencil"></svg>
-                        </button>
-                      </div> -->
-                      
-                      <!-- Botón para eliminar, deshabilitado si solicitud.confirma no es '0' -->
                       <div class="m-1">
-                        <button cButton color="danger" size="sm" cTooltip="Eliminar registro" cTooltipPlacement="top" 
-                        [disabled]="solicitud.confirma !== 0 && solicitud.confirma !== 99"
-                        (click)="eliminarRegistro(solicitud)">
-                          <svg cIcon name="cil-trash"></svg>
+                        <button cButton class="btn-primary" size="sm" cTooltip="Verificar datos" cTooltipPlacement="top"
+                        (click)="abrirModalDetalleTSU(solicitud)">
+                          <svg cIcon name="cil-magnifying-glass"></svg>
                         </button>
-                      </div>
+                      </div>                
                     </div>
                   </td>
                 </ng-container>
@@ -117,7 +90,7 @@
           <div *ngIf="sinResultadosRecibidas">
             <c-alert color="success" class="d-flex align-items-center">
               <svg cIcon class="me-2" width="24" height="24" name="cilNoteAdd"></svg>
-              <div>No existen aspirantes por convenio cargados</div>
+              <div>No existen aspirantes por convenio cargados pendientes de revisión</div>
             </c-alert>
           </div>
           <mat-paginator [hidePageSize]="true" [pageSize]="5" #paginatorProcesadas></mat-paginator>
