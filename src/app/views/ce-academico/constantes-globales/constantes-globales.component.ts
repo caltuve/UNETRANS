@@ -125,10 +125,10 @@ export class ConstantesGlobalesComponent {
     
     this.recibidas.paginator = this.paginatorRecibidas;
     this.procesadas.paginator = this.paginatorProcesadas;
-    this.findAutopostulados();
-    this.findModIngreso();
-    this.findTrayectos();
-    this.findResolucion(); 
+    //this.findAutopostulados();
+    //this.findModIngreso();
+    //this.findTrayectos();
+    //this.findResolucion(); 
     this.findEstadosEducacionMedia(); 
     this.findTipos(); 
     //this.cdRef.detectChanges(); 

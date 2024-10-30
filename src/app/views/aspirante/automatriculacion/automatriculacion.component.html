@@ -810,13 +810,20 @@
               <c-alert color="info">
                 <h4 cAlertHeading><strong>¡IMPORTANTE!</strong></h4>
                 <p>
-                  Si el nombre del Plantel o Instituto no se muestra en la lista por favor notifícalo
-                  inmediatamente al correo <strong>soportesice&#64;unetrans.edu.ve</strong> <br>
-                  Deberás indicar el ESTADO, MUNICIPIO, PARROQUIA, NOMBRE DE LA INSTITUCIÓN y la imagen del titulo de bachiller.<br>
-                  <strong>¡EVITE SELECCIONAR OTRA INSTITUCIÓN QUE NO SEA EN LA CUAL SE GRADUÓ!</strong>
+                  Si el nombre de tu Plantel o Instituto no aparece en la lista, sigue estos pasos para reportarlo:
+                  <br><br>
+                  1. Envía un correo a <strong>soportesice&#64;unetrans.edu.ve</strong> con el asunto: <strong>Falta de Instituto</strong>.<br>
+                  2. En el correo, incluye los siguientes datos:
+                  <br>
+                  - Estado donde se encuentra la institución.<br>
+                  - Municipio y Parroquia.<br>
+                  - Nombre completo de la Institución.<br>
+                  - Imagen escaneada del título de bachiller.<br><br>
+                  <strong>¡Por favor, evita seleccionar otra institución que no sea la tuya, ya que esto puede retrasar tu proceso!</strong>
                 </p>
               </c-alert>
             </div>
+            
 
 
           </mat-expansion-panel>
@@ -1039,25 +1046,33 @@
                   </div>
                 </div>
                 <div class="row">
-                  <div class="col l12 m12 s12"><label>Contraseña de acceso:</label>
+                  <div class="col l12 m12 s12">
+                    <label>Contraseña de acceso:</label>
                     <div class="row mar-b-0">
                       <div class="col s12">
                         <mat-form-field>
                           <mat-label>Contraseña:</mat-label>
-                          <input type="password" (keyup)="validarContrasena()" [(ngModel)]="pass" matInput
+                          <input [type]="hidePassword ? 'password' : 'text'" (keyup)="validarContrasena()" [(ngModel)]="pass" matInput
                             formControlName="pass">
+                          <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button">
+                            <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                          </button>
                         </mat-form-field>
                       </div>
                       <div class="col s12">
                         <mat-form-field>
                           <mat-label>Confirme contraseña:</mat-label>
-                          <input type="password" (keyup)="validarConfirmacion()" [(ngModel)]="confpass" matInput
+                          <input [type]="hideConfirmPassword ? 'password' : 'text'" (keyup)="validarConfirmacion()" [(ngModel)]="confpass" matInput
                             formControlName="confpass">
+                          <button mat-icon-button matSuffix (click)="hideConfirmPassword = !hideConfirmPassword" type="button">
+                            <mat-icon>{{hideConfirmPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                          </button>
                         </mat-form-field>
                       </div>
                     </div>
                   </div>
                 </div>
+                
               </div>
               <div class="col-md-6 col-12">
                 <div class="card">

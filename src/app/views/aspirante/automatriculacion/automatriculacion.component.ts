@@ -1633,6 +1633,9 @@ export class AutomatriculacionComponent implements OnInit, AfterViewInit {
   fourthFormGroup: FormGroup;
   fiveFormGroup: FormGroup;
 
+  hidePassword = true;
+  hideConfirmPassword = true;
+
   listPlantel: Colegio[] = []; // Asume que tienes esta lista inicializada
   filteredPlanteles: Observable<Colegio[]>;
 
@@ -2514,6 +2517,9 @@ crearPersona(f: any) {
 }
 
 
+
+
+
 guardar(): void {
   this.SpinnerService.show(); 
       
@@ -2564,7 +2570,7 @@ findEstudianteAspirante(cedula: { value: string; readonly: boolean; } | null | u
         //this.estudiante = result;
         this.estudiante = Object.values(result);
         this.generatedPDFFile();
-        this.createEtiqueta();
+        //this.createEtiqueta();
       }
     );
   }
@@ -2691,13 +2697,12 @@ selectedPlantel = this._formBuilder.group({
   
  });
 
- //Generación del PDF si todo esta OK
- public generatedPDFFile() {
 
 
+public generatedPDFFile() {
   const doc = new jsPDF('p', 'pt', 'letter');
 
-  // Obtener los valores del JSON
+  // Página 1 - Ficha de Registro Estudiantil
   const nacionalidad = this.estudiante[0].nac;
   const cedula = this.estudiante[0].ced_pas;
   const nombres = this.estudiante[0].nombres;
@@ -2711,7 +2716,7 @@ selectedPlantel = this._formBuilder.group({
   const parronac = this.estudiante[0].parronac;
   const etnia = this.estudiante[0].etnia;
   const discapacidad = this.estudiante[0].discapacidad;
-  const conapdis = this.estudiante[0].conapdis
+  const conapdis = this.estudiante[0].conapdis;
   const edores = this.estudiante[0].edores;
   const munires = this.estudiante[0].munires;
   const parrores = this.estudiante[0].parrores;
@@ -2741,7 +2746,6 @@ selectedPlantel = this._formBuilder.group({
   const trayecto_ing = this.estudiante[0].trayecto_ing;
   const mencionies = this.estudiante[0].mencionies;
 
-  
   // Agregar encabezado en cada página
   const headerImg = new Image();
   headerImg.src = 'assets/img/brand/cintillo_unetrans_082023.png';
@@ -2752,13 +2756,12 @@ selectedPlantel = this._formBuilder.group({
   doc.setDrawColor(0);
   doc.setFillColor(255, 255, 255);
   doc.setFontSize(12);
+  // Agregar el contenido de la ficha de registro estudiantil (como tienes ahora)
+  // Encabezado y contenido de la ficha...
+  doc.setFontSize(12);
+  doc.setFont('Arial', 'bold');
+  doc.text('Ficha de Registro Estudiantil', doc.internal.pageSize.getWidth() / 2, 76, { align: 'center' });
   
-  // Resto del código para agregar contenido al PDF...
-// Título
-doc.setFontSize(12);
-doc.setFont('Arial', 'bold');
-doc.text('Ficha de Registro Estudiantil', doc.internal.pageSize.getWidth() / 2, 76, { align: 'center' });
-
 // Contenido
 doc.setFontSize(10);
 
@@ -3228,90 +3231,44 @@ doc.text(`Fecha consignación`, 446, doc.internal.pageSize.getHeight() - 50);
 
 }
 
-
-
-
-
-
-// // Pie de página
-// doc.setFontSize(9);
-// doc.setFont('Arial', 'bold');
-// doc.text('FORMATO UNETRANS-DACE-01.', 20, doc.internal.pageSize.getHeight() - 20);
-// doc.addPage();
-
-// doc.addImage(headerImg, 'PNG', 42, 10, 1052/2, 87/2);
-  
-//     doc.setDrawColor(0);
-//     doc.setFillColor(255, 255, 255);
-//     doc.setFontSize(12);
-
-
 // Pie de página
 doc.setFontSize(6);
 doc.setFont('Arial', 'bold');
 doc.text('FORMATO UNETRANS-DACE-01.', 20, doc.internal.pageSize.getHeight() - 20);
-  
-  // Guardar el archivo PDF
-  doc.save(`ficha_registro_ingreso_${cedula}.pdf`);
 
-}
-
-createEtiqueta() {
-  const doc = new jsPDF('p', 'pt', 'letter');
-  // Agregar encabezado en cada página
-  const headerImg = new Image();
-  headerImg.src = 'assets/img/brand/cintillo_unetrans_082023.png';
-  
-  //doc.addPage();
+  // Página 2 - Etiquetas
+  doc.addPage();  // Añadir una nueva página
   doc.addImage(headerImg, 'PNG', 42, 10, 1052/2, 87/2);
-  
 
-
-  const nacionalidad = this.estudiante[0].nac;
-  const cedula = this.estudiante[0].ced_pas;
-  const carnet = this.estudiante[0].carnet.toString();
-  const nombres = this.estudiante[0].nombres;
-  const apellidos = this.estudiante[0].apellidos;
-  const pnf = this.estudiante[0].pnf;
-  const mod_ingreso = this.estudiante[0].mod_ingreso;
   const nombre_corto = this.estudiante[0].nombre_corto;
 
-
-
   doc.setFontSize(10);
-doc.setFont('Arial', 'bold');
-doc.text('Etiquetas para expediente estudiantil', doc.internal.pageSize.getWidth() / 2, 76, { align: 'center' });
-doc.setFont('Arial', 'normal');
-var text = "Debes imprimir y recortar las etiquetas para ser pegadas en la parte frontal de la carpeta (rectangulo grande) y en la pestaña de la carpeta (rectangulo pequeño).";
-var splitText = doc.splitTextToSize(text, doc.internal.pageSize.getWidth() - 108);
-doc.text(splitText, 55, 100);
-//doc.text(`Debes imprimir y recortar las etiquetas para ser pegadas en la parte frontal de la carpeta`, 55, 100);
-//doc.text(`(rectangulo grande) y en la pestaña de la carpeta (rectangulo pequeño).`, 55, 113);
+  doc.setFont('Arial', 'bold');
+  doc.text('Etiquetas para expediente estudiantil', doc.internal.pageSize.getWidth() / 2, 76, { align: 'center' });
 
-  // Establecer las coordenadas y dimensiones del cuadrado
+  // Texto de instrucciones para imprimir y recortar las etiquetas...
+  var text = "Debes imprimir y recortar las etiquetas para ser pegadas en la parte frontal de la carpeta (rectangulo grande) y en la pestaña de la carpeta (rectangulo pequeño).";
+  var splitText = doc.splitTextToSize(text, doc.internal.pageSize.getWidth() - 108);
+  doc.text(splitText, 55, 100);
+
+  // Dibujar etiquetas y contenido
   const x = 55;
   const y = 130;
   const width = 380;
   const height = 120;
-
-  // Dibujar el cuadrado con líneas punteadas
   doc.setDrawColor(0);
   doc.setLineWidth(0.4);
   doc.setLineDashPattern([1, 1], 0);
   doc.rect(x, y, width, height, 'D');
-
-  // Escribir texto dentro del cuadrado
-  const textX = x + 5;
-  const textY = y + 16;
-  doc.setFontSize(12);
+  
   doc.setFont('Arial', 'bold');
-  doc.text('Expediente estudiantil UNETRANS', width -135, textY, { align: 'center' });
+  doc.text('Expediente estudiantil UNETRANS', width - 135, y + 16, { align: 'center' });
   doc.setFont('Arial', 'normal');
-  doc.text(`Carnet: ${carnet}     Cédula: ${nacionalidad}-${cedula}`, textX, textY+18);
-  doc.text(`Nombres: ${nombres}`, textX, textY + 36);
-  doc.text(`Apellidos: ${apellidos}`, textX, textY + 54);
-  doc.text(`PNF: ${pnf}`, textX, textY + 72);
-  doc.text(`Ingreso: ${mod_ingreso}`, textX, textY + 90);
+  doc.text(`Carnet: ${carnet}     Cédula: ${nacionalidad}-${cedula}`, x + 5, y + 34);
+  doc.text(`Nombres: ${nombres}`, x + 5, y + 50);
+  doc.text(`Apellidos: ${apellidos}`, x + 5, y + 66);
+  doc.text(`PNF: ${pnf}`, x + 5, y + 82);
+  doc.text(`Ingreso: ${mod_ingreso}`, x + 5, y + 98);
 
   // Dibujar la línea para el carnet y nombre
   const lineStartX = x;
@@ -3347,8 +3304,9 @@ doc.text(splitText, 55, 100);
 doc.setFontSize(6);
 doc.setFont('Arial', 'bold');
 doc.text('FORMATO UNETRANS-DACE-02.', 20, doc.internal.pageSize.getHeight() - 20);
-   // Guardar el archivo
-   doc.save(`etiquetas_${cedula}.pdf`);
+
+  // Guardar el archivo PDF final con las dos páginas
+  doc.save(`ficha_y_etiquetas_${cedula}.pdf`);
 }
 
 

@@ -1,7 +1,15 @@
 <c-col xs="12">
   <c-card class="mb-4">
-    <c-card-header>
-      <strong>Aspirantes OPSU</strong> &nbsp; <small>Módulo para gestión de aspirantes</small>      
+    <c-card-header class="d-flex justify-content-between align-items-center">
+      <div>
+        <strong>Aspirantes OPSU</strong> &nbsp; 
+        <small>Módulo para gestión de aspirantes</small>
+      </div>
+    
+      <!-- Botón para consultar estadísticas -->
+      <button cButton size="sm" class="btn btn-info ms-1" (click)="consultarEstadistica()">
+        <svg cIcon class="me-2" name="cilBarChart"></svg>Consultar Estadísticas
+      </button>
     </c-card-header>
     <c-card-body >
       Listado de aspirantes generado por OPSU al cierre del proceso del SNI por Programa Nacional de Formación. 

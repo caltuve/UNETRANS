@@ -24,13 +24,7 @@
                             <p><strong>Teléfono:</strong> {{ estudiante.tlf_cel }}</p>
                 </div>
             </div>
-            <div class="d-flex flex-wrap">
-                <div class="m-1">
-                    <button cButton color="primary" size="sm">
-                        Asociar nuevo programa académico
-                      </button>
-                  </div>
-            </div>
+            <hr> <!-- Línea divisoria -->
             <div *ngIf="hayResultados" class="mat-elevation-z8">
                 <table mat-table [dataSource]="dataSource2" [hover]="true"
                 [responsive]="true"

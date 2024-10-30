@@ -68,11 +68,15 @@ import {MatSortModule} from '@angular/material/sort';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatRadioModule} from '@angular/material/radio';
+import { VerSolicitudModalComponent } from './ver-solicitud-modal/ver-solicitud-modal.component';
+import { NuevaSolicitudComponent } from './nueva-solicitud/nueva-solicitud.component';
 
 
 @NgModule({
   declarations: [
-    DocumentosComponent
+    DocumentosComponent,
+    VerSolicitudModalComponent,
+    NuevaSolicitudComponent
   ],
   imports: [
     CommonModule,

@@ -66,20 +66,46 @@ export class ModalDetConvenioComponent implements OnInit {
       this.usr = JSON.parse(sessionStorage.getItem('currentUser')!); 
     }
 
-ngOnInit(): void {
-    // Verifica que la solicitud se haya recibido correctamente
-    if (this.solicitud) {
-      // Asegurarse de que el PDF base64 tiene el prefijo correcto
-      if (this.solicitud?.titulo_pdf) {
-        this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.solicitud.titulo_pdf);
+    ngOnInit(): void {
+      // Verifica que la solicitud se haya recibido correctamente
+      if (this.solicitud) {
+        // Aquí hacemos la llamada para obtener los detalles adicionales del estudiante, como el PDF
+        this.loadStudentDetails(this.solicitud.id_estudiante);
+      } else {
+        console.error('La solicitud no se ha pasado correctamente al modal');
       }
-    } else {
-      console.error('La solicitud no se ha pasado correctamente al modal');
+    
+      // Inicializar el formulario reactivo
+      this.trayectoForm = this.fb.group({
+        trayecto: [null, Validators.required]
+      });
     }
-    this.trayectoForm = this.fb.group({
-      trayecto: [null, Validators.required]
-    });
-  }
+
+// Función para cargar los detalles del estudiante
+loadStudentDetails(id_estudiante: string): void {
+  this.SpinnerService.show();  // Mostrar el spinner al iniciar la solicitud
+  // Llamar al servicio que busca los datos adicionales, incluido el PDF
+  this.controlestudiosService.getAspiranteDetails(id_estudiante).subscribe(
+    (response: any) => {
+      if (response && response.titulo_pdf) {
+        // Solo cargamos el PDF si está disponible
+        this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(response.titulo_pdf);
+      } else {
+        console.log('No se encontró el título PDF para el estudiante');
+      }
+
+      // Cargar otros datos adicionales si es necesario
+      this.solicitud = { ...this.solicitud, ...response };
+
+      this.SpinnerService.hide();  // Ocultar el spinner tras recibir la respuesta con éxito
+    },
+    (error: any) => {
+      console.error('Error al obtener los detalles del estudiante:', error);
+      this.SpinnerService.hide();  // Ocultar el spinner incluso si hubo un error
+    }
+  );
+}
+
 
 
   

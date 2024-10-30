@@ -4,6 +4,8 @@ import { ControlEstudiosService } from '../../control-estudios/control-estudios.
 import {MatTableDataSource} from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
 import { NgxSpinnerService } from "ngx-spinner";
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+import { EstadisticasOpsuProgramaComponent } from '../estadisticas-opsu-programa/estadisticas-opsu-programa.component';
 
 @Component({
   selector: 'app-aspirante-opsu',
@@ -28,12 +30,15 @@ export class AspiranteOpsuComponent implements OnInit {
   hayResultadosRecibidas: boolean = false;
   sinResultadosRecibidas: boolean = false;
 
+  modalRef: BsModalRef;
   
   @ViewChild('paginatorProcesadas') paginatorProcesadas: MatPaginator;
 
   constructor(private _formBuilder: FormBuilder,
     public controlestudiosService: ControlEstudiosService,
-    private SpinnerService: NgxSpinnerService,) {
+    private SpinnerService: NgxSpinnerService,
+    private modalService: BsModalService,
+    ) {
     }
 
 
@@ -120,6 +125,14 @@ findAspirantes() {
     }
   );
 }
+
+consultarEstadistica(): void {
+  const modalRef: BsModalRef = this.modalService.show(EstadisticasOpsuProgramaComponent, {
+    class: 'modal-lg'  // Tamaño del modal
+  });
+}
+
+
 
 applyFilterProcesadas(event: Event) {
   const filterValue = (event.target as HTMLInputElement).value;

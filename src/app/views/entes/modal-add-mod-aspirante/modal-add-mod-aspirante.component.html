@@ -77,14 +77,14 @@
             <mat-label>Tipo de aspirante</mat-label>
             <mat-select formControlName="tipoAspirante" (selectionChange)="onTipoAspiranteChange($event.value)">
               <mat-option value="Bachiller">Bachiller</mat-option>
-              <mat-option value="TSU">Técnico Superior Universitario</mat-option>
+              <mat-option value="TSU">Universitario</mat-option>
             </mat-select>
           </mat-form-field>
         </div>
       
         <!-- Se muestra solo si el aspirante es TSU -->
         <div *ngIf="firstFormGroup.get('tipoAspirante')?.value === 'TSU'" class="col l6 m6 s12">
-          <label class="label-custom">Subir título de T.S.U.:</label>
+          <label class="label-custom">Subir título obtenido:</label>
           <input cFormControl  (change)="onFileSelected($event)"  sizing="sm" type="file" />
         </div>
       </div>

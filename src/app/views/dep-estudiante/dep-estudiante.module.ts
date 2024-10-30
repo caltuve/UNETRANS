@@ -70,6 +70,7 @@ import { ModalInscripcionComponent } from './modal-inscripcion/modal-inscripcion
 import { MigracionComponent } from './migracion/migracion.component';
 import { ConveniosComponent } from './convenios/convenios.component';
 import { ModalDetConvenioComponent } from './modal-det-convenio/modal-det-convenio.component';
+import { ConsultaDetalleAcademicoComponent } from './consulta-detalle-academico/consulta-detalle-academico.component';
 
 
 
@@ -80,7 +81,8 @@ import { ModalDetConvenioComponent } from './modal-det-convenio/modal-det-conven
     ModalInscripcionComponent,
     MigracionComponent,
     ConveniosComponent,
-    ModalDetConvenioComponent
+    ModalDetConvenioComponent,
+    ConsultaDetalleAcademicoComponent
   ],
   imports: [
     CommonModule,

@@ -138,6 +138,15 @@ getAspirantes() {
   return this.http.get(`${this.url}resumen_opsu_dace.php`);
 }
 
+ // Método para obtener las estadísticas por programa
+ getEstadisticasOPSU(): Observable<any> {
+  return this.http.get(`${this.url}getEstadisticasOPSU.php`);
+}
+
+getEstadisticasConvenio(): Observable<any> {
+  return this.http.get(`${this.url}getEstadisticasConvenio.php`);
+}
+
 getAspirantesConvenio() {
   return this.http.get(`${this.url}resumen_convenio_dace.php`);
 }
@@ -198,12 +207,33 @@ getReincorporacion() {
     return this.http.get(`${this.url}inscripcion_est.php?usrsice=${usrsice}`);
   }
 
+
+  getProgramasforDocumentos(dato: any){
+    return this.http.post(`${this.url}getprogramasDocuments.php`, JSON.stringify(dato));
+  }
+
+  getDocumentosDisponibles(dato: any) {
+    return this.http.post(`${this.url}getDocumentosDisponibles.php`, dato);
+  }
+
+  crearSolicitudDocumentos(solicitudData: any): Observable<any> {
+    return this.http.post(`${this.url}crearSolicitudDocumentos.php`, JSON.stringify(solicitudData));
+  }
+
   getInscripcionUCEstudiante(carnet: any): Observable<any>{
     return this.http.get(`${this.url}inscripcion_est_UC.php?carnet=${carnet}`);
   }
 
   getDatosConstancia(usrsice: any): Observable<any>{
     return this.http.get(`${this.url}detalle_constancia.php?usrsice=${usrsice}`);
+  }
+
+  getSolicitudesDocumentos(usrsice: string): Observable<any> {
+    return this.http.get(`${this.url}getSolicitudesDocumentos.php?usrsice=${usrsice}`);
+  }
+
+  getDetalleSolicitud(idSolicitud: number): Observable<any> {
+    return this.http.get(`${this.url}getDetalleSolicitud.php?id_solicitud=${idSolicitud}`);
   }
 
   getProgramasActivos() {
@@ -216,6 +246,10 @@ getReincorporacion() {
 
   getPeriodos() {
     return this.http.get(`${this.url}periodos.php`);
+  }
+
+  getTipoDocumentos(): Observable<any> {
+    return this.http.get(`${this.url}tipodocs.php`);
   }
 
   getProcesosCargaCalificaciones() {
@@ -464,6 +498,11 @@ getReincorporacion() {
     return this.http.get(`${this.url}obtenerPlanReporte.php?id=${id}`)
   }
 
+  getAspiranteDetails(id_estudiante: string): Observable<any> {
+    const url = `${this.url}getAspiranteDetails.php?id_estudiante=${id_estudiante}`;
+    return this.http.get(url);
+  }
+
   getImageReports(): Observable<any> {
     return this.http.get(`${this.url}buscarImagenesReportes.php`)
   }
@@ -654,6 +693,10 @@ getDatosGraduacion(fechagrado: string): Observable<any[]> {
 
 getIdentidad(cedula: string): Observable<any> {
   return this.http.post(`${this.url}getIdentidad.php`, JSON.stringify(cedula));
+}
+
+getEstudianteAspirante(identificacion: any): Observable<any>{
+  return this.http.post(`${this.url}dat_estudiante.php`, JSON.stringify(identificacion))
 }
 
 // Método para buscar los datos de residencia

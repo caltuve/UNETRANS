@@ -9,6 +9,7 @@ import {ModalDirective} from 'ngx-bootstrap/modal';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 
 import { ModalAddModAspiranteComponent } from '../../entes/modal-add-mod-aspirante/modal-add-mod-aspirante.component'; 
+import { EstadisticasConvenioProgramaComponent } from '../estadisticas-convenio-programa/estadisticas-convenio-programa.component';
 
 @Component({
   selector: 'app-convenio',
@@ -228,6 +229,21 @@ abrirModalNuevoAspirante() {
     }
   });
 }
+
+abrirModalEstadisticasConvenio(): void {
+  const modalRef: BsModalRef = this.modalService.show(EstadisticasConvenioProgramaComponent, {
+    class: 'modal-lg',
+    ignoreBackdropClick: true,
+    keyboard: false
+  });
+
+  modalRef.content.onClose.subscribe((result: any) => {
+    if (result) {
+      console.log('Modal cerrado exitosamente.');
+    }
+  });
+}
+
 
 
 // Método para abrir el modal en modo edición

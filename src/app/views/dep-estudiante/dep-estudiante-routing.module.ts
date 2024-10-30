@@ -4,6 +4,7 @@ import { ConsultarDatosComponent } from './consultar-datos/consultar-datos.compo
 import { InscripcionComponent } from './inscripcion/inscripcion.component';
 import { MigracionComponent } from './migracion/migracion.component';
 import { ConveniosComponent } from './convenios/convenios.component';
+import { ConsultaDetalleAcademicoComponent } from './consulta-detalle-academico/consulta-detalle-academico.component';
 
 const routes: Routes = [
   {
@@ -23,6 +24,12 @@ const routes: Routes = [
         data: {
           title: 'Consultar datos'
         }
+      },
+      { path: 'consultar-datos/consulta-detalle-academico/:id', 
+        component: ConsultaDetalleAcademicoComponent,
+        data: {
+          title: 'Consultar datos - Detalles Académicos'
+        } 
       },
       {
         path: 'inscripcion',

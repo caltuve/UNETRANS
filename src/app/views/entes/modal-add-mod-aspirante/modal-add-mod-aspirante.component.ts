@@ -210,6 +210,7 @@ onTipoAspiranteChange(tipoAspirante: string) {
                 } else {
                   // Manejo genérico de errores
                   this.notifyService.showError('Ocurrió un error al consultar la API externa, ingrese los nombres y apellidos de forma manual');
+                  
                 }
                 this.SpinnerService.hide();
                 return of(null); // Finalizar el flujo de errores

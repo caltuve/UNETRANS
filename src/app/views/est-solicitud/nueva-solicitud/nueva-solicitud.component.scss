@@ -1,0 +1,20 @@
+.documento-contenedor {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+
+  .documento-field, .formato-radio {
+    flex: 1 1 20%; // Ajusta el tamaño mínimo de cada campo
+  }
+}
+
+.observaciones-field {
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .documento-field, .formato-radio {
+    flex: 1 1 100%; // En dispositivos móviles, los campos ocuparán el 100% del ancho
+  }
+}

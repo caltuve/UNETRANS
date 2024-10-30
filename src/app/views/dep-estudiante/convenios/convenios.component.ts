@@ -272,7 +272,7 @@ applyFilter(event: Event) {
 abrirModalDetalleTSU(aspiranteData: any) {
   const initialState = {
     solicitud: aspiranteData,  // Pasa los datos del aspirante al modal
-    isEditMode: true               // Indica que es modo edición
+    isEditMode: true           // Indica que es modo edición
   };
 
   const modalRef: BsModalRef = this.modalService.show(ModalDetConvenioComponent, {
@@ -285,10 +285,10 @@ abrirModalDetalleTSU(aspiranteData: any) {
   // Suscribirse al evento de cierre del modal para realizar acciones posteriores
   modalRef.content.onClose.subscribe((result: any) => {
     if (result) {
-      // Si el modal se cerró con éxito, recarga los aspirantes
       this.findAspirantesConvenio(this.usr.usrsice);
     }
   });
 }
+
 
 }

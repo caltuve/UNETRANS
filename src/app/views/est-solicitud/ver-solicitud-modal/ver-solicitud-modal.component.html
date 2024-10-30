@@ -1,0 +1,51 @@
+<c-card>
+    <c-card-header ngPreserveWhitespaces>
+        <strong>Detalles de la Solicitud</strong>
+    </c-card-header>
+    <c-card-body>
+        <!-- Contenedor de los documentos solicitados -->
+        <div class="documentos-container">
+            <h3>Documentos Solicitados</h3>
+            <table mat-table [dataSource]="documentos" [hover]="true" [responsive]="true" [striped]="true"
+            align="middle" cTable class="mb-0 border" cTable>
+  
+                <!-- Columna de Tipo de Documento -->
+                <ng-container matColumnDef="tipo_documento">
+                  <th mat-header-cell *matHeaderCellDef> Tipo Documento</th>
+                  <td mat-cell *matCellDef="let documento"> {{documento.tipo_documento}} </td>
+                </ng-container>
+  
+                <!-- Columna de Nombre del Documento -->
+                <ng-container matColumnDef="nombre_documento">
+                  <th mat-header-cell *matHeaderCellDef> Nombre Documento</th>
+                  <td mat-cell *matCellDef="let documento"> {{documento.nombre_documento}} </td>
+                </ng-container>
+  
+                <!-- Columna de Cantidad -->
+                <ng-container matColumnDef="cantidad">
+                  <th mat-header-cell *matHeaderCellDef> Cantidad</th>
+                  <td mat-cell *matCellDef="let documento"> {{documento.cantidad}} </td>
+                </ng-container>
+  
+                <!-- Columna de Costo Unitario -->
+                <ng-container matColumnDef="costo_unitario">
+                  <th mat-header-cell *matHeaderCellDef> Costo Unitario</th>
+                  <td mat-cell *matCellDef="let documento"> {{documento.costo_unitario | currency:'EUR' }} </td>
+                </ng-container>
+  
+                <!-- Columna de Costo Total -->
+                <ng-container matColumnDef="costo_total">
+                  <th mat-header-cell *matHeaderCellDef> Costo Total</th>
+                  <td mat-cell *matCellDef="let documento"> {{documento.costo_total | currency:'EUR' }} </td>
+                </ng-container>
+  
+                <tr mat-header-row *matHeaderRowDef="['tipo_documento', 'nombre_documento', 'cantidad', 'costo_unitario', 'costo_total']"></tr>
+                <tr mat-row *matRowDef="let row; columns: ['tipo_documento', 'nombre_documento', 'cantidad', 'costo_unitario', 'costo_total'];"></tr>
+            </table>
+        </div>
+    </c-card-body>
+    <c-card-footer class="d-flex justify-content-end">
+        <button cButton color="primary" (click)="close()">Cerrar</button>
+    </c-card-footer>
+    
+</c-card>

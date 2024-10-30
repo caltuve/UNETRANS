@@ -1,0 +1,35 @@
+<div class="modal-header">
+    <h2 class="modal-title">Estadísticas por Programa de Formación</h2>
+    <button type="button" class="btn-close" aria-label="Close" (click)="decline()"></button>
+  </div>
+  
+  <div class="modal-body">
+    <table class="table table-striped" *ngIf="estadisticas.length > 0">
+      <thead>
+        <tr>
+          <th>Programa de Formación</th>
+          <th>Cantidad de Estudiantes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let estadistica of estadisticas">
+          <td>{{ estadistica.nombre_programa }}</td>
+          <td>{{ estadistica.cant }}</td>
+        </tr>
+        <!-- Fila adicional para mostrar el total -->
+        <tr>
+          <td><strong>Total</strong></td>
+          <td><strong>{{ calcularTotalEstudiantes() }}</strong></td>
+        </tr>
+      </tbody>
+    </table>
+  
+    <div *ngIf="estadisticas.length === 0" class="alert alert-info">
+      No se encontraron estadísticas.
+    </div>
+  </div>
+  
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="decline()">Cerrar</button>
+  </div>
+  

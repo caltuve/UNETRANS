@@ -1,59 +1,127 @@
-
 <c-col xs="12">
-    <c-card class="mb-4">
-        <c-card-header>
-            <strong>Servicios de Documentación</strong> &nbsp; <small>Módulo para la descarga y solicitud de documentos académicos</small>
-        </c-card-header>
-        <c-card-body>
-          <div>
-            <c-alert color="info" class="d-flex align-items-center">
-              <svg cIcon class="me-2" width="60" height="60" name="cilBellExclamation"></svg>
-              <div><strong>Información Importante!!!</strong><br>
-                Actualmente, el sistema de solicitudes de documentos está en mantenimiento. <br>
-                Agradecemos tu paciencia y te invitamos a estar atento a futuras actualizaciones. Para más información o consultas, no dudes en contactarnos por el correo: soportesice&#64;unetrans.edu.ve</div>
-          </c-alert>
+  <c-card class="mb-4">
+      <c-card-header>
+          <strong>Servicios de Documentación</strong> &nbsp; 
+          <small>Módulo para la descarga y solicitud de documentos académicos</small>
+          <!-- Botón para nueva solicitud -->
+          <button cButton size="sm" class="btn btn-info ms-1" (click)="irANuevaSolicitud()">
+            <svg cIcon class="me-2" name="cil-note-add"></svg>Nueva Solicitud
+          </button>
+      </c-card-header>
+      <c-card-body>
+          <!-- Mostrar mat-table si hay solicitudes -->
+<div *ngIf="hayResultados && !cargandoDatos">
+  <table mat-table [dataSource]="dataSource" [hover]="true" [responsive]="true" [striped]="true" align="middle" cTable class="mb-0 border" cTable>
+
+    <!-- Estatus Solicitud -->
+    <ng-container matColumnDef="estatus_solicitud">
+      <th class="estatus-ancho" mat-header-cell *matHeaderCellDef> Estatus </th>
+      <td class="estatus-ancho" mat-cell *matCellDef="let solicitud">
+        <div class="container" cTooltip="{{ solicitud.desc_estatus_solicitud }}" cTooltipPlacement="top">
+  
+          <!-- Iconos para los diferentes estatus -->
+          <svg *ngIf="solicitud.estatus_solicitud == 'PPE'" cIcon width="30" height="30" name="cilClock" style="color: #f9b115;"></svg>
+          <svg *ngIf="solicitud.estatus_solicitud == 'PEV'" cIcon width="30" height="30" name="cilCheckCircle" style="color: #007bff;"></svg>
+          <svg *ngIf="solicitud.estatus_solicitud == 'PVE'" cIcon width="30" height="30" name="cilEnvelopeOpen" style="color: #2EB85C;"></svg>
+          <svg *ngIf="solicitud.estatus_solicitud == 'PPR'" cIcon width="30" height="30" name="cilSearch" style="color: #ffcc00;"></svg>
+          <svg *ngIf="solicitud.estatus_solicitud == 'PEL'" cIcon width="30" height="30" name="cilPencil" style="color: #f9b115;"></svg>
+          <svg *ngIf="solicitud.estatus_solicitud == 'PFI'" cIcon width="30" height="30" name="cilFile" style="color: #2EB85C;"></svg>
+          <svg *ngIf="solicitud.estatus_solicitud == 'DLE'" cIcon width="30" height="30" name="cilCloudDownload" style="color: #007bff;"></svg>
+          <svg *ngIf="solicitud.estatus_solicitud == 'ENT'" cIcon width="30" height="30" name="cilCheckCircle" style="color: #2EB85C;"></svg>
         </div>
+      </td>
+    </ng-container>
+  
+    <!-- Identificador Solicitud -->
+    <ng-container matColumnDef="identificador_solicitud">
+      <th class="cedula-ancho" mat-header-cell *matHeaderCellDef> Identificación </th>
+      <td class="cedula-ancho" mat-cell *matCellDef="let solicitud"> {{solicitud.identificador_solicitud}} </td>
+    </ng-container>
+  
+    <!-- Fecha Solicitud -->
+    <ng-container matColumnDef="fecha_solicitud">
+      <th mat-header-cell *matHeaderCellDef> Fecha Solicitud </th>
+      <td mat-cell *matCellDef="let solicitud"> {{solicitud.fecha_solicitud}} </td>
+    </ng-container>
+  
+    <!-- Total Documentos -->
+    <ng-container matColumnDef="total_doc">
+      <th mat-header-cell *matHeaderCellDef> Total Documentos </th>
+      <td mat-cell *matCellDef="let solicitud"> {{solicitud.total_doc}} </td>
+    </ng-container>
+  
+<!-- Monto en Euros y Bolívares con narrowSymbol -->
+<ng-container matColumnDef="monto">
+  <th mat-header-cell *matHeaderCellDef> Monto a Pagar </th>
+  <td mat-cell *matCellDef="let solicitud">
+    <!-- Monto en Euros -->
+    € {{ solicitud.monto | number:'1.2-2' }} 
+    <br>
+    <!-- Monto en Bolívares (redondeado a 2 decimales) -->
+    Bs {{ (solicitud.monto * tasaConversion) | number:'1.2-2' }} 
+  </td>
+</ng-container>
 
-          <!-- <div *ngIf="sinResultados && !cargandoDatos">
-            <c-alert color="info" class="d-flex align-items-center">
-              <svg cIcon class="me-2" width="60" height="60" name="cilBellExclamation"></svg>
-              <div><strong>Información Importante!!!</strong><br>
-                Actualmente, solo estamos emitiendo constancias de estudio para estudiantes activos. Estamos trabajando activamente en el desarrollo de 
-                nuestro módulo para incluir otros tipos de documentos y servicios para personas egresadas. 
-                Agradecemos tu paciencia y te invitamos a estar atento a futuras actualizaciones. Para más información o consultas, no dudes en contactarnos por el correo: soportesice@unetrans.edu.ve</div>
-          </c-alert>
-          <c-alert color="warning" class="d-flex align-items-center">
-            <svg cIcon class="me-2" width="24" height="24" name="cilWarning"></svg>
-            <div><strong>No inscrito en el periodo actual</strong><br>
-              Por favor, verifica tu estado de inscripción con el Jefe de Departamento o contacta con la <strong>Dirección de Control de Estudios</strong> para más información.</div>
-        </c-alert>
+    <!-- Acciones -->
+    <ng-container matColumnDef="acciones">
+      <th class="gestion-ancho" mat-header-cell *matHeaderCellDef> Acciones </th>
+      <td class="gestion-ancho" mat-cell *matCellDef="let solicitud">
+        <div class="d-flex justify-content-center align-items-center">
+    
+          <!-- Botón para Ver Solicitud (solo icono con tooltip) -->
+          <button cButton class="btn-info m-1" size="sm" cTooltip="Ver Solicitud" cTooltipPlacement="top" (click)="verSolicitud(solicitud)">
+            <svg cIcon name="cil-magnifying-glass" width="20" height="20"></svg>
+          </button>
+
+          <!-- Botón para Editar Solicitud si el estatus es PPE -->
+      <button cButton class="btn-warning m-1" size="sm" *ngIf="solicitud.estatus_solicitud === 'PPE'" cTooltip="Editar Solicitud" cTooltipPlacement="top" (click)="editarSolicitud(solicitud)">
+        <svg cIcon name="cil-pencil" width="20" height="20"></svg>
+      </button>
+    
+          <!-- Botón para Reportar Pago (solo icono con tooltip) -->
+          <button cButton class="btn-primary m-1" size="sm" *ngIf="solicitud.estatus_solicitud === 'PPE'" cTooltip="Reportar Pago" cTooltipPlacement="top" (click)="reportarPago(solicitud)">
+            <svg cIcon name="cil-credit-card" width="20" height="20"></svg>
+          </button>
+    
+          <!-- Botón para Anular Solicitud (solo icono con tooltip) -->
+          <button cButton class="btn-danger m-1" size="sm" *ngIf="solicitud.estatus_solicitud === 'PPE'" cTooltip="Anular" cTooltipPlacement="top" (click)="anularSolicitud(solicitud)">
+            <svg cIcon name="cil-x-circle" width="20" height="20"></svg>
+          </button>
+    
+          <!-- Botón para Descargar Documento (solo icono con tooltip) -->
+          <button cButton class="btn-primary m-1" size="sm" *ngIf="solicitud.estatus_solicitud === 'DLE'" cTooltip="Descargar" cTooltipPlacement="top" (click)="descargarDocumento(solicitud)">
+            <svg cIcon name="cil-cloud-download" width="20" height="20"></svg>
+          </button>
+    
+          <!-- Botón para Pagar si aún no ha sido pagado -->
+          <button disabled="true" cButton class="btn-warning m-1" size="sm" *ngIf="solicitud.estatus_solicitud === 'PPE'" cTooltip="Pagar" cTooltipPlacement="top" (click)="pagarSolicitud(solicitud)">
+            <svg cIcon name="cil-money" width="20" height="20"></svg>
+          </button>
+    
         </div>
-        <div *ngIf="hayResultados && !cargandoDatos">
-          <table mat-table [dataSource]="documentos" [hover]="true" [responsive]="true" [striped]="true"
-          align="middle" cTable class="mb-0 border" cTable>
+      </td>
+    </ng-container>
+    
 
-           
-            <ng-container matColumnDef="nombre">
-              <th mat-header-cell *matHeaderCellDef> Documento disponible</th>
-              <td mat-cell *matCellDef="let documento"> {{documento.nombre}} </td>
-            </ng-container>
-      
-           
-            <ng-container matColumnDef="descargar">
-              <th class="down-ancho" mat-header-cell *matHeaderCellDef> Descargar </th>
-              <td class="down-ancho" mat-cell *matCellDef="let documento">
-                <button type="button" class="btn btn-primary" (click)="descargarDocumento(documento.nombre)"><svg cIcon class="me-2" name="cil-cloud-download"></svg>Descargar</button>
-              </td>
-            </ng-container>
-      
-            <tr mat-header-row *matHeaderRowDef="['nombre', 'descargar']"></tr>
-            <tr mat-row *matRowDef="let row; columns: ['nombre', 'descargar'];"></tr>
-          </table>
-        </div> -->
+    <!-- Header and Row Declarations -->
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+  
+</div>
 
-        </c-card-body> 
-    </c-card>
-  </c-col>
+<!-- Mostrar mensaje si no hay solicitudes -->
+<div *ngIf="!hayResultados && !cargandoDatos">
+  <c-alert color="info" class="d-flex align-items-center">
+    <svg cIcon class="me-2" width="30" height="30" name="cilBellExclamation"></svg>
+    <div>No tienes solicitudes de documentos realizadas.</div>
+  </c-alert>
+</div>
+
+      </c-card-body>
+  </c-card>
+</c-col>
+
   <ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" size="default" type="ball-atom">
     <p style="color: white" align="center">Por favor espere... <br>¡Validando información!</p>
   </ngx-spinner>

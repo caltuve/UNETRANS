@@ -28,20 +28,12 @@ export interface Estudiante {
   // ... otros campos relevantes
 }
 
-export interface DocumentosEstudiante {
-  nombreDocumento: string;
-  entregado: string,
-  estadoAprobacion: string,
-  // ... otros campos relevantes
-}
-
 @Component({
   selector: 'app-consulta-detalle-academico',
   templateUrl: './consulta-detalle-academico.component.html',
   styleUrls: ['./consulta-detalle-academico.component.scss']
 })
 export class ConsultaDetalleAcademicoComponent {
-
   displayedColumns: string[] = ['cohorte','plan', 'carnet', 'pnf', 'grado', 'condicion' ];
   dataSource2 = new MatTableDataSource();
 

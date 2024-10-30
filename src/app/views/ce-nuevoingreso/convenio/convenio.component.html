@@ -1,11 +1,19 @@
 <c-col xs="12">
   <c-card class="mb-4">
     <c-card-header>
-      <strong>Aspirantes por Convenio</strong> &nbsp; <small>Módulo para gestión de aspirantes por convenio</small>  &nbsp; 
+      <strong>Aspirantes por Convenio</strong> &nbsp; <small>Módulo para gestión de aspirantes por convenio</small> &nbsp;
+      
+      <!-- Botón para nuevo aspirante -->
       <button cButton color="primary" size="sm" (click)="abrirModalNuevoAspirante()">
         <svg cIcon class="me-2" name="cilUserPlus"></svg>Nuevo aspirante
-      </button>        
+      </button> &nbsp;
+    
+      <!-- Botón para ver estadísticas -->
+      <button cButton color="info" size="sm" (click)="abrirModalEstadisticasConvenio()">
+        <svg cIcon class="me-2" name="cilChartPie"></svg>Ver Estadísticas
+      </button>
     </c-card-header>
+    
     <c-card-body >
         Listado de aspirantes por convenio para el periodo académico actual.
         <br>
