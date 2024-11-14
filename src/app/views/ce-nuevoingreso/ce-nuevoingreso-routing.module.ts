@@ -11,6 +11,7 @@ import { InscripcionComponent } from './inscripcion/inscripcion.component';
 import { MigracionComponent } from './migracion/migracion.component';
 import { PostMigracionComponent } from './post-migracion/post-migracion.component';
 import { ConsultaDetalleAcademicoComponent } from './consulta-detalle-academico/consulta-detalle-academico.component';
+import { RevFotosComponent } from './rev-fotos/rev-fotos.component';
 
 const routes: Routes = [
   {
@@ -98,6 +99,13 @@ const routes: Routes = [
         data: {
           title: 'Migración Estudiantil - PostMigración'
         } 
+      },
+      {
+        path: 'rev-fotos',
+        component: RevFotosComponent,
+        data: {
+          title: 'Revisión de fotografías'
+        }
       },
     ]
   }

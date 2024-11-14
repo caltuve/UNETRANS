@@ -5,6 +5,8 @@ import { NgxSpinnerService } from "ngx-spinner";
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import {ModalDirective} from 'ngx-bootstrap/modal';
 
+import { ActContactoModalComponent } from '../act-contacto-modal/act-contacto-modal.component'; 
+
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
@@ -20,7 +22,8 @@ export class DetallePerfilComponent implements OnInit {
   //fotoModal: BsModalRef;
   cargarFotoModal: BsModalRef;
   estudiante: any = {
-    identidad: {}
+    identidad: {},
+    contacto: {}
   };
   cargandoDatos: boolean = false;
   usrsice: string;
@@ -63,6 +66,46 @@ export class DetallePerfilComponent implements OnInit {
         console.error('Error al cargar datos de identidad:', error);
         this.cargandoDatos = false;
         this.SpinnerService.hide();
+      });
+    }
+
+    cargarDatosContacto() {
+      this.SpinnerService.show();
+      this.cargandoDatos = true;
+      this.controlestudiosService.getDatosContacto(this.usrsice).subscribe(data => {
+        if (data && data.length > 0) {
+          this.estudiante.contacto = data[0]; // Asigna el primer objeto de la respuesta a contacto
+          this.codpersona = data[0].codpersona;
+        } else {
+          this.estudiante.contacto = {}; // Asigna un objeto vacío si no hay datos
+        }
+        this.cargandoDatos = false;
+        this.SpinnerService.hide();
+      }, error => {
+        console.error('Error al cargar datos de contacto:', error);
+        this.cargandoDatos = false;
+        this.SpinnerService.hide();
+      });
+    }
+    
+    abrirModalActualizar(tipo: string) {
+      const initialState = {
+        tipoContacto: tipo,
+        contacto: this.estudiante.contacto // Pasar datos actuales de contacto como estado inicial
+      };
+    
+      const modalRef: BsModalRef = this.modalService.show(ActContactoModalComponent, {
+        ignoreBackdropClick: true,
+        keyboard: false,
+        class: 'modal-dialog-centered modal-lg', // Tamaño adecuado para cada campo
+        initialState: initialState
+      });
+    
+      modalRef.content.actualizacionCompleta?.subscribe((result: any) => {
+        if (result) {
+          console.log(`Datos de contacto actualizados para ${tipo}.`);
+          this.cargarDatosContacto(); // Llamar a la función para cargar datos actualizados
+        }
       });
     }
     

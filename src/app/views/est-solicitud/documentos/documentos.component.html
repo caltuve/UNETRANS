@@ -4,13 +4,40 @@
           <strong>Servicios de Documentación</strong> &nbsp; 
           <small>Módulo para la descarga y solicitud de documentos académicos</small>
           <!-- Botón para nueva solicitud -->
-          <button cButton size="sm" class="btn btn-info ms-1" (click)="irANuevaSolicitud()">
+          <button cButton size="sm" class="btn btn-info ms-1" (click)="irANuevaSolicitud()" [disabled]="!tasaDisponible">
             <svg cIcon class="me-2" name="cil-note-add"></svg>Nueva Solicitud
           </button>
       </c-card-header>
       <c-card-body>
+
+        <!-- Mensaje informativo de la tasa de cambio -->
+<c-alert *ngIf="tasaDisponible && !cargandoDatos" color="info" class="d-flex align-items-center mb-3">
+  <svg cIcon class="me-2" width="30" height="30" name="cilInfo"></svg>
+  <div>
+    Tasa de cambio del día para solicitudes: <strong>{{ fechaTasa | date: 'dd/MM/yyyy' }}</strong> - {{ tasaCambio | currency:'Bs ':'symbol':'1.2-8' }}
+  </div>  
+</c-alert>
+
+<!-- Mensaje de no disponibilidad de la tasa de cambio -->
+<c-alert *ngIf="!tasaDisponible && !cargandoDatos" color="danger" class="d-flex align-items-center mb-3">
+  <svg cIcon class="me-2" width="30" height="30" name="cilInfo"></svg>
+  <div>
+    El sistema no está disponible temporalmente debido a la falta de una tasa de cambio para el día de hoy.
+    Por favor, inténtelo más tarde o contacte con el soporte si el problema persiste.
+  </div>
+</c-alert>
+
+
+        <!-- Mostrar mensaje si no hay resultados y no está cargando -->
+        <div *ngIf="!cargandoDatos && sinResultados">
+          <c-alert color="info" class="d-flex align-items-center">
+            <svg cIcon class="me-2" width="30" height="30" name="cilBellExclamation"></svg>
+            <div>No tienes solicitudes de documentos realizadas.</div>
+          </c-alert>
+        </div>
           <!-- Mostrar mat-table si hay solicitudes -->
-<div *ngIf="hayResultados && !cargandoDatos">
+<div *ngIf="!cargandoDatos && hayResultados">
+
   <table mat-table [dataSource]="dataSource" [hover]="true" [responsive]="true" [striped]="true" align="middle" cTable class="mb-0 border" cTable>
 
     <!-- Estatus Solicitud -->
@@ -28,6 +55,7 @@
           <svg *ngIf="solicitud.estatus_solicitud == 'PFI'" cIcon width="30" height="30" name="cilFile" style="color: #2EB85C;"></svg>
           <svg *ngIf="solicitud.estatus_solicitud == 'DLE'" cIcon width="30" height="30" name="cilCloudDownload" style="color: #007bff;"></svg>
           <svg *ngIf="solicitud.estatus_solicitud == 'ENT'" cIcon width="30" height="30" name="cilCheckCircle" style="color: #2EB85C;"></svg>
+          <svg *ngIf="solicitud.estatus_solicitud == 'SNA'" cIcon width="30" height="30" name="cilXCircle" style="color: #e55353;"></svg>
         </div>
       </td>
     </ng-container>
@@ -58,7 +86,7 @@
     € {{ solicitud.monto | number:'1.2-2' }} 
     <br>
     <!-- Monto en Bolívares (redondeado a 2 decimales) -->
-    Bs {{ (solicitud.monto * tasaConversion) | number:'1.2-2' }} 
+    Bs {{ (solicitud.monto * tasaCambio!) | number:'1.2-2' }} 
   </td>
 </ng-container>
 
@@ -74,14 +102,14 @@
           </button>
 
           <!-- Botón para Editar Solicitud si el estatus es PPE -->
-      <button cButton class="btn-warning m-1" size="sm" *ngIf="solicitud.estatus_solicitud === 'PPE'" cTooltip="Editar Solicitud" cTooltipPlacement="top" (click)="editarSolicitud(solicitud)">
+      <!-- <button cButton class="btn-warning m-1" size="sm" *ngIf="solicitud.estatus_solicitud === 'PPE'" cTooltip="Editar Solicitud" cTooltipPlacement="top" (click)="editarSolicitud(solicitud)">
         <svg cIcon name="cil-pencil" width="20" height="20"></svg>
-      </button>
-    
-          <!-- Botón para Reportar Pago (solo icono con tooltip) -->
-          <button cButton class="btn-primary m-1" size="sm" *ngIf="solicitud.estatus_solicitud === 'PPE'" cTooltip="Reportar Pago" cTooltipPlacement="top" (click)="reportarPago(solicitud)">
-            <svg cIcon name="cil-credit-card" width="20" height="20"></svg>
-          </button>
+      </button> -->
+      
+    <!-- Botón para Pagar si aún no ha sido pagado -->
+    <button cButton class="btn-warning m-1" size="sm" *ngIf="solicitud.estatus_solicitud === 'PPE'" cTooltip="Pagar o reportar pago" cTooltipPlacement="top" (click)="mostrarDatosPagoMovil(solicitud)">
+      <svg cIcon name="cil-money" width="20" height="20"></svg>
+    </button>
     
           <!-- Botón para Anular Solicitud (solo icono con tooltip) -->
           <button cButton class="btn-danger m-1" size="sm" *ngIf="solicitud.estatus_solicitud === 'PPE'" cTooltip="Anular" cTooltipPlacement="top" (click)="anularSolicitud(solicitud)">
@@ -89,14 +117,9 @@
           </button>
     
           <!-- Botón para Descargar Documento (solo icono con tooltip) -->
-          <button cButton class="btn-primary m-1" size="sm" *ngIf="solicitud.estatus_solicitud === 'DLE'" cTooltip="Descargar" cTooltipPlacement="top" (click)="descargarDocumento(solicitud)">
+          <!-- <button cButton class="btn-primary m-1" size="sm" *ngIf="solicitud.estatus_solicitud === 'DLE'" cTooltip="Descargar" cTooltipPlacement="top" (click)="descargarDocumento(solicitud)">
             <svg cIcon name="cil-cloud-download" width="20" height="20"></svg>
-          </button>
-    
-          <!-- Botón para Pagar si aún no ha sido pagado -->
-          <button disabled="true" cButton class="btn-warning m-1" size="sm" *ngIf="solicitud.estatus_solicitud === 'PPE'" cTooltip="Pagar" cTooltipPlacement="top" (click)="pagarSolicitud(solicitud)">
-            <svg cIcon name="cil-money" width="20" height="20"></svg>
-          </button>
+          </button> -->
     
         </div>
       </td>
@@ -110,13 +133,6 @@
   
 </div>
 
-<!-- Mostrar mensaje si no hay solicitudes -->
-<div *ngIf="!hayResultados && !cargandoDatos">
-  <c-alert color="info" class="d-flex align-items-center">
-    <svg cIcon class="me-2" width="30" height="30" name="cilBellExclamation"></svg>
-    <div>No tienes solicitudes de documentos realizadas.</div>
-  </c-alert>
-</div>
 
       </c-card-body>
   </c-card>

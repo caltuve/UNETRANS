@@ -85,52 +85,49 @@ export class ConsultaDetalleAcademicoComponent {
 
     cargarDatosPersona(id: number): void {
       this.SpinnerService.show();
-      this.controlestudiosService.findPersonaInscripcion({cedula : id}).subscribe(
+      this.controlestudiosService.findPersonaInscripcion({ cedula: id }).subscribe(
         (result: any) => {
           this.hayResultados = false;
           this.sinResultados = false;
-  
-          // Asumiendo que la respuesta tiene dos propiedades: 'estudiante' y 'documentos'
+    
           if (result && result.estudiante) {
-            this.dataSource.data = [result.estudiante]; // Almacena los datos del estudiante
+            // Almacena los datos del estudiante
+            this.dataSource.data = [result.estudiante];
             this.cedulaActual = id;
-            this.controlestudiosService.findPersonaCalificaciones({cedula : this.cedulaActual} ).subscribe(
+    
+            this.controlestudiosService.findPersonaCalificaciones({ cedula: this.cedulaActual }).subscribe(
               (result: any) => {
                 this.hayResultados = false;
                 this.sinResultados = false;
                 this.dataSource2.data = result;
+    
                 if (this.dataSource2.data.length == 0) {
                   this.SpinnerService.hide();
-                  this.sinResultados = this.dataSource2.data.length == 0
+                  this.sinResultados = true;
                   this.hayResultados = false;
-                }
-                else {
+                } else {
                   this.notifyService.showSuccess('Consulta de datos de estudiante');
                   this.SpinnerService.hide();
                   this.hayResultados = true;
     
-                  // Invoca la función findInscripcion pasando el valor del carnet
-                  if (this.dataSource.data[0].carnet) {
-                    this.findInscripcion(this.dataSource.data[0].carnet); // Invoca la función con el carnet del estudiante
-                  }
+                  // Recorre todos los programas activos y llama a findInscripcion para cada carnet
+                  this.dataSource.data.forEach((programa: any) => {
+                    if (programa.carnet && programa.estatus === 1) {
+                      this.findInscripcion(programa.carnet); // Invoca la función con el carnet del programa activo
+                    }
+                  });
                 }
-        
               }
             );
-            //this.dataSourceDocumentos.data = result.documentos; // Almacena los documentos en el dataSource de la tabla
-  
-            //this.notifyService.showSuccess('Consulta de datos de estudiante');
+    
             this.hayResultados = true; // Indica que hay resultados
-            // Actualizar el FormArray
-          //this.actualizarFormArrayConDocumentos(result.documentos);
           } else {
             // No se encontraron datos
             this.sinResultados = true;
             this.hayResultados = false;
           }
-  
+    
           this.SpinnerService.hide();
-          //this.formSearchPersona.reset();
         },
         error => {
           // Manejo de error
@@ -138,10 +135,10 @@ export class ConsultaDetalleAcademicoComponent {
           this.SpinnerService.hide();
           this.sinResultados = true;
           this.hayResultados = false;
-          ///this.formSearchPersona.reset();
         }
       );
     }
+    
 
     findInscripcion(carnet: any) {
       this.cargandoDatos = true;

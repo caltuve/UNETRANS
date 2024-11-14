@@ -1,0 +1,178 @@
+<ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" size="default" type="ball-atom">
+    <p style="color: white" align="center">Por favor espere... <br>¡Validando información!</p>
+  </ngx-spinner>
+  
+  <c-col xs="12">
+    <c-card class="mb-4">
+      <c-card-header>
+        <strong>Solicitudes de revisión de fotografías</strong> &nbsp;
+        <small>Módulo para gestión de solicitudes de fotos subidas al SICE</small>
+      </c-card-header>
+      <c-card-body>
+        <!-- Tabs de navegación -->
+        <c-nav variant="tabs">
+          <c-nav-item class="ms-3">
+            <a
+              [cTabContent]="tabContent1"
+              [routerLink]
+              [tabPaneIdx]="0"
+              cNavLink
+              (click)="cargarDatosPendientes()"
+              [ngClass]="{ 'active-tab': tabContent1.activeTabPaneIdx === 0 }"
+              class="d-flex align-items-center position-relative"
+              [style.border]="tabContent1.activeTabPaneIdx === 0 ? '2px solid white' : '2px solid #003E85'"
+      [style.backgroundColor]="tabContent1.activeTabPaneIdx === 0 ? '#003E85' : 'transparent'"
+      [style.color]="tabContent1.activeTabPaneIdx === 0 ? '#fff' : '#003E85'"
+            >
+              <svg cIcon class="me-2" name="cilInbox"></svg>
+              Pendientes
+              <c-badge
+                *ngIf="pendientes.data.length > 0"
+                color="danger"
+                shape="rounded-pill"
+                class="position-absolute badge-adjusted"
+              >
+                {{ pendientes.data.length > 99 ? '99+' : pendientes.data.length }}
+              </c-badge>
+              <c-badge
+                *ngIf="pendientes.data.length === 0"
+                color="success"
+                shape="rounded-pill"
+                class="position-absolute badge-adjusted"
+              >
+                <svg cIcon name="cilCheckCircle" width="12" height="12"></svg>
+              </c-badge>
+            </a>
+          </c-nav-item>
+  
+          <c-nav-item class="ms-3">
+            <a
+              [cTabContent]="tabContent1"
+              [routerLink]
+              [tabPaneIdx]="1"
+              cNavLink
+              (click)="cargarDatosRevisadas()"
+              [ngClass]="{ 'active-tab': tabContent1.activeTabPaneIdx === 1 }"
+              class="d-flex align-items-center position-relative"
+              [style.border]="tabContent1.activeTabPaneIdx === 1 ? '2px solid white' : '2px solid #003E85'"
+      [style.backgroundColor]="tabContent1.activeTabPaneIdx === 1 ? '#003E85' : 'transparent'"
+      [style.color]="tabContent1.activeTabPaneIdx === 1 ? '#fff' : '#003E85'"
+            >
+              <svg cIcon class="me-2" name="cilClock"></svg>
+              Revisadas
+            </a>
+          </c-nav-item>
+        </c-nav>
+  
+        <!-- Contenido de los tabs -->
+        <c-tab-content #tabContent1="cTabContent" [activeTabPaneIdx]="0" cRounded="bottom">
+          <!-- Pendientes Tab -->
+          <c-tab-pane class="p-3 preview" role="tabpanel">
+            <div *ngIf="hayResultadosPendientes; else sinResultadosPendientes">
+              <mat-form-field>
+                <input
+                  matInput
+                  (keyup)="applyFilterPendientes($event)"
+                  placeholder="Buscar solicitud pendiente"
+                />
+              </mat-form-field>
+              <table mat-table [dataSource]="pendientes" class="mb-0 border" cTable>
+                <ng-container matColumnDef="fecha_solicitud">
+                  <th class="fecha-ancho" mat-header-cell *matHeaderCellDef>Fecha de solicitud</th>
+                  <td class="fecha-ancho" mat-cell *matCellDef="let solicitud">{{ solicitud.fecha_solicitud }}</td>
+                </ng-container>
+                <ng-container matColumnDef="id_estudiante">
+                  <th class="id-ancho" mat-header-cell *matHeaderCellDef>Identificación</th>
+                  <td class="id-ancho" mat-cell *matCellDef="let solicitud">{{ solicitud.nac }}-{{ solicitud.ced_pas }}</td>
+                </ng-container>
+                <ng-container matColumnDef="nombre_completo">
+                  <th mat-header-cell *matHeaderCellDef>Apellidos y nombres</th>
+                  <td mat-cell *matCellDef="let solicitud">{{ solicitud.nombre_completo }}</td>
+                </ng-container>
+                <ng-container matColumnDef="accion">
+                  <th mat-header-cell *matHeaderCellDef>Acción </th>
+                  <td mat-cell *matCellDef="let solicitud">
+                    <button cButton class="btn-info m-1" size="sm" cTooltip="Ver foto" cTooltipPlacement="top" (click)="verFoto(solicitud)">
+                        <svg cIcon name="cil-camera" width="20" height="20"></svg>
+                      </button>
+                  </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumnsPendientes"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumnsPendientes;"></tr>
+              </table>
+              <mat-paginator [hidePageSize]="true" [pageSize]="5" #paginatorPendientes></mat-paginator>
+            </div>
+            <ng-template #sinResultadosPendientes>
+              <c-alert color="success">
+                <svg cIcon class="me-2" width="24" height="24" name="cilCheckCircle"></svg>
+                No existen solicitudes pendientes.
+              </c-alert>
+            </ng-template>
+          </c-tab-pane>
+  
+          <!-- Revisadas Tab -->
+          <c-tab-pane class="p-3 preview" role="tabpanel">
+            <div *ngIf="hayResultadosRevisadas; else sinResultadosRevisadas">
+              <mat-form-field>
+                <input
+                  matInput
+                  (keyup)="applyFilterRevisadas($event)"
+                  placeholder="Buscar solicitud revisada"
+                />
+              </mat-form-field>
+              <table mat-table [dataSource]="revisadas" class="mb-0 border" cTable>
+                <ng-container matColumnDef="estatus">
+                  <th class="estatus-ancho" mat-header-cell *matHeaderCellDef> Estatus </th>
+                  <td class="estatus-ancho" mat-cell *matCellDef="let solicitud">
+                    <div class="container" 
+                         cTooltip="{{ 
+                            solicitud.estatus == '2' ? 'La foto ha sido aprobada.' : 
+                            solicitud.estatus == '3' ? 'La foto ha sido rechazada.' : '' }}" 
+                         cTooltipPlacement="right">
+                      
+                      <!-- Icono para Estatus 2: Aprobada -->
+                      <svg *ngIf="solicitud.estatus == '2'" cIcon width="30" height="30" name="cilCheckCircle" style="color: #2EB85C;"></svg>
+                      
+                      <!-- Icono para Estatus 3: Rechazada -->
+                      <svg *ngIf="solicitud.estatus == '3'" cIcon width="30" height="30" name="cilXCircle" style="color: #e55353;"></svg>
+                      
+                    </div>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="id_estudiante">
+                  <th class="id-ancho" mat-header-cell *matHeaderCellDef>Identificación</th>
+                  <td class="id-ancho" mat-cell *matCellDef="let solicitud">{{ solicitud.nac }}-{{ solicitud.ced_pas }}</td>
+                </ng-container>
+                <ng-container matColumnDef="nombre_completo">
+                  <th mat-header-cell *matHeaderCellDef>Apellidos y nombres</th>
+                  <td mat-cell *matCellDef="let solicitud">{{ solicitud.nombre_completo }}</td>
+                </ng-container>                
+                <ng-container matColumnDef="usr_procesa">
+                  <th mat-header-cell *matHeaderCellDef>Procesado</th>
+                  <td mat-cell *matCellDef="let solicitud">{{ solicitud.fec_usr_procesa }}</td>
+                </ng-container>
+                <ng-container matColumnDef="accion">
+                  <th mat-header-cell *matHeaderCellDef>Acción </th>
+                  <td mat-cell *matCellDef="let solicitud">
+                    <button cButton class="btn-info m-1" size="sm" cTooltip="Ver foto" cTooltipPlacement="top" (click)="verFotoProcesada(solicitud)">
+                        <svg cIcon name="cil-camera" width="20" height="20"></svg>
+                      </button>
+                  </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumnsRevisadas"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumnsRevisadas;"></tr>
+              </table>
+              <mat-paginator [hidePageSize]="true" [pageSize]="5" #paginatorRevisadas></mat-paginator>
+            </div>
+            <ng-template #sinResultadosRevisadas>
+              <c-alert color="success">
+                <svg cIcon class="me-2" width="24" height="24" name="cilCheckCircle"></svg>
+                No existen solicitudes revisadas.
+              </c-alert>
+            </ng-template>
+          </c-tab-pane>
+        </c-tab-content>
+      </c-card-body>
+    </c-card>
+  </c-col>
+  

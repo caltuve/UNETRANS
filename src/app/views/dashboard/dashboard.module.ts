@@ -36,6 +36,8 @@ import { HttpClientModule } from '@angular/common/http';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatTabsModule} from '@angular/material/tabs';
 
+import { MatTableModule } from '@angular/material/table';
+
 
 @NgModule({
   imports: [
@@ -60,7 +62,7 @@ import {MatTabsModule} from '@angular/material/tabs';
     WidgetsModule,
     NgxSpinnerModule,
     SharedModule,
-
+    MatTableModule,
     MatCardModule,
     MatIconModule,
     MatDividerModule,

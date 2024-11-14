@@ -4,10 +4,10 @@
       <c-card-header>Bienvenido al Sistema Integral de Control de Estudios de la UNETRANS</c-card-header>
       <c-card-body>
         <c-row>
-          <c-col lg="12"> 
-           
+          <c-col lg="12">
 
-            <div *ngIf="!cargandoDatos && tieneRol('006')" >
+
+            <div *ngIf="!cargandoDatos && tieneRol('006')">
               <h2>Información de mis cursos</h2>
               <div *ngIf="cursosDocente.length > 0; else noDataTemplate">
                 <div class="d-flex flex-row flex-wrap">
@@ -23,16 +23,18 @@
                             <p cCardText><strong>Cantidad de actas:</strong> {{ curso.cantidad }}</p>
                             <p cCardText><strong>Estudiantes inscritos:</strong> {{ curso.inscritos }}</p>
                           </div>
-                          <div class="curso-estado" [ngStyle]="{'color': curso.actas_cargadas < curso.cantidad ? 'red' : 'green'}">
+                          <div class="curso-estado"
+                            [ngStyle]="{'color': curso.actas_cargadas < curso.cantidad ? 'red' : 'green'}">
                             {{ curso.actas_cargadas < curso.cantidad ? 'Tienes ' : 'Todas las actas están cargadas' }}
-                            <span *ngIf="curso.actas_cargadas < curso.cantidad" style="font-weight: bold;">
+                              <span *ngIf="curso.actas_cargadas < curso.cantidad" style="font-weight: bold;">
                               {{ curso.cantidad - curso.actas_cargadas }}
-                            </span>
-                            <span *ngIf="curso.actas_cargadas < curso.cantidad">
-                              {{ (curso.cantidad - curso.actas_cargadas) === 1 ? ' acta por cargar' : ' actas por cargar' }}
-                            </span>
+                              </span>
+                              <span *ngIf="curso.actas_cargadas < curso.cantidad">
+                                {{ (curso.cantidad - curso.actas_cargadas) === 1 ? ' acta por cargar' : ' actas por
+                                cargar' }}
+                              </span>
                           </div>
-                          
+
                         </div>
                         <div class="curso-acciones">
                           <button class="btn btn-primary btn-sm mr-2" routerLink="/doc-academico/mis-cursos">
@@ -43,7 +45,7 @@
                           </button>
                         </div>
                       </c-card-body>
-                                          
+
                     </c-card>
                   </c-col>
                 </div>
@@ -54,14 +56,17 @@
                 </div>
               </ng-template>
             </div>
-            
+
 
             <div *ngIf="tieneRol('007')" class="mis-programas">
               <h2>Mis Programas</h2>
 
               <c-alert *ngIf="!cargandoDatos && mostrarMensaje" color="info" fade>
-                Estimad{{ estudiante.genero_mensaje }} <strong>{{ estudiante.nombre }}</strong>, en este apartado es donde podrás observar tus programas académicos.<br>
-                Tras el reciente proceso de migración de datos al registrarte en el SICE se ha iniciado de forma automática un procedimiento de revisión 📑 para validar y poder realizar la migración de calificaciones históricas. <br>
+                Estimad{{ estudiante.genero_mensaje }} <strong>{{ estudiante.nombre }}</strong>, en este apartado es
+                donde podrás observar tus programas académicos.<br>
+                Tras el reciente proceso de migración de datos al registrarte en el SICE se ha iniciado de forma
+                automática un procedimiento de revisión 📑 para validar y poder realizar la migración de calificaciones
+                históricas. <br>
                 Te solicitamos paciencia mientras procesamos un volumen considerable de solicitudes.
               </c-alert>
 
@@ -69,7 +74,7 @@
                 <c-col lg="6" md="6" sm="12" *ngFor="let matricula of estudiante.matriculas">
                   <c-card class="mb-3">
                     <c-card-header class="custom-card-header">
-                      <strong>{{ matricula.programa }}</strong> 
+                      <strong>{{ matricula.programa }}</strong>
                     </c-card-header>
                     <c-card-body>
                       <h4 cCardTitle>
@@ -79,53 +84,122 @@
                           'text-warning': matricula.estatus === 'Inactivo',
                           'text-primary': matricula.estatus === 'Egresado',
                           'text-danger': matricula.estatus === 'Retirado'
-                        }">{{ matricula.estatus }} <svg cIcon width="20" height="20" name="{{ getIconName(matricula.estatus) }}" class="icon-estatus"></svg></span>
+                        }">{{ matricula.estatus }} <svg cIcon width="20" height="20"
+                            name="{{ getIconName(matricula.estatus) }}" class="icon-estatus"></svg></span>
                       </h4>
                       <div [ngSwitch]="matricula.estatus">
                         <!-- Ajustado para mostrar grados uno debajo del otro con icono -->
                         <ng-container *ngFor="let grado of matricula.grados">
-                          <p cCardText> 
-                            <strong>{{ grado.nombre }}  </strong>
-                            <svg cIcon width="20" height="20"  name="{{ getIconNameGrade(+grado.estatus) }}" class="icon-estatus"></svg>
-                             - {{ grado.desc_estatus}}
+                          <p cCardText>
+                            <strong>{{ grado.nombre }} </strong>
+                            <svg cIcon width="20" height="20" name="{{ getIconNameGrade(+grado.estatus) }}"
+                              class="icon-estatus"></svg>
+                            - {{ grado.desc_estatus}}
                           </p>
                         </ng-container>
                       </div>
                       <br>
                       <!-- Mensaje de alerta si algún grado es 'Sin definir' -->
                       <div *ngIf="tieneEstadoSinDefinir(estudiante.matriculas)" class="alert alert-info" role="alert">
-                        Se ha detectado una omisión en la especificación de la mención durante el proceso de migración de datos. Se ha iniciado automáticamente una solicitud de revisión para corregir esta información a la brevedad.
+                        Se ha detectado una omisión en la especificación de la mención durante el proceso de migración
+                        de datos. Se ha iniciado automáticamente una solicitud de revisión para corregir esta
+                        información a la brevedad.
                       </div>
                     </c-card-body>
                   </c-card>
                 </c-col>
               </div>
+              <hr> <!-- Línea divisoria -->
+              <div class="inscripcion-container">
+                <!-- Si no hay resultados y no está cargando datos -->
+                <div *ngIf="!cargandoDatos && !hayResultadosInscripcion">
+                  <c-alert color="danger" class="d-flex align-items-center">
+                    <svg cIcon class="me-2" width="24" height="24" name="cilWarning"></svg>
+                    <div><strong>No inscrito en el periodo actual ({{ periodoActual }}).</strong></div>
+                  </c-alert>
+                </div>
+
+                <!-- Si hay resultados y no está cargando datos -->
+                <div *ngIf="!cargandoDatos && hayResultadosInscripcion">
+                  <h3>Unidades Curriculares Inscritas</h3>
+                  <table mat-table [dataSource]="dataSourceUC" class="mb-0 border" cTable>
+                    <!-- Columna de Acta -->
+                    <ng-container matColumnDef="acta">
+                      <th mat-header-cell *matHeaderCellDef> Acta</th>
+                      <td mat-cell *matCellDef="let documento"> {{ documento.acta }} </td>
+                    </ng-container>
+
+                    <!-- Columna de Periodo -->
+                    <ng-container matColumnDef="periodo">
+                      <th mat-header-cell *matHeaderCellDef> Periodo</th>
+                      <td mat-cell *matCellDef="let documento"> {{ documento.periodo }} </td>
+                    </ng-container>
+
+                    <!-- Columna de Código UC -->
+                    <ng-container matColumnDef="cod_ucurr">
+                      <th mat-header-cell *matHeaderCellDef> Cod. UC</th>
+                      <td mat-cell *matCellDef="let documento"> {{ documento.cod_ucurr }} </td>
+                    </ng-container>
+
+                    <!-- Columna de Nombre UC -->
+                    <ng-container matColumnDef="nombre_uc">
+                      <th mat-header-cell *matHeaderCellDef> Nombre UC</th>
+                      <td mat-cell *matCellDef="let documento"> {{ documento.nombre_uc }} </td>
+                    </ng-container>
+
+                    <!-- Columna de Créditos -->
+                    <ng-container matColumnDef="creditos">
+                      <th mat-header-cell *matHeaderCellDef> Créditos</th>
+                      <td mat-cell *matCellDef="let documento"> {{ documento.creditos }} </td>
+                    </ng-container>
+
+                    <!-- Columna de Sección -->
+                    <ng-container matColumnDef="seccion">
+                      <th mat-header-cell *matHeaderCellDef> Sección</th>
+                      <td mat-cell *matCellDef="let documento"> {{ documento.seccion }} </td>
+                    </ng-container>
+
+                    <!-- Columna de Profesor -->
+                    <ng-container matColumnDef="profesor">
+                      <th mat-header-cell *matHeaderCellDef> Profesor</th>
+                      <td mat-cell *matCellDef="let documento"> {{ documento.prof_asignado }} </td>
+                    </ng-container>
+
+                    <!-- Fila de cabecera -->
+                    <tr mat-header-row *matHeaderRowDef="displayedColumnsUC"></tr>
+                    <!-- Fila de contenido -->
+                    <tr mat-row *matRowDef="let row; columns: displayedColumnsUC;"></tr>
+                  </table>
+                </div>
+              </div>
+
             </div>
 
             <div *ngIf="tieneRol('008')" class="mis-programas">
               <h2>Procesos del Ente de Transporte</h2>
-            
+
               <c-alert *ngIf="!cargandoDatos" color="info" fade>
-                Estimad{{ persona_ente.genero_mensaje }} <strong>{{ persona_ente.nombre }}</strong>, aquí puedes ver el estado de los procesos actuales de tu ente adscrito <strong>{{ persona_ente.ente }}</strong>
+                Estimad{{ persona_ente.genero_mensaje }} <strong>{{ persona_ente.nombre }}</strong>, aquí puedes ver el
+                estado de los procesos actuales de tu ente adscrito <strong>{{ persona_ente.ente }}</strong>
               </c-alert>
-            
+
               <div class="d-flex flex-row flex-wrap">
                 <c-col lg="6" md="6" sm="12" *ngFor="let proceso of procesos">
                   <c-card class="mb-3">
                     <c-card-header class="custom-card-header">
-                      <strong>{{ proceso.proceso }}</strong> 
+                      <strong>{{ proceso.proceso }}</strong>
                     </c-card-header>
                     <c-card-body>
                       <h4 cCardTitle>
                         Periodo: {{ proceso.periodo }}
                       </h4>
-              
+
                       <p cCardText>
                         <!-- Mostrar "Por definir" si la fecha es null -->
                         Fecha de inicio: {{ proceso.fec_ini_view ? proceso.fec_ini_view : 'Por definir' }} <br>
                         Fecha de fin: {{ proceso.fec_fin_view ? proceso.fec_fin_view : 'Por definir' }}
                       </p>
-              
+
                       <!-- Mensaje de estado del proceso -->
                       <p cCardText>
                         <strong>Estado: </strong>
@@ -133,34 +207,40 @@
                           'text-success': proceso.estatus === 'ACTIVO',
                           'text-danger': proceso.estatus === 'FINALIZADO'
                         }">
-                          {{ proceso.estatus }} 
-                          <svg cIcon width="20" height="20" name="cil{{ proceso.estatus === 'ACTIVO' ? 'CheckCircle' : 'XCircle' }}" class="icon-estatus"></svg>
+                          {{ proceso.estatus }}
+                          <svg cIcon width="20" height="20"
+                            name="cil{{ proceso.estatus === 'ACTIVO' ? 'CheckCircle' : 'XCircle' }}"
+                            class="icon-estatus"></svg>
                         </span>
                       </p>
-              
+
                       <!-- Verificación de si el proceso está habilitado según fechas -->
-                      <div *ngIf="procesoHabilitado(proceso.fec_ini, proceso.fec_fin)" class="alert alert-success d-flex justify-content-between align-items-center">
+                      <div *ngIf="procesoHabilitado(proceso.fec_ini, proceso.fec_fin)"
+                        class="alert alert-success d-flex justify-content-between align-items-center">
                         <span class="w-50 text-center">Este proceso está habilitado.</span>
-                        <button *ngIf="proceso.id === 10" cButton color="primary" size="sm" class="w-50" (click)="irACargaConvenio()">
+                        <button *ngIf="proceso.id === 10" cButton color="primary" size="sm" class="w-50"
+                          (click)="irACargaConvenio()">
                           <svg cIcon class="me-2" name="cilUserPlus"></svg>Ir a la carga de aspirantes
                         </button>
                       </div>
-              
-                      <div *ngIf="!procesoHabilitado(proceso.fec_ini, proceso.fec_fin)" class="alert alert-secondary d-flex justify-content-between align-items-center">
+
+                      <div *ngIf="!procesoHabilitado(proceso.fec_ini, proceso.fec_fin)"
+                        class="alert alert-secondary d-flex justify-content-between align-items-center">
                         <span class="text-center w-100">
                           <!-- Mostrar "Por definir" si ambas fechas son null -->
-                          {{ proceso.fec_ini === null && proceso.fec_fin === null ? 'Fechas del proceso por definir' : 'Esta fase del proceso finalizó' }}
+                          {{ proceso.fec_ini === null && proceso.fec_fin === null ? 'Fechas del proceso por definir' :
+                          'Esta fase del proceso finalizó' }}
                         </span>
                       </div>
-              
+
                     </c-card-body>
                   </c-card>
                 </c-col>
               </div>
-              
+
             </div>
-            
-            
+
+
 
             <!-- <div >
               <h2>Panel de Jefe de Departamento</h2>
@@ -197,8 +277,8 @@
                 </c-col>
               </div>
             </div> -->
-            
-          </c-col>        
+
+          </c-col>
         </c-row>
         <!-- <div *ngIf="tieneRol('005')" class="card-container">
           <c-card class="mb-12">
@@ -810,5 +890,4 @@
 </c-row>-->
 <ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" size="default" type="ball-atom">
   <p style="color: white" align="center">Por favor espere... <br>¡Validando información!</p>
-  </ngx-spinner>
- 
+</ngx-spinner>

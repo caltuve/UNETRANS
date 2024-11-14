@@ -64,11 +64,13 @@ import {MatSortModule} from '@angular/material/sort';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatRadioModule} from '@angular/material/radio';
-import {MatSlideToggleModule} from '@angular/material/slide-toggle'; 
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import { ActContactoModalComponent } from './act-contacto-modal/act-contacto-modal.component'; 
 
 @NgModule({
   declarations: [
-    DetallePerfilComponent
+    DetallePerfilComponent,
+    ActContactoModalComponent
   ],
   imports: [
     CommonModule,

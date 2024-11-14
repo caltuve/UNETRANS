@@ -1,0 +1,36 @@
+.estudiante-container {
+    display: flex;
+    flex-wrap: wrap; /* Permite que los elementos se ajusten en pantallas pequeñas */
+    gap: 20px; /* Espacio entre los bloques */
+    padding: 20px;
+    align-items: flex-start; /* Alinea los elementos superiormente */
+}
+
+.foto-estudiante {
+    flex: 1 1 120px; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.foto-estudiante img {
+    width: 150px;  /* Ancho fijo de la imagen */
+    height: 200px; /* Alto fijo de la imagen */
+    object-fit: cover; /* Asegura que la imagen ocupe todo el espacio y se recorte si es necesario */
+    object-position: top; /* Alinea la imagen desde la parte superior */
+    border-radius: 8px; /* Opcional: bordes redondeados */
+    margin-bottom: 5px;
+}
+
+td mat-cell ul {
+    margin: 0;
+    padding-left: 20px; /* Indentación */
+    list-style-type: disc; /* Muestra puntos al inicio */
+  }
+  
+  td mat-cell ul li {
+    line-height: 1.5; /* Espaciado entre líneas */
+  }
+  

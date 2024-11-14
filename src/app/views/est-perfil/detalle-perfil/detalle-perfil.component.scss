@@ -2,12 +2,12 @@
     display: flex;
     flex-wrap: wrap; /* Permite que los elementos se ajusten en pantallas pequeñas */
     gap: 20px; /* Espacio entre los bloques */
-    padding: 20px;
+    padding: 5;
     align-items: flex-start; /* Alinea los elementos superiormente */
 }
 
 .foto-estudiante {
-    flex: 1 1 120px; 
+    flex: 1 1 120px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -15,13 +15,22 @@
     margin-bottom: 10px;
 }
 
-.foto-estudiante img {
-    width: 150px;  /* Ancho fijo de la imagen */
-    height: 200px; /* Alto fijo de la imagen */
-    object-fit: cover; /* Asegura que la imagen ocupe todo el espacio y se recorte si es necesario */
-    border-radius: 8px; /* Opcional: bordes redondeados */
-    margin-bottom: 5px;
+.alert-center {
+    width: 100%;          /* Hace que ocupe el ancho completo de .foto-estudiante */
+    text-align: center;    /* Centra el contenido de texto */
+    margin-top: 5px;       /* Espacio superior para separar de la imagen */
 }
+
+.foto-estudiante img {
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Añadir sombra para destacar la foto */
+    margin-right: 20px; /* Espacio entre la foto y los datos */
+    width: 120px;  /* Ancho fijo de la imagen */
+      height: 160px; /* Alto fijo de la imagen */
+      object-fit: cover; /* Asegura que la imagen ocupe todo el espacio y se recorte si es necesario */
+      object-position: top; /* Alinea la imagen desde la parte superior */
+      border-radius: 8px; /* Opcional: bordes redondeados */
+      margin-bottom: 5px;
+  }
 
 .btn-cargar-foto {
     padding: 8px 16px;
@@ -63,6 +72,18 @@
 .btn-actualizar {
     position: absolute;
     top: 10px; /* Mantiene el botón en la parte superior derecha */
+    right: 10px;
+    padding: 6px 12px;
+    background-color: #003E85;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem; /* Tamaño de fuente ligeramente reducido para que se ajuste mejor */
+    transition: background-color 0.3s ease;
+}
+
+.btn-actualizar2 {
     right: 10px;
     padding: 6px 12px;
     background-color: #003E85;

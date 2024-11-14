@@ -1,0 +1,127 @@
+<div class="modal-header">
+    <h2 class="modal-title">Actualizar {{ tipoContacto === 'habitacion' ? 'Teléfono de Habitación' : tipoContacto === 'celular' ? 'Teléfono Celular' : 'Correo Electrónico' }}</h2>
+    <button type="button" class="close" (click)="cerrarModal()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <!-- Alertas Condicionales Según el Tipo de Contacto -->
+<div class="mb-3">
+    <c-alert *ngIf="tipoContacto === 'habitacion'" color="info" class="d-flex align-items-start alert-responsive">
+      <svg cIcon class="me-2 icon-responsive" width="40" height="40" name="cilWarning"></svg>
+      <div class="alert-content">
+        <strong>Instrucción:</strong> Por favor, ingrese el código de área y número de su teléfono de habitación. Asegúrate de que esté actualizado.
+      </div>
+    </c-alert>
+    
+    <c-alert *ngIf="tipoContacto === 'celular'" color="info" class="d-flex align-items-start alert-responsive">
+      <svg cIcon class="me-2 icon-responsive" width="40" height="40" name="cilWarning"></svg>
+      <div class="alert-content">
+        <strong>Instrucción:</strong> Por favor, selecciona la operadora y el número de tu teléfono celular. Este número se utilizará para notificaciones importantes.
+      </div>
+    </c-alert>
+    
+    <c-alert *ngIf="tipoContacto === 'email'" color="info" class="d-flex align-items-start alert-responsive">
+      <svg cIcon class="me-2 icon-responsive" width="40" height="40" name="cilWarning"></svg>
+      <div class="alert-content">
+        <strong>Instrucción:</strong> Ingresa tu dirección de correo electrónico y asegúrate de verificarlo. Un código de validación será enviado a este correo.
+      </div>
+    </c-alert>
+  </div>
+  
+  <div class="modal-body">
+    <form [formGroup]="formContacto" (ngSubmit)="guardarDatos()">
+      <div class="row">
+        <!-- Campo para Teléfono de Habitación o Celular -->
+        <div *ngIf="tipoContacto === 'habitacion' || tipoContacto === 'celular'" class="col l12 m12 s12">
+          <label>{{ tipoContacto === 'habitacion' ? 'Teléfono de Habitación' : 'Teléfono Celular' }}</label>
+          
+          <!-- Valor Actual -->
+          <p class="text-muted">
+            {{ tipoContacto === 'habitacion' 
+                ? (contacto.cod_tlf_hab && contacto.tlf_hab ? (contacto.cod_tlf_hab + '-' + contacto.tlf_hab) : 'No proporcionado')
+                : (contacto.cod_tlf_cel && contacto.tlf_cel ? (contacto.cod_tlf_cel + '-' + contacto.tlf_cel) : 'No proporcionado') 
+            }}
+          </p>
+          
+          
+          <div class="row">
+            <!-- Operadora -->
+            <div class="col s12">
+              <mat-form-field appearance="fill">
+                <mat-label>Operadora</mat-label>
+                <mat-select formControlName="operadora" required>
+                  <mat-option *ngFor="let oper of operadoras" [value]="oper.codelemento">{{ oper.codelemento }}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+  
+            <!-- Número -->
+            <div class="col s12">
+              <mat-form-field appearance="fill">
+                <mat-label>Número</mat-label>
+                <input maxlength="7" minlength="7"
+                          oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength); this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
+                          formControlName="numero" matInput required>
+                <mat-error *ngIf="formContacto.get('numero')?.hasError('required')">Este campo es obligatorio.</mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Campo para Correo Electrónico -->
+        <div *ngIf="tipoContacto === 'email'" class="col l12 m12 s12">
+            <label>Correo Electrónico</label>
+          
+            <!-- Valor Actual -->
+            <p class="text-muted">{{ contacto.email || 'No proporcionado' }}</p>
+          
+            <div class="row">
+                <div class="col-md-6 col-12">
+                  <mat-form-field appearance="fill">
+                    <mat-label>Correo electrónico</mat-label>
+                    <input matInput type="email" formControlName="email">
+                    <button type="button" mat-button matSuffix 
+                            (click)="verifyEmail($event)" 
+                            [disabled]="!formContacto.get('email')?.valid || emailDuplicado">
+                      Verificar
+                    </button>
+                    <mat-error *ngIf="emailDuplicado">El correo ya está registrado.</mat-error>
+                    <mat-error *ngIf="formContacto.get('email')?.hasError('email')">Ingrese un correo válido.</mat-error>
+                    <mat-error *ngIf="formContacto.get('email')?.errors?.['gmailDomain']">
+                        Solo se aceptan correos de dominio &#64;gmail.com
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              
+                <!-- Campo para el Código de Verificación -->
+                <div class="col-md-6 col-12">
+                  <mat-form-field appearance="fill">
+                    <mat-label>Código de verificación</mat-label>
+                    <input matInput type="text" formControlName="validationCode" maxlength="6" minlength="6">
+                    <button type="button" mat-button matSuffix 
+                            (click)="validateCode($event)" 
+                            [disabled]="!formContacto.get('validationCode')?.valid">
+                      Validar
+                    </button>
+                    <mat-error *ngIf="formContacto.get('validationCode')?.hasError('minlength')">
+                      El código debe tener al menos 6 dígitos.
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+              
+          </div>    
+          
+      </div>
+  
+      <div align="right" class="mt-3" *ngIf="tipoContacto !== 'email'">
+        <button cButton class="btn btn-info ms-1" type="submit" 
+                [disabled]="!formContacto.valid || !correoVerificado">
+          <svg cIcon class="me-2" name="cil-save"></svg>Guardar Cambios
+        </button>
+      </div>
+      
+    </form>
+  </div>
+  

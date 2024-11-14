@@ -171,6 +171,28 @@ getSolicitudesRevisionMigra() {
   return this.http.get(`${this.url}solic_revision_migra.php`);
 }
 
+getRevFotosPendientes(): Observable<any> {
+  return this.http.get(`${this.url}revFotosPendientes.php`);
+}
+
+getFoto(codpersona: string): Observable<any> {
+  const solicitudData = { codpersona }; // Empaquetar los datos en un objeto para enviar con POST
+  return this.http.post(`${this.url}getFoto.php`, JSON.stringify(solicitudData));
+}
+
+getFotoProcesada(id_foto: number): Observable<any> {
+  const solicitudData = { id_foto }; // Empaquetar los datos en un objeto para enviar con POST
+  return this.http.post(`${this.url}getFotoProcesada.php`, JSON.stringify(solicitudData));
+}
+
+actualizarFoto(data: any): Observable<any> {
+  return this.http.post(`${this.url}actualizarFoto.php`, JSON.stringify(data));
+}
+
+getRevFotosRevisadas(): Observable<any> {
+  return this.http.get(`${this.url}revFotosRevisadas.php`);
+}
+
 getReincorporacion() {
   return this.http.get(`${this.url}resumen_reincorporacion_dace.php`);
 }
@@ -212,6 +234,10 @@ getReincorporacion() {
     return this.http.post(`${this.url}getprogramasDocuments.php`, JSON.stringify(dato));
   }
 
+  getCheckReqCarnet(dato: any){
+    return this.http.post(`${this.url}checkreqcarnet.php`, JSON.stringify(dato));
+  }
+
   getDocumentosDisponibles(dato: any) {
     return this.http.post(`${this.url}getDocumentosDisponibles.php`, dato);
   }
@@ -228,9 +254,19 @@ getReincorporacion() {
     return this.http.get(`${this.url}detalle_constancia.php?usrsice=${usrsice}`);
   }
 
+  getTasaCambio(): Observable<any> {
+    return this.http.get(`${this.url}get_tasa_cambio.php`);
+  }
+
   getSolicitudesDocumentos(usrsice: string): Observable<any> {
     return this.http.get(`${this.url}getSolicitudesDocumentos.php?usrsice=${usrsice}`);
   }
+
+  anularSolicitud(id_solicitud: number): Observable<any>  {
+    const url = `${this.url}anularSolicitud.php`; // Asegúrate de tener la URL base correcta
+    return this.http.post(url, { id_solicitud });
+  }
+  
 
   getDetalleSolicitud(idSolicitud: number): Observable<any> {
     return this.http.get(`${this.url}getDetalleSolicitud.php?id_solicitud=${idSolicitud}`);
@@ -417,6 +453,10 @@ getReincorporacion() {
     return this.http.post(`${this.url}generaotpopsu.php`, JSON.stringify(datos))
   }
 
+  generaOtpChangeMail(datos: any): Observable<any>{
+    return this.http.post(`${this.url}generaotpChangeMail.php`, JSON.stringify(datos))
+  }
+
   generaOtp(datos: any): Observable<any>{
     return this.http.post(`${this.url}generaotp.php`, JSON.stringify(datos))
   }
@@ -435,6 +475,10 @@ getReincorporacion() {
 
   validarOTPOpsu(datos: any): Observable<any>{
     return this.http.post(`${this.url}validaotpOpsu.php`, JSON.stringify(datos))
+  }
+
+  validarOTPChangeMail(datos: any): Observable<any>{
+    return this.http.post(`${this.url}validaotpChangeMail.php`, JSON.stringify(datos))
   }
 
   crearPlantel(datosplantel : any): Observable<any>{
@@ -629,6 +673,15 @@ findDatosAcademicosDash(dato: any): Observable<any> {
   return this.http.post(`${this.url}finddatosacademicosdash.php`, JSON.stringify(dato));
 }
 
+findDatosAcademicosDashInscripcion(dato: any): Observable<any> {
+  if (dato && dato.cedula) {
+    return this.http.get(`${this.url}inscripcion_est_UC_dash.php?ced_pas=${dato.cedula}`);
+  } else {
+    throw new Error("El parámetro 'dato' debe incluir una propiedad 'cedula'.");
+  }
+}
+
+
 findDatosDocenteDash(dato: any): Observable<any> {
   return this.http.post(`${this.url}finddatosdocentedash.php`, JSON.stringify(dato));
 }
@@ -693,6 +746,10 @@ getDatosGraduacion(fechagrado: string): Observable<any[]> {
 
 getIdentidad(cedula: string): Observable<any> {
   return this.http.post(`${this.url}getIdentidad.php`, JSON.stringify(cedula));
+}
+
+getDatosContacto(cedula: string): Observable<any> {
+  return this.http.post(`${this.url}getDatosContacto.php`, JSON.stringify(cedula));
 }
 
 getEstudianteAspirante(identificacion: any): Observable<any>{

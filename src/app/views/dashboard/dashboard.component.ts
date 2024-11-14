@@ -4,6 +4,7 @@ import { ControlEstudiosService } from '../control-estudios/control-estudios.ser
 import { DashboardChartsData, IChartProps } from './dashboard-charts-data';
 import { NgxSpinnerService } from "ngx-spinner";
 import { Router } from '@angular/router'; // Importar el router para redirigir
+import { MatTableDataSource } from '@angular/material/table';
 
 import { ChartjsComponent } from '@coreui/angular-chartjs';
 
@@ -60,6 +61,11 @@ export class DashboardComponent implements OnInit {
   cargandoDatos: boolean = true;
 mostrarMensaje: boolean = false;
   visible: boolean = true;
+
+  dataSourceUC = new MatTableDataSource([]);
+displayedColumnsUC: string[] = ['acta', 'periodo', 'cod_ucurr', 'nombre_uc', 'creditos', 'seccion', 'profesor'];
+hayResultadosInscripcion: boolean = false;
+periodoActual: string = '2024-A'; // Ajustar según el periodo actual.
 
   constructor(private chartsData: DashboardChartsData,
     private SpinnerService: NgxSpinnerService,
@@ -145,6 +151,7 @@ mostrarMensaje: boolean = false;
       switch(rol) {
         case '007':
           this.buscarDatosAcademicos();
+          this.cargarInscripcion();
           break;
         case '006':
           this.buscarDatosDocente();
@@ -156,6 +163,30 @@ mostrarMensaje: boolean = false;
       }
     });
   }
+
+  cargarInscripcion(): void {
+    this.cargandoDatos = true;
+  
+    this.controlestudiosService.findDatosAcademicosDashInscripcion({cedula: this.usr.cedula!}).subscribe(
+      (response: any) => {
+        if (response && response.materias && response.materias.length > 0) {
+          this.dataSourceUC.data = response.materias;
+          this.hayResultadosInscripcion = true;
+        } else {
+          this.dataSourceUC.data = [];
+          this.hayResultadosInscripcion = false;
+        }
+        this.cargandoDatos = false;
+      },
+      (error) => {
+        console.error('Error al cargar inscripciones:', error);
+        this.dataSourceUC.data = [];
+        this.hayResultadosInscripcion = false;
+        this.cargandoDatos = false;
+      }
+    );
+  }
+  
 
   data = {
     labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],

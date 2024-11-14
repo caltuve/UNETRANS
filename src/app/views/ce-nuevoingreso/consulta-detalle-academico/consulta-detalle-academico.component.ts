@@ -42,7 +42,7 @@ export interface DocumentosEstudiante {
 })
 export class ConsultaDetalleAcademicoComponent {
 
-  displayedColumns: string[] = ['cohorte','plan', 'carnet', 'pnf', 'grado', 'condicion' ];
+  displayedColumns: string[] = ['cohorte','plan', 'carnet', 'pnf', 'grado', 'condicion', 'mod_ingreso' ];
   dataSource2 = new MatTableDataSource();
 
   idPersona: number;

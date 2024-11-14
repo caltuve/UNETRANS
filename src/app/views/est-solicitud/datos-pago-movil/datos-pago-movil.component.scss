@@ -1,0 +1,11 @@
+// For smaller screens, display elements stacked with the QR first
+@media (max-width: 767px) {
+  .qr-container, .pago-movil-info {
+    width: 100%;
+    //text-align: center; // Center-align for better appearance on mobile
+  }
+  
+  .qr-container img {
+    max-width: 70%; // Adjust QR size for small screens
+  }
+}

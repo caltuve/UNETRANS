@@ -71,12 +71,14 @@ import {MatRadioModule} from '@angular/material/radio';
 import { VerSolicitudModalComponent } from './ver-solicitud-modal/ver-solicitud-modal.component';
 import { NuevaSolicitudComponent } from './nueva-solicitud/nueva-solicitud.component';
 
-
+import {MatSnackBarModule} from '@angular/material/snack-bar';
+import { DatosPagoMovilComponent } from './datos-pago-movil/datos-pago-movil.component';
 @NgModule({
   declarations: [
     DocumentosComponent,
     VerSolicitudModalComponent,
-    NuevaSolicitudComponent
+    NuevaSolicitudComponent,
+    DatosPagoMovilComponent
   ],
   imports: [
     CommonModule,
@@ -128,6 +130,7 @@ import { NuevaSolicitudComponent } from './nueva-solicitud/nueva-solicitud.compo
   MatSortModule,
   MatCheckboxModule,
   MatRadioModule,
+  MatSnackBarModule
   ],
   providers: [DatePipe,
     {provide: MAT_DATE_LOCALE, useValue: 'es-VE'}, {provide: ControlEstudiosService},

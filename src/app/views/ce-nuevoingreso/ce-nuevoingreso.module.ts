@@ -84,6 +84,8 @@ import { ModalPostMigracionPlanesEstudiosComponent } from './modal-post-migracio
 import { ConsultaDetalleAcademicoComponent } from './consulta-detalle-academico/consulta-detalle-academico.component';
 import { EstadisticasOpsuProgramaComponent } from './estadisticas-opsu-programa/estadisticas-opsu-programa.component';
 import { EstadisticasConvenioProgramaComponent } from './estadisticas-convenio-programa/estadisticas-convenio-programa.component';
+import { RevFotosComponent } from './rev-fotos/rev-fotos.component';
+import { VerFotoModalComponent } from './ver-foto-modal/ver-foto-modal.component';
 
 
 @NgModule({
@@ -106,7 +108,9 @@ import { EstadisticasConvenioProgramaComponent } from './estadisticas-convenio-p
     ModalPostMigracionPlanesEstudiosComponent,
     ConsultaDetalleAcademicoComponent,
     EstadisticasOpsuProgramaComponent,
-    EstadisticasConvenioProgramaComponent
+    EstadisticasConvenioProgramaComponent,
+    RevFotosComponent,
+    VerFotoModalComponent
   ],
   imports: [
     CommonModule,

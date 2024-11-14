@@ -1,0 +1,60 @@
+<div class="modal-header">
+  <h3 class="modal-title">Detalles de la Solicitud</h3>
+  <button type="button" class="close" (click)="bsModalRef.hide()" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <div class="row">
+    <!-- Foto del Estudiante -->
+    <div class="col-md-4 text-center mb-3">
+      <h4>Foto del Estudiante</h4>
+      <div class="foto-estudiante">
+        <img [src]="foto" alt="Foto del Estudiante" class="img-fluid" *ngIf="foto" />
+        <p *ngIf="!foto">No se ha encontrado una foto para esta solicitud.</p>
+      </div>
+    </div>
+
+    <!-- Detalles de la Solicitud y Motivos de Rechazo -->
+    <div class="col-md-8">
+      <h4>Detalles de la Solicitud</h4>
+      <ul>
+        <li><strong>ID Estudiante:</strong> {{ solicitud.nac }}-{{ solicitud.ced_pas }}</li>
+        <li><strong>Nombre Completo:</strong> {{ solicitud.nombre_completo }}</li>
+      </ul>
+
+     <!-- Mostrar motivos de rechazo solo si están presentes -->
+     <div *ngIf="solicitud.motivo_rechazo">
+      <h4>Motivo(s) de Rechazo</h4>
+      <ul>
+        <li *ngFor="let motivo of solicitud.motivo_rechazo.split(',')">
+          {{ motivo.trim() }}
+        </li>
+      </ul>
+    </div>
+
+    <!-- Mostrar formulario solo si no está en modo visualización -->
+    <form *ngIf="!soloVisualizacion" [formGroup]="motivoRechazoForm">
+        <div class="form-group mt-3">
+          <label>Motivo de Rechazo (si corresponde):</label>
+          <div *ngFor="let motivo of motivosList">
+            <div class="form-check">
+              <input 
+                class="form-check-input" 
+                type="checkbox" 
+                [formControlName]="motivo.controlName">
+              <label class="form-check-label">{{ motivo.label }}</label>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal-footer" *ngIf="!soloVisualizacion">
+  <button type="button" class="btn btn-success" (click)="aprobar()" [disabled]="tieneMotivosSeleccionados()">Aprobar</button>
+  <button type="button" class="btn btn-danger" (click)="rechazar()" [disabled]="!tieneMotivosSeleccionados()">Rechazar</button>
+</div>
+
+

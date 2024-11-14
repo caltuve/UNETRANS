@@ -74,6 +74,11 @@
                     <th mat-header-cell *matHeaderCellDef  > Condición </th>
                     <td mat-cell *matCellDef="let row"> {{row.desc_estatus}} </td>
                   </ng-container>
+
+                  <ng-container matColumnDef="mod_ingreso">
+                    <th mat-header-cell *matHeaderCellDef  > Mod. Ingreso </th>
+                    <td mat-cell *matCellDef="let row"> {{row.mod_ingreso}} </td>
+                  </ng-container>
         
           
                   <!-- Columna de detalle -->

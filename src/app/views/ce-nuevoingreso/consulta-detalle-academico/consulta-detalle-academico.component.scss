@@ -15,11 +15,14 @@
 }
 
 .foto-estudiante img {
-  max-width: 120px; /* Ajusta el tamaño de la foto tipo carnet */
-  height: auto; /* Mantiene la proporción de la imagen */
-  border-radius: 12px; /* Bordes redondeados más suaves para la imagen */
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Añadir sombra para destacar la foto */
   margin-right: 20px; /* Espacio entre la foto y los datos */
+  width: 120px;  /* Ancho fijo de la imagen */
+    height: 160px; /* Alto fijo de la imagen */
+    object-fit: cover; /* Asegura que la imagen ocupe todo el espacio y se recorte si es necesario */
+    object-position: top; /* Alinea la imagen desde la parte superior */
+    border-radius: 8px; /* Opcional: bordes redondeados */
+    margin-bottom: 5px;
 }
 
 .datos-estudiante p {

@@ -17,6 +17,8 @@ import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 
 import { VerSolicitudModalComponent } from '../ver-solicitud-modal/ver-solicitud-modal.component';
 
+import { DatosPagoMovilComponent } from '../datos-pago-movil/datos-pago-movil.component';
+
 @Component({
   selector: 'app-documentos',
   templateUrl: './documentos.component.html',
@@ -25,7 +27,7 @@ import { VerSolicitudModalComponent } from '../ver-solicitud-modal/ver-solicitud
 export class DocumentosComponent {
 
   displayedColumns: string[] = ['fecha_solicitud', 'estatus_solicitud', 'identificador_solicitud', 'total_doc', 'monto', 'acciones'];
-  dataSource: MatTableDataSource<any>;
+  dataSource: MatTableDataSource<any> = new MatTableDataSource<any>([]);
 
   estaInscrito: boolean;
   documentos: any[] = [];
@@ -42,13 +44,18 @@ export class DocumentosComponent {
     usrsice: null,
   }
 
-  tasaConversion: number = 44.42319324;
+  tasaCambio: number | null = null;
+  fechaTasa: Date | null = null;
+  tasaDisponible: boolean = false;
+  mensaje: string = '';
 
   hayResultados: boolean = false;
   sinResultados: boolean = false;
   cargandoDatos = true; // Añade esto a tu componente
 
   solicitud: any; // Aquí recibes la solicitud para mostrar sus detalles
+
+  iconSize: string = '30px';
 
   constructor(
     public controlestudiosService: ControlEstudiosService,
@@ -65,16 +72,10 @@ export class DocumentosComponent {
     datosEstudiante: any;
     datosInscripcion: any;
   ngOnInit(): void {
+    this.obtenerTasaCambio();
     this.buscarSolicitudesDocumentos(this.usr.usrsice);
-  this.findInscripcion(this.usr.usrsice);
-    // Suponiendo que tienes una lógica para determinar si el estudiante está inscrito
-    this.estaInscrito = true;
-
-    if (this.estaInscrito) {
-      this.documentos = [
-        { nombre: 'Constancia de Estudios', disponible: false },
-        { nombre: 'Constancia de Inscripción', disponible: true }
-      ];
+    if (window.innerWidth <= 768) { // Si la pantalla es de tamaño móvil
+      this.iconSize = '40px';
     }
   }
 
@@ -111,6 +112,27 @@ export class DocumentosComponent {
       })
     );
   }
+
+  obtenerTasaCambio(): void {
+    this.controlestudiosService.getTasaCambio().subscribe(
+      (response) => {
+        if (response.success) {
+          this.tasaCambio = response.tasa_cambio;
+          this.fechaTasa = new Date(); // Asignar la fecha actual a fechaTasa
+          this.tasaDisponible = true;
+        } else {
+          this.tasaCambio = null;
+          this.fechaTasa = null;
+          this.tasaDisponible = false;
+        }
+      },
+      (error) => {
+        console.error("Error al obtener la tasa de cambio:", error);
+        this.tasaDisponible = false;
+        this.mensaje = 'Error al obtener la tasa de cambio';
+      }
+    );
+  }
   
 
   findInscripcion(usrsice: any) {
@@ -134,24 +156,45 @@ export class DocumentosComponent {
     });
   }
 
+
   buscarSolicitudesDocumentos(usrsice: any): void {
     this.cargandoDatos = true;
     this.SpinnerService.show();
   
-    this.controlestudiosService.getSolicitudesDocumentos(usrsice).subscribe(data => {
-      
-      this.dataSource = new MatTableDataSource(data.datos);
-    
-      this.cargandoDatos = false;
-      this.SpinnerService.hide();
-      this.hayResultados = data.length > 0;
-      this.sinResultados = data.length === 0;
-    }, error => {
-      console.error('Error al obtener las solicitudes:', error);
-      this.cargandoDatos = false;
-      this.SpinnerService.hide();
-    });
+    this.controlestudiosService.getSolicitudesDocumentos(usrsice).subscribe(
+      (data: any) => {
+        if (data.estatus === "ERROR") {
+          // No hay solicitudes para el estudiante, mostrar mensaje de sin resultados
+          this.hayResultados = false;
+          this.sinResultados = true;
+          this.dataSource.data = []; // Vacía la tabla
+        } else if (data.datos && data.datos.length > 0) {
+          // Hay resultados
+          this.dataSource = new MatTableDataSource(data.datos);
+          this.hayResultados = true;
+          this.sinResultados = false;
+        } else {
+          // No hay resultados explícitos
+          this.hayResultados = false;
+          this.sinResultados = true;
+          this.dataSource.data = []; // Vacía la tabla
+        }
+  
+        this.cargandoDatos = false;
+        this.SpinnerService.hide();
+      },
+      (error) => {
+        console.error('Error al obtener las solicitudes:', error);
+        this.hayResultados = false;
+        this.sinResultados = true;
+        this.cargandoDatos = false;
+        this.SpinnerService.hide();
+      }
+    );
   }
+  
+  
+
 
   // Función para ver la solicitud
   verSolicitud(solicitud: any) {
@@ -183,18 +226,49 @@ export class DocumentosComponent {
   }
 
   // Función para anular solicitud
-  anularSolicitud(solicitud: any) {
-    console.log('Anulando la solicitud', solicitud);
+  anularSolicitud(solicitud: any): void {
+    const confirmacion = confirm('¿Está seguro de que desea anular esta solicitud? Esta acción no se puede deshacer.');
+    if (confirmacion) {
+      this.controlestudiosService.anularSolicitud(solicitud.id_solicitud).subscribe(
+        response => {
+          if (response.estatus === 'OK') {
+            this.notifyService.showSuccess('Solicitud anulada exitosamente.');
+            this.buscarSolicitudesDocumentos(this.usr.usrsice); // Refresca la lista de solicitudes
+          } else {
+            this.notifyService.showError('No se pudo anular la solicitud. Intente de nuevo.');
+          }
+        },
+        error => {
+          console.error('Error al anular la solicitud:', error);
+          this.notifyService.showError('Hubo un error al procesar la anulación.');
+        }
+      );
+    }
   }
+  
 
   // Función para descargar documento
   descargarDocumento(solicitud: any) {
     console.log('Descargando documento de la solicitud', solicitud);
   }
 
-  // Función para pagar solicitud
-  pagarSolicitud(solicitud: any) {
-    console.log('Pagando la solicitud', solicitud);
+  mostrarDatosPagoMovil(solicitud: any): void {
+    console.log('Solicitud enviada al modal:', solicitud); // Confirmar solicitud
+    console.log('Tasa de conversión enviada al modal:', this.tasaCambio); // Confirmar tasaConversion
+  
+    const initialState = {
+      solicitud: solicitud,
+      tasaConversion: this.tasaCambio!
+    };
+  
+    const modalRef: BsModalRef = this.modalService.show(DatosPagoMovilComponent, {
+      ignoreBackdropClick: true,
+      keyboard: false,
+      class: 'modal-dialog-centered modal-lg',
+      initialState: initialState
+    });
   }
+  
+  
 
 }
